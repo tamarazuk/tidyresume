@@ -1,0 +1,113 @@
+.md-editor {
+  border: 0;
+}
+
+/* Toolbar */
+.md-editor-toolbar-wrapper {
+  padding: 8px;
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border);
+  overflow-y: visible;
+}
+
+.md-editor-toolbar-item {
+  padding: 6px 8px;
+  border-radius: calc(var(--radius) - 2px);
+  transition: all 0.2s ease;
+}
+
+.md-editor-toolbar-item:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.md-editor-toolbar-active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.md-editor-dropdown-overlay {
+  margin-top: 0;
+}
+
+/* Modals */
+.md-editor-modal {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background-color: var(--card);
+}
+
+.md-editor-modal-header {
+  border-bottom: 1px solid var(--border);
+  padding: 16px;
+}
+
+.md-editor-modal-body {
+  padding: 16px;
+}
+
+/* Inputs */
+.md-editor input,
+.md-editor textarea {
+  background-color: var(--input);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: calc(var(--radius) - 2px);
+  padding: 8px 12px;
+}
+
+.md-editor input:focus,
+.md-editor textarea:focus {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-color: var(--ring);
+}
+
+/* Buttons */
+.md-editor button {
+  border-radius: calc(var(--radius) - 2px);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.md-editor button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+/* Footer */
+.md-editor-footer {
+  background-color: var(--background);
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  padding: 8px 12px;
+  height: auto;
+}
+
+/* Catalog */
+.md-editor-catalog-wrapper {
+  border-left: 1px solid var(--border);
+  background-color: var(--card);
+}
+
+.md-editor-catalog-link {
+  color: var(--foreground);
+  border-radius: calc(var(--radius) - 2px);
+  padding: 4px 8px;
+  transition: all 0.15s ease;
+}
+
+.md-editor-catalog-link:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.md-editor-catalog-active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* CodeMirror */
+.md-editor .cm-lineNumbers .cm-gutterElement {
+  color: var(--muted-foreground);
+  opacity: 0.4;
+}

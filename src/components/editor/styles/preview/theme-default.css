@@ -1,0 +1,14 @@
+/* Theme wrapper overrides (optional) */
+.default-template-theme {
+  --resume-preview-background: var(--color-slate-100);
+  --resume-preview-foreground: #0f172a;
+  --resume-preview-muted: #f8fafc;
+  --resume-preview-muted-foreground: #64748b;
+  --resume-preview-border: #e2e8f0;
+  --resume-preview-primary: #2b9dee;
+  --resume-preview-primary-foreground: #ffffff;
+  --resume-preview-card: #ffffff;
+  --resume-preview-card-foreground: #0f172a;
+  --resume-preview-code-block-bg: #0b1220;
+  --resume-preview-code-block-color: #a9b7c6;
+}

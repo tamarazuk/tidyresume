@@ -1,0 +1,23 @@
+@layer components {
+  /* Resume paper styling */
+  .resume-paper {
+    @apply bg-white shadow-xl;
+    width: var(--spacing-a4-width);
+    min-height: var(--spacing-a4-height);
+  }
+
+  /* Resume preview scaling for sidebar */
+  .resume-preview-scale {
+    transform-origin: top center;
+  }
+
+  /* Primary button with glow */
+  .btn-primary-glow {
+    @apply bg-primary hover:bg-primary-600 font-bold text-white transition-all;
+    box-shadow: var(--shadow-primary-md);
+  }
+  .btn-primary-glow:hover {
+    box-shadow: var(--shadow-primary-md);
+    @apply -translate-y-0.5;
+  }
+}

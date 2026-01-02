@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@import './theme.css';
+
+@import './components.css';
+
+@import './utilities.css';
+
+@import './print.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    font-family: var(--font-display);
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse {
+    animation: none;
+  }
+}

@@ -1,0 +1,378 @@
+/* Preview tokens aligned with app theme variables */
+.md-editor-preview-wrapper {
+  --background: var(--resume-preview-background, #f1f5f9);
+  --foreground: var(--resume-preview-foreground, #0f172a);
+  --muted: var(--resume-preview-muted, #f1f5f9);
+  --muted-foreground: var(--resume-preview-muted-foreground, #64748b);
+  --border: var(--resume-preview-border, #e2e8f0);
+  --primary: var(--resume-preview-primary, #2b9dee);
+  --primary-foreground: var(--resume-preview-primary-foreground, #ffffff);
+  --card: var(--resume-preview-card, #ffffff);
+  --card-foreground: var(--resume-preview-card-foreground, #0f172a);
+  --accent: var(--resume-preview-accent, #e2e8f0);
+  --accent-foreground: var(--resume-preview-accent-foreground, #0f172a);
+
+  --preview-paper-width: 210mm;
+  --preview-paper-height: 297mm;
+  --preview-paper-padding: 15mm;
+  --preview-paper-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.45);
+  --preview-page-gap: 28px;
+  --preview-page-margin: var(--preview-paper-padding);
+  --preview-page-outline: color-mix(in oklch, var(--border) 70%, transparent);
+
+  --preview-link-color: var(--primary);
+  --preview-link-hover-color: color-mix(
+    in oklch,
+    var(--preview-link-color) 70%,
+    #0f172a
+  );
+
+  --preview-code-inline-color: var(--primary);
+  --preview-code-inline-bg: color-mix(
+    in oklch,
+    var(--primary) 12%,
+    transparent
+  );
+  --preview-code-block-color: var(--resume-preview-code-block-color, #a9b7c6);
+  --preview-code-block-bg: var(--resume-preview-code-block-bg, #0b1220);
+
+  --preview-radius-sm: 2px;
+  --preview-radius-md: 6px;
+  --preview-pill-bg: var(--resume-preview-pill-bg, #f1f5f9);
+  --preview-pill-color: var(--resume-preview-pill-color, #334155);
+
+  background-color: var(--background);
+  padding: clamp(16px, 3vw, 32px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+  display: block;
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar-track {
+  background-color: var(--border);
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+  border-radius: 999px;
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar-thumb:horizontal:hover {
+  background-color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+@media screen {
+  .md-editor-preview {
+    background: transparent;
+    box-shadow: none;
+    border-color: transparent;
+  }
+}
+
+.md-editor-preview-wrapper,
+.md-editor-preview-wrapper * {
+  color-scheme: light !important;
+}
+
+/* The preview container */
+.md-editor-preview {
+  color: var(--foreground);
+  background: var(--card);
+  font-family: var(--font-sans);
+  width: var(--preview-paper-width);
+  min-width: var(--preview-paper-width);
+  max-width: var(--preview-paper-width);
+  flex: 0 0 var(--preview-paper-width);
+  margin-inline: auto;
+  min-height: var(--preview-paper-height);
+  padding: var(--preview-paper-padding);
+  box-shadow: var(--preview-paper-shadow);
+  border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+  border-radius: var(--preview-radius-md);
+  word-break: normal;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.md-editor-preview * {
+  box-sizing: border-box;
+}
+
+/* Scrollbar */
+.md-editor-preview ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.md-editor-preview ::-webkit-scrollbar-button:vertical {
+  display: none;
+}
+.md-editor-preview ::-webkit-scrollbar-track,
+.md-editor-preview ::-webkit-scrollbar-thumb,
+.md-editor-preview ::-webkit-scrollbar-corner {
+  border-radius: 2px;
+}
+.md-editor-preview ::-webkit-scrollbar-track {
+  background-color: var(--border);
+}
+.md-editor-preview ::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+}
+.md-editor-preview ::-webkit-scrollbar-thumb:vertical:hover {
+  background-color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+.md-editor-preview ::-webkit-scrollbar-thumb:vertical:active {
+  background-color: color-mix(in srgb, var(--foreground) 50%, transparent);
+}
+
+/* Common elements */
+.md-editor-preview p:empty {
+  display: none;
+}
+
+.md-editor-preview .resume-page-break {
+  display: block;
+  width: 100%;
+  break-after: page;
+  page-break-after: always;
+}
+
+@media screen {
+  .md-editor-preview .resume-page-break {
+    height: calc(var(--preview-page-gap) + (var(--preview-page-margin) * 2));
+    margin: 24px calc(var(--preview-paper-padding) * -1);
+    width: calc(100% + (var(--preview-paper-padding) * 2));
+    background: linear-gradient(
+      to bottom,
+      var(--card) 0,
+      var(--card) var(--preview-page-margin),
+      var(--background) var(--preview-page-margin),
+      var(--background) calc(100% - var(--preview-page-margin)),
+      var(--card) calc(100% - var(--preview-page-margin)),
+      var(--card) 100%
+    );
+  }
+}
+
+@media print {
+  .md-editor-preview .resume-page-break {
+    height: 0;
+    margin: 0;
+    border: 0;
+  }
+}
+
+.md-editor-preview a {
+  color: var(--preview-link-color);
+  text-decoration: none;
+}
+.md-editor-preview a:hover {
+  color: var(--preview-link-hover-color);
+  text-decoration: none;
+}
+.md-editor-preview a[target='_blank']::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Headings */
+.md-editor-preview h1,
+.md-editor-preview h2,
+.md-editor-preview h3,
+.md-editor-preview h4,
+.md-editor-preview h5,
+.md-editor-preview h6 {
+  margin-block-start: 24px;
+  margin-block-end: 16px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+/* Resume header */
+.md-editor-preview h1 {
+  margin-block-start: 0;
+  margin-block-end: 6px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.md-editor-preview h1 + h2 {
+  margin-block-start: 0;
+  margin-block-end: 12px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  text-transform: none;
+  border: none;
+  padding: 0;
+}
+
+.md-editor-preview h1 + h2 + p {
+  margin-block-start: 0;
+  margin-block-end: 24px;
+  padding-block-end: 16px;
+  border-block-end: 2px solid var(--foreground);
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+
+.md-editor-preview h2 {
+  margin-block-start: 28px;
+  margin-block-end: 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  border-block-end: 1px solid var(--border);
+  padding-block-end: 6px;
+}
+
+.md-editor-preview h3 {
+  margin-block-start: 18px;
+  margin-block-end: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.md-editor-preview h4 {
+  margin-block-start: 12px;
+  margin-block-end: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.md-editor-preview p {
+  margin-block: 0 12px;
+  color: var(--muted-foreground);
+}
+
+.md-editor-preview strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.md-editor-preview em {
+  color: var(--muted-foreground);
+}
+
+.md-editor-preview p > em {
+  display: inline-block;
+  font-size: 0.85rem;
+}
+
+/* Lists */
+.md-editor-preview ul,
+.md-editor-preview ol {
+  list-style: revert;
+  padding-inline-start: 1.25em;
+  margin-block: 0 16px;
+  color: var(--muted-foreground);
+  list-style-position: outside;
+}
+
+.md-editor-preview li {
+  margin-block: 4px;
+}
+
+.md-editor-preview li::marker {
+  color: var(--muted-foreground);
+}
+
+/* Skill/tag style for lists directly after section headings */
+.md-editor-preview h2 + ul {
+  list-style: disc;
+  padding-inline-start: 1.25em;
+  margin-block: 0 16px;
+  display: block;
+}
+
+.md-editor-preview h2 + ul > li {
+  margin-block: 4px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.md-editor-preview h2 + ul > li strong {
+  color: inherit;
+}
+
+/* Tables */
+.md-editor-preview table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.md-editor-preview th,
+.md-editor-preview td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+}
+
+/* Keep preview styling light even when the editor is in dark mode */
+.md-editor-dark .md-editor-preview {
+  --md-theme-color: var(--foreground);
+  --md-theme-color-reverse: var(--background);
+  --md-theme-color-hover: color-mix(
+    in oklch,
+    var(--foreground) 8%,
+    transparent
+  );
+  --md-theme-color-hover-inset: var(--muted);
+  --md-theme-link-color: var(--preview-link-color);
+  --md-theme-link-hover-color: var(--preview-link-hover-color);
+  --md-theme-border-color: var(--border);
+  --md-theme-border-color-reverse: var(--border);
+  --md-theme-border-color-inset: color-mix(
+    in oklch,
+    var(--border) 70%,
+    transparent
+  );
+  --md-theme-bg-color: var(--card);
+  --md-theme-bg-color-inset: var(--muted);
+  --md-theme-code-inline-color: var(--preview-code-inline-color);
+  --md-theme-code-inline-bg-color: var(--preview-code-inline-bg);
+  --md-theme-code-block-color: var(--preview-code-block-color);
+  --md-theme-code-block-bg-color: var(--preview-code-block-bg);
+  --md-theme-code-before-bg-color: var(--preview-code-block-bg);
+  --md-theme-code-copy-tips-color: var(--foreground);
+  --md-theme-code-copy-tips-bg-color: var(--card);
+  --md-theme-code-active-color: var(--primary);
+  --md-theme-quote-color: var(--foreground);
+  --md-theme-quote-border: 4px solid var(--border);
+  --md-theme-quote-bg-color: var(--muted);
+  --md-theme-table-stripe-color: var(--muted);
+  --md-theme-table-tr-bg-color: var(--card);
+  --md-theme-table-td-border-color: var(--border);
+}
+
+/* Quotes */
+.md-editor-preview blockquote {
+  margin: 16px 0;
+  padding: 8px 16px;
+  border-inline-start: 4px solid var(--border);
+  background-color: var(--muted);
+}
+
+/* Inline code */
+.md-editor-preview code {
+  color: var(--preview-code-inline-color);
+  background-color: var(--preview-code-inline-bg);
+  border-radius: var(--preview-radius-sm);
+  padding: 2px 4px;
+  line-height: 1.4;
+}

@@ -1,0 +1,43 @@
+/* Override md-editor-rt variables with TidyResume theme */
+.md-editor {
+  /* Colors - Light mode */
+  --md-color: var(--foreground);
+  --md-hover-color: var(--foreground);
+  --md-bk-color: var(--background);
+  --md-bk-color-outstand: var(--muted);
+  --md-bk-hover-color: var(--accent);
+  --md-border-color: var(--border);
+  --md-border-hover-color: var(--input);
+  --md-border-active-color: var(--ring);
+  --md-modal-mask: #00000073;
+  --md-modal-shadow: var(--shadow-lg);
+
+  /* Scrollbar colors */
+  --md-scrollbar-bg-color: var(--muted);
+  --md-scrollbar-thumb-color: var(--border);
+  --md-scrollbar-thumb-hover-color: var(--muted-foreground);
+  --md-scrollbar-thumb-active-color: var(--foreground);
+
+  /* Typography */
+  font-family: var(--font-sans);
+  border-radius: 0;
+  border: 1px solid var(--border);
+}
+
+/* Dark mode overrides */
+.dark .md-editor {
+  --md-color: var(--foreground);
+  --md-hover-color: var(--foreground);
+  --md-bk-color: var(--background);
+  --md-bk-color-outstand: var(--muted);
+  --md-bk-hover-color: var(--accent);
+  --md-border-color: var(--border);
+  --md-border-hover-color: var(--input);
+  --md-border-active-color: var(--ring);
+  --md-modal-shadow: var(--shadow-xl);
+
+  --md-scrollbar-bg-color: var(--muted);
+  --md-scrollbar-thumb-color: var(--border);
+  --md-scrollbar-thumb-hover-color: var(--muted-foreground);
+  --md-scrollbar-thumb-active-color: var(--foreground);
+}

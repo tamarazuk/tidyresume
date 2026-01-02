@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TidyResume
+
+A markdown-based resume builder that lets you create professional resumes in Markdown with local-first saving and PDF export. Shareable URLs are coming soon.
+
+![TidyResume Editor](/.github/images/editor-preview.png)
+
+## Features
+
+- **Markdown Editor** — Write your resume in familiar Markdown syntax with live preview
+- **Local-first Saving** — Drafts stay in your browser (no account required)
+- **PDF Export** — Print or export a clean, ATS-friendly PDF
+- **Shareable URLs** — Publishing is coming soon
+- **Multiple Templates** — Additional layouts are coming soon
+- **Dark Mode** — Editor UI supports dark mode (preview stays light)
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **UI Components:** Custom components + shadcn/ui patterns (Base UI primitives)
+- **Icons:** Phosphor Icons
+- **Editor:** md-editor-rt
+- **Theming:** next-themes
+- **State:** zustand (localStorage persistence)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- pnpm
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Clone the repository
+git clone https://github.com/tamarazuk/tidyresume.git
+cd tidyresume
+
+# Install dependencies
+pnpm install
+
+# Start the development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── (marketing)/       # Landing page route group
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   │   └── privacy-policy/
+│   │       └── page.tsx
+│   ├── edit/              # Resume editor page
+│   │   └── page.tsx
+│   ├── layout.tsx         # Root layout
+├── styles/
+│   ├── globals.css        # Global styles, Tailwind imports
+│   ├── print.css          # Print styles for PDF export
+│   └── theme.css          # CSS custom properties (colors, shadows, etc.)
+├── components/
+│   ├── editor/            # Markdown editor components
+│   ├── layout/            # Header, navigation
+│   ├── marketing/         # Landing page sections
+│   └── ui/                # Reusable UI primitives
+├── stores/                # Zustand stores (editor state, drafts)
+├── lib/
+│   └── utils.ts           # Utility functions (cn, etc.)
+└── providers/
+    └── theme-provider.tsx # next-themes wrapper
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev        # Start development server
+pnpm build      # Build for production
+pnpm start      # Start production server
+pnpm lint       # Run ESLint
+pnpm format     # Format code with Prettier
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design System
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app uses a dual-color scheme:
 
-## Deploy on Vercel
+- **App UI (Indigo `#6366f1`)** — Used for buttons, links, and interactive elements
+- **Resume Output (Blue `#2b9dee`)** — Used in the resume preview/templates via `.resume-theme` class
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This separation ensures the app has personality while resumes remain universally professional.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Printing and PDF export
+
+TidyResume supports browser-native printing: use the print button in the editor, or your browser's File → Print/print shortcut. The print view is scoped so only the resume renders (no app chrome), and you can save to PDF using the browser's built-in print dialog.
+
+## Component Library Note
+
+When adding new UI primitives, use Base UI (`@base-ui/react`) instead of Radix.
+
+## Roadmap
+
+- [x] Markdown editor with live preview
+- [x] Landing page
+- [x] Dark mode support
+- [ ] Publish flow with shareable URLs
+- [ ] Edit via secret token (no auth)
+- [ ] PDF export
+- [ ] Multiple resume templates
+- [ ] Guided editor mode (form-based)
+- [ ] Custom slug selection
+
+## Contributing
+
+This is a personal portfolio project, but suggestions and feedback are welcome! Feel free to open an issue.
+
+## License
+
+MIT

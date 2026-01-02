@@ -1,0 +1,162 @@
+/* Print styles for PDF export */
+@media print {
+  @page {
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    height: auto !important;
+    font-size: 12pt !important;
+  }
+
+  body {
+    display: block !important;
+    background-color: white !important;
+    margin: 0 !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    break-after: avoid-page;
+    page-break-after: avoid;
+    break-before: avoid-page;
+    page-break-before: avoid;
+  }
+
+  li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  p {
+    orphans: 2;
+    widows: 2;
+  }
+
+  [data-base-ui-portal] {
+    display: none !important;
+  }
+
+  .editor-page {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .editor-page .md-editor-toolbar-wrapper,
+  .editor-page .md-editor-toolbar,
+  .editor-page .md-editor-footer,
+  .editor-page .md-editor-resize-operate,
+  .editor-page .md-editor-input-wrapper,
+  .editor-page
+    .md-editor-content-wrapper
+    > .md-editor-custom-scrollbar:first-child {
+    display: none !important;
+  }
+
+  .editor-page .md-editor-content,
+  .editor-page .md-editor-content-wrapper,
+  .editor-page .md-editor-preview-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .editor-page .md-editor-preview-wrapper {
+    display: block !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .editor-page .md-editor-preview {
+    display: block !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    background: white !important;
+  }
+
+  .editor-page .md-editor {
+    border: none !important;
+    box-shadow: none !important;
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .editor-page .md-editor-content,
+  .editor-page .md-editor-content-wrapper {
+    display: block !important;
+    flex: none !important;
+  }
+
+  .editor-page .md-editor-preview .resume-page-break {
+    display: block !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    break-before: auto !important;
+    page-break-before: auto !important;
+    break-after: auto !important;
+    page-break-after: auto !important;
+  }
+
+  .editor-page .md-editor-preview .resume-page-break + * {
+    break-before: page !important;
+    page-break-before: always !important;
+    margin-top: 0 !important;
+  }
+
+  .editor-page .md-editor-preview * + .resume-page-break {
+    margin-bottom: 0 !important;
+  }
+
+  .editor-page .md-editor-preview p:empty + .resume-page-break,
+  .editor-page .md-editor-preview .resume-page-break + p:empty {
+    display: none !important;
+  }
+
+  .editor-page .md-editor-preview p > br:only-child {
+    display: none !important;
+  }
+
+  .editor-page .md-editor-custom-scrollbar {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .editor-page .md-editor-custom-scrollbar__track,
+  .editor-page .md-editor-custom-scrollbar__thumb {
+    display: none !important;
+  }
+
+  .editor-page .resume-paper {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .editor-page .resume-paper,
+  .editor-page .resume-paper * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
