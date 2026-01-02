@@ -1,0 +1,20 @@
+/* Optional: block code styling */
+.md-editor-preview pre {
+  margin: 20px 0;
+  background-color: var(--preview-code-block-bg);
+  border-radius: var(--preview-radius-md);
+  overflow: auto;
+}
+
+.md-editor-preview pre code {
+  display: block;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    monospace;
+  font-size: 14px;
+  color: var(--preview-code-block-color);
+  background: transparent;
+  padding: 1em;
+  line-height: 1.6;
+  border-radius: 0;
+}
