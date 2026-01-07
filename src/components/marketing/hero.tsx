@@ -1,5 +1,4 @@
 import { FileTextIcon } from '@phosphor-icons/react/dist/ssr'
-import { Badge } from '@/components/ui/badge'
 import ButtonLink from '@/components/ui/button-link'
 
 function HeroMockup() {
@@ -92,7 +91,7 @@ function HeroMockup() {
               <div className="bg-muted/40 pointer-events-none absolute inset-0 sm:opacity-0" />
               <div className="border-border mb-4 border-b pb-4 text-left">
                 <div className="text-foreground text-lg font-semibold">
-                  MAYA SANDOVAL
+                  Maya Sandoval
                 </div>
                 <div className="text-primary text-sm">
                   Senior Software Engineer
@@ -154,35 +153,11 @@ function HeroMockup() {
                   <div className="text-primary mb-1 text-[11px] font-semibold tracking-wide uppercase">
                     Skills
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      TypeScript
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      Python
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      Go
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      React
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      Node.js
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      PostgreSQL
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      AWS
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      Kubernetes
-                    </Badge>
-                    <Badge className="bg-primary/10 text-primary rounded-full px-2 py-1 text-[11px]">
-                      Docker
-                    </Badge>
-                  </div>
+                  <ul className="text-muted-foreground list-disc space-y-1 pl-4">
+                    <li>TypeScript, Python, Go</li>
+                    <li>React, Node.js, PostgreSQL</li>
+                    <li>AWS, Kubernetes, Docker</li>
+                  </ul>
                 </div>
               </div>
             </div>
