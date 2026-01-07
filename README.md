@@ -121,4 +121,4 @@ This is a personal portfolio project, but suggestions and feedback are welcome! 
 
 ## License
 
-MIT
+MIT. See `LICENSE`.
