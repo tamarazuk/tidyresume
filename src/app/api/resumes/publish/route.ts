@@ -12,9 +12,9 @@ export async function POST(request: Request) {
       slug?: string | null
     }
     const { env } = await getCloudflareContext({ async: true })
-    const prisma = getDb(env.DB)
+    const db = getDb(env.DB)
 
-    const result = await resumeService.publishResume(prisma, body)
+    const result = await resumeService.publishResume(db, body)
 
     // Construct the view URL
     const url = result.slug ? `/r/${result.slug}` : `/r/${result.id}`

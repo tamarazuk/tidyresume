@@ -24,6 +24,7 @@
       "binding": "DB",
       "database_name": "tidyresume-db",
       "database_id": "f9160017-87bb-448b-9e1a-6f432a17850d",
+      "migrations_dir": "drizzle",
     },
   ],
   "services": [

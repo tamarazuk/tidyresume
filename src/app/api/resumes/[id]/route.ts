@@ -10,9 +10,9 @@ export async function GET(
   try {
     const { id } = await params
     const { env } = await getCloudflareContext({ async: true })
-    const prisma = getDb(env.DB)
+    const db = getDb(env.DB)
 
-    const resume = await resumeService.getResume(prisma, id)
+    const resume = await resumeService.getResume(db, id)
 
     if (!resume) {
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
@@ -35,9 +35,9 @@ export async function DELETE(
   try {
     const { id } = await params
     const { env } = await getCloudflareContext({ async: true })
-    const prisma = getDb(env.DB)
+    const db = getDb(env.DB)
 
-    await resumeService.deleteResume(prisma, id)
+    await resumeService.deleteResume(db, id)
 
     return NextResponse.json({ success: true })
   } catch (error) {

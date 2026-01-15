@@ -9,8 +9,8 @@ import * as resumeService from '@/services/resume-service'
 async function getResume(id: string) {
   try {
     const { env } = await getCloudflareContext({ async: true })
-    const prisma = getDb(env.DB)
-    return resumeService.getResume(prisma, id)
+    const db = getDb(env.DB)
+    return resumeService.getResume(db, id)
   } catch (e) {
     console.error(e)
     return null

@@ -1,29 +1,25 @@
-import { PrismaClient } from '@prisma/client'
+import { eq, or } from 'drizzle-orm'
+import { DrizzleD1Database } from 'drizzle-orm/d1'
+import { resumes } from '@/db/schema'
+import * as schema from '@/db/schema'
 
-export async function getResume(prisma: PrismaClient, idOrSlug: string) {
-  // Try finding by ID first
-  let resume = await prisma.resume.findUnique({
-    where: { id: idOrSlug },
+type Db = DrizzleD1Database<typeof schema>
+
+export async function getResume(db: Db, idOrSlug: string) {
+  // Try finding by ID or Slug
+  const resume = await db.query.resumes.findFirst({
+    where: or(eq(resumes.id, idOrSlug), eq(resumes.slug, idOrSlug)),
   })
-
-  // If not found, try finding by Slug
-  if (!resume) {
-    resume = await prisma.resume.findUnique({
-      where: { slug: idOrSlug },
-    })
-  }
 
   return resume
 }
 
-export async function deleteResume(prisma: PrismaClient, id: string) {
-  return prisma.resume.delete({
-    where: { id },
-  })
+export async function deleteResume(db: Db, id: string) {
+  return db.delete(resumes).where(eq(resumes.id, id))
 }
 
 export async function publishResume(
-  prisma: PrismaClient,
+  db: Db,
   data: {
     id?: string
     title: string
@@ -39,8 +35,8 @@ export async function publishResume(
 
   // Check slug uniqueness if provided
   if (data.slug) {
-    const existing = await prisma.resume.findUnique({
-      where: { slug: data.slug },
+    const existing = await db.query.resumes.findFirst({
+      where: eq(resumes.slug, data.slug),
     })
 
     // If slug exists and belongs to a DIFFERENT resume, throw error
@@ -49,27 +45,26 @@ export async function publishResume(
     }
   }
 
-  const updateData: {
-    title: string
-    content: string
-    slug?: string | null
-  } = {
-    title: data.title,
-    content: data.content,
-  }
+  const slugVal = data.slug ?? null
 
-  if (Object.prototype.hasOwnProperty.call(data, 'slug')) {
-    updateData.slug = data.slug ?? null
-  }
-
-  return prisma.resume.upsert({
-    where: { id: resumeId },
-    update: updateData,
-    create: {
+  // Drizzle SQLite upsert
+  await db
+    .insert(resumes)
+    .values({
       id: resumeId,
       title: data.title,
       content: data.content,
-      slug: data.slug ?? null,
-    },
-  })
+      slug: slugVal,
+    })
+    .onConflictDoUpdate({
+      target: resumes.id,
+      set: {
+        title: data.title,
+        content: data.content,
+        slug: slugVal,
+        updatedAt: new Date(),
+      },
+    })
+
+  return { id: resumeId, slug: slugVal }
 }

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+import { eq } from 'drizzle-orm'
 import { getDb } from '@/db'
+import { authTokens } from '@/db/schema'
 
 export async function POST(request: Request) {
   try {
@@ -11,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const { env } = await getCloudflareContext({ async: true })
-    const prisma = getDb(env.DB)
+    const db = getDb(env.DB)
 
     // Hash token to verify
     const encoder = new TextEncoder()
@@ -20,9 +22,9 @@ export async function POST(request: Request) {
     const hashArray = Array.from(new Uint8Array(hashBuffer))
     const hashedToken = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 
-    const authToken = await prisma.authToken.findUnique({
-      where: { token: hashedToken },
-      include: { resume: true },
+    const authToken = await db.query.authTokens.findFirst({
+      where: eq(authTokens.token, hashedToken),
+      with: { resume: true },
     })
 
     if (!authToken) {
@@ -38,10 +40,9 @@ export async function POST(request: Request) {
     }
 
     // Mark as used
-    await prisma.authToken.update({
-      where: { id: authToken.id },
-      data: { usedAt: new Date() },
-    })
+    await db.update(authTokens)
+      .set({ usedAt: new Date() })
+      .where(eq(authTokens.id, authToken.id))
 
     return NextResponse.json({ resume: authToken.resume })
 

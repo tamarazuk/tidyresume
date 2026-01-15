@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+import { eq } from 'drizzle-orm'
 import { getDb } from '@/db'
+import { resumes, authTokens } from '@/db/schema'
 import { sendMagicLinkEmail } from '@/lib/email'
 
 export async function POST(request: Request) {
@@ -12,11 +14,11 @@ export async function POST(request: Request) {
     }
 
     const { env } = await getCloudflareContext({ async: true })
-    const prisma = getDb(env.DB)
+    const db = getDb(env.DB)
 
     // Check if resume exists
-    const resume = await prisma.resume.findUnique({
-      where: { id: resumeId },
+    const resume = await db.query.resumes.findFirst({
+      where: eq(resumes.id, resumeId),
     })
 
     if (!resume) {
@@ -41,30 +43,29 @@ export async function POST(request: Request) {
     // Store in DB
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
 
-    const transactions = []
+    type BatchOp = Parameters<typeof db.batch>[0][number]
+    const batch: BatchOp[] = []
 
     // Update resume email if not set
     if (!resume.userEmail) {
-      transactions.push(
-        prisma.resume.update({
-          where: { id: resumeId },
-          data: { userEmail: email },
-        })
+      batch.push(
+        db.update(resumes)
+          .set({ userEmail: email })
+          .where(eq(resumes.id, resumeId))
       )
     }
 
-    transactions.push(
-      prisma.authToken.create({
-        data: {
-          token: hashedToken,
-          resumeId,
-          email,
-          expiresAt,
-        },
+    batch.push(
+      db.insert(authTokens).values({
+        id: crypto.randomUUID(),
+        token: hashedToken,
+        resumeId,
+        email,
+        expiresAt,
       })
     )
 
-    await prisma.$transaction(transactions)
+    await db.batch(batch as [BatchOp, ...BatchOp[]])
 
     // Send email
     // Use origin from request
