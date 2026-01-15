@@ -3,16 +3,24 @@ import type { Footers } from 'md-editor-rt'
 import {
   CheckCircleIcon,
   CircleIcon,
+  CloudCheckIcon,
+  KeyboardIcon,
   SpinnerGapIcon,
   WarningCircleIcon,
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import EditorShortcutsMenu from '../components/toolbar-shortcuts-menu'
 import {
   FOOTER_LAYOUT,
   type CustomFooterItemId,
@@ -20,12 +28,16 @@ import {
 } from './footer-items'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
+type SyncStatus = 'synced' | 'syncing' | 'error' | 'unsaved'
+type CloudStatus = 'synced' | 'syncing' | 'error'
 export type EditorSaveStatus = SaveStatus
 
 interface UseEditorFootersOptions {
   value: string
   layout?: FooterLayoutItem[]
   saveStatus?: SaveStatus
+  cloudStatus?: SyncStatus
+  hasCloudCopy?: boolean
   warningMessage?: string | null
 }
 
@@ -67,8 +79,47 @@ const saveStatusConfig: Record<
 const saveStatusTooltip =
   'Saved in this browser’s local storage. You can reopen this page in the same browser anytime to keep editing'
 
+const cloudStatusConfig: Record<
+  CloudStatus,
+  { label: string; icon: ReactElement; badgeClassName: string }
+> = {
+  synced: {
+    label: 'Saved to cloud',
+    icon: <CloudCheckIcon size={12} aria-hidden />,
+    badgeClassName:
+      'border-sky-500/20 bg-sky-500/10 text-sky-700 dark:text-sky-300',
+  },
+  syncing: {
+    label: 'Syncing to cloud',
+    icon: <SpinnerGapIcon size={12} aria-hidden className="animate-spin" />,
+    badgeClassName:
+      'border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300',
+  },
+  error: {
+    label: 'Cloud sync error',
+    icon: <WarningCircleIcon size={12} aria-hidden />,
+    badgeClassName:
+      'border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-300',
+  },
+}
+
+const cloudStatusTooltip: Record<CloudStatus, string> = {
+  synced: 'Your published resume is up to date in the cloud.',
+  syncing: 'Updating your published resume in the cloud.',
+  error: 'We could not update the published resume in the cloud.',
+}
+
 const warningTooltip =
   'Some content was too large to store locally. Try a smaller image or shorten the resume.'
+
+const resolveCloudStatus = (
+  status: SyncStatus | undefined,
+  hasCloudCopy: boolean | undefined
+): CloudStatus | null => {
+  if (!hasCloudCopy) return null
+  if (status === 'syncing' || status === 'error') return status
+  return 'synced'
+}
 
 function FooterMetric({ label, value, className }: FooterMetricProps) {
   return (
@@ -94,6 +145,8 @@ function useEditorFooters({
   value,
   layout = FOOTER_LAYOUT,
   saveStatus,
+  cloudStatus,
+  hasCloudCopy,
   warningMessage,
 }: UseEditorFootersOptions): UseEditorFootersReturn {
   const wordCount = useMemo(() => countWords(value), [value])
@@ -102,6 +155,29 @@ function useEditorFooters({
   const buildCustomFooter = useCallback(
     (id: CustomFooterItemId) => {
       switch (id) {
+        case 'shortcutTips':
+          return (
+            <Popover key="footer-shortcut-tips">
+              <PopoverTrigger
+                type="button"
+                className={cn(
+                  'md-editor-footer-item text-muted-foreground hover:text-foreground hover:bg-accent inline-flex items-center gap-2 rounded-md px-2 py-1 text-xs font-medium transition'
+                )}
+                aria-label="Keyboard shortcuts"
+              >
+                <KeyboardIcon size={14} aria-hidden />
+                Shortcuts
+              </PopoverTrigger>
+              <PopoverContent
+                side="top"
+                align="start"
+                sideOffset={8}
+                className="bg-transparent p-0 shadow-none ring-0"
+              >
+                <EditorShortcutsMenu />
+              </PopoverContent>
+            </Popover>
+          )
         case 'wordCount':
           return (
             <FooterMetric
@@ -120,8 +196,15 @@ function useEditorFooters({
           )
         case 'saveStatus':
           if (!saveStatus) return null
+          const resolvedCloudStatus = resolveCloudStatus(
+            cloudStatus,
+            hasCloudCopy
+          )
           return (
-            <div key="footer-save-status" className="md-editor-footer-item">
+            <div
+              key="footer-save-status"
+              className="md-editor-footer-item flex flex-wrap items-center gap-2"
+            >
               <Tooltip>
                 <TooltipTrigger
                   render={(props) => {
@@ -148,6 +231,39 @@ function useEditorFooters({
                 />
                 <TooltipContent>{saveStatusTooltip}</TooltipContent>
               </Tooltip>
+              {resolvedCloudStatus ? (
+                <Tooltip>
+                  <TooltipTrigger
+                    render={(props) => {
+                      const { className: triggerClassName, ...rest } = props
+                      return (
+                        <span
+                          {...rest}
+                          className={cn('inline-flex', triggerClassName)}
+                        >
+                          <Badge
+                            variant="secondary"
+                            data-icon="inline-start"
+                            className={cn(
+                              'border',
+                              cloudStatusConfig[resolvedCloudStatus]
+                                .badgeClassName
+                            )}
+                          >
+                            {cloudStatusConfig[resolvedCloudStatus].icon}
+                            <span>
+                              {cloudStatusConfig[resolvedCloudStatus].label}
+                            </span>
+                          </Badge>
+                        </span>
+                      )
+                    }}
+                  />
+                  <TooltipContent>
+                    {cloudStatusTooltip[resolvedCloudStatus]}
+                  </TooltipContent>
+                </Tooltip>
+              ) : null}
             </div>
           )
         case 'warning':
@@ -183,7 +299,14 @@ function useEditorFooters({
           return null
       }
     },
-    [characterCount, saveStatus, warningMessage, wordCount]
+    [
+      characterCount,
+      cloudStatus,
+      hasCloudCopy,
+      saveStatus,
+      warningMessage,
+      wordCount,
+    ]
   )
 
   const { footers, defFooters } = useMemo(() => {

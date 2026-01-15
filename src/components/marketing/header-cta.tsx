@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react'
 import ButtonLink from '@/components/ui/button-link'
 
 const RESUME_STORAGE_KEY = 'tidyresume-editor'
+const DEFAULT_RESUME_TITLE = 'Untitled Resume'
 
 function subscribeToResumeDraft(callback: () => void) {
   if (typeof window === 'undefined') return () => {}
@@ -18,7 +19,32 @@ function subscribeToResumeDraft(callback: () => void) {
 
 function getResumeDraftSnapshot() {
   if (typeof window === 'undefined') return false
-  return Boolean(localStorage.getItem(RESUME_STORAGE_KEY))
+  const stored = localStorage.getItem(RESUME_STORAGE_KEY)
+  if (!stored) return false
+
+  try {
+    const parsed = JSON.parse(stored) as {
+      state?: {
+        id?: string | null
+        markdown?: string | null
+        resumeTitle?: string | null
+      }
+      id?: string | null
+      markdown?: string | null
+      resumeTitle?: string | null
+    }
+    const state = parsed.state ?? parsed
+    const hasTitle =
+      typeof state.resumeTitle === 'string' &&
+      state.resumeTitle.trim().length > 0 &&
+      state.resumeTitle !== DEFAULT_RESUME_TITLE
+    const hasMarkdown =
+      typeof state.markdown === 'string' && state.markdown.trim().length > 0
+
+    return Boolean(state.id || hasTitle || hasMarkdown)
+  } catch {
+    return false
+  }
 }
 
 export default function HeaderCta() {

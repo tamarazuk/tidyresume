@@ -1,0 +1,1 @@
+export const RESUME_TITLE_MAX_LENGTH = 120

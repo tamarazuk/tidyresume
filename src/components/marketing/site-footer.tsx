@@ -19,6 +19,12 @@ export default function SiteFooter() {
           >
             Privacy Policy
           </Link>
+          <a
+            className="hover:text-primary transition-colors"
+            href="mailto:tidyresume@tzuk.app"
+          >
+            Contact
+          </a>
           <Link
             className="hover:text-primary flex items-center gap-1 transition-colors"
             href="https://github.com/tamarazuk/tidyresume"

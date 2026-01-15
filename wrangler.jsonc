@@ -19,6 +19,13 @@
     // see https://opennext.js.org/cloudflare/howtos/image
     "binding": "IMAGES",
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tidyresume-db",
+      "database_id": "f9160017-87bb-448b-9e1a-6f432a17850d",
+    },
+  ],
   "services": [
     {
       // Self-reference service binding, the service name must match the worker name

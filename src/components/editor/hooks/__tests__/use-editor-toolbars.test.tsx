@@ -1,13 +1,16 @@
+import type { ChangeEvent, RefObject } from 'react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
+import type { ExposeParam } from 'md-editor-rt'
 import { useEditorToolbars } from '../use-editor-toolbars'
 
 const setImageWarning = vi.fn()
 const setEditorViewState = vi.fn()
 
 vi.mock('@/stores/resume-store', () => ({
-  useResumeStore: (selector: (state: { setImageWarning: typeof setImageWarning }) => unknown) =>
-    selector({ setImageWarning }),
+  useResumeStore: (
+    selector: (state: { setImageWarning: typeof setImageWarning }) => unknown
+  ) => selector({ setImageWarning }),
 }))
 
 vi.mock('@/stores/editor-view-store', () => ({
@@ -43,12 +46,15 @@ const originalImage = global.Image
 const originalCreateElement = document.createElement.bind(document)
 
 class MockFileReader {
+  static EMPTY = 0
+  static LOADING = 1
+  static DONE = 2
   result: string | ArrayBuffer | null = null
   onload: null | (() => void) = null
   onerror: null | (() => void) = null
   error: Error | null = null
 
-  readAsDataURL() {
+  readAsDataURL(_file?: Blob) {
     this.result = nextFileReaderResult
     this.onload?.()
   }
@@ -89,20 +95,22 @@ describe('useEditorToolbars image handling', () => {
     nextFileReaderResult = 'data:image/jpeg;base64,abc'
     nextImageSize = { width: 700, height: 700 }
 
-    global.FileReader = MockFileReader as typeof FileReader
-    global.Image = MockImage as typeof Image
+    global.FileReader = MockFileReader as unknown as typeof FileReader
+    global.Image = MockImage as unknown as typeof Image
 
-    vi.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
-      if (tagName === 'canvas') {
-        return {
-          width: 0,
-          height: 0,
-          getContext: () => ({ drawImage: vi.fn() }),
-          toDataURL: toDataURLMock,
-        } as unknown as HTMLCanvasElement
+    vi.spyOn(document, 'createElement').mockImplementation(
+      (tagName: string) => {
+        if (tagName === 'canvas') {
+          return {
+            width: 0,
+            height: 0,
+            getContext: () => ({ drawImage: vi.fn() }),
+            toDataURL: toDataURLMock,
+          } as unknown as HTMLCanvasElement
+        }
+        return originalCreateElement(tagName)
       }
-      return originalCreateElement(tagName)
-    })
+    )
   })
 
   afterEach(() => {
@@ -119,7 +127,7 @@ describe('useEditorToolbars image handling', () => {
         on: vi.fn(),
         off: vi.fn(),
       },
-    }
+    } as unknown as RefObject<ExposeParam | null>
 
     nextImageSize = { width: 1400, height: 2100 }
     toDataURLMock.mockReturnValue('data:image/jpeg;base64,' + 'a'.repeat(1000))
@@ -131,7 +139,7 @@ describe('useEditorToolbars image handling', () => {
     await act(async () => {
       result.current.uploadInputProps.onChange?.({
         target: { files: [file], value: 'file' },
-      } as React.ChangeEvent<HTMLInputElement>)
+      } as unknown as ChangeEvent<HTMLInputElement>)
       await flushMicrotasks()
     })
 
@@ -149,10 +157,12 @@ describe('useEditorToolbars image handling', () => {
         on: vi.fn(),
         off: vi.fn(),
       },
-    }
+    } as unknown as RefObject<ExposeParam | null>
 
     nextImageSize = { width: 1400, height: 2100 }
-    toDataURLMock.mockReturnValue('data:image/png;base64,' + 'a'.repeat(1_500_001))
+    toDataURLMock.mockReturnValue(
+      'data:image/png;base64,' + 'a'.repeat(1_500_001)
+    )
 
     const { result } = renderHook(() => useEditorToolbars({ editorRef }))
 
@@ -161,7 +171,7 @@ describe('useEditorToolbars image handling', () => {
     await act(async () => {
       result.current.uploadInputProps.onChange?.({
         target: { files: [file], value: 'file' },
-      } as React.ChangeEvent<HTMLInputElement>)
+      } as unknown as ChangeEvent<HTMLInputElement>)
       await flushMicrotasks()
     })
 
