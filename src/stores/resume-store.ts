@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
+import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
 import type { ResumeId, ResumeSlug } from '@/lib/resume-types'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
@@ -52,7 +53,7 @@ export const useResumeStore = create<ResumeState>()(
       return {
         id: null,
         slug: null,
-        resumeTitle: 'Untitled Resume',
+        resumeTitle: DEFAULT_RESUME_TITLE,
         markdown: DEFAULT_RESUME,
         saveStatus: 'saved',
         syncStatus: 'unsaved',
@@ -85,7 +86,7 @@ export const useResumeStore = create<ResumeState>()(
           set({
             id: null,
             slug: null,
-            resumeTitle: 'Untitled Resume',
+            resumeTitle: DEFAULT_RESUME_TITLE,
             markdown: '',
             saveStatus: 'saved',
             syncStatus: 'unsaved',

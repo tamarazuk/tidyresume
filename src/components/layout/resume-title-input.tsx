@@ -6,7 +6,7 @@ import { PencilSimpleIcon } from '@phosphor-icons/react/dist/ssr'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useResumeHydrated, useResumeStore } from '@/stores/resume-store'
-import { RESUME_TITLE_MAX_LENGTH } from '@/lib/constants'
+import { RESUME_TITLE_MAX_LENGTH, FOCUS_TITLE_EVENT } from '@/lib/constants'
 
 export default function ResumeTitleInput() {
   const isHydrated = useResumeHydrated()
@@ -18,6 +18,12 @@ export default function ResumeTitleInput() {
     'text-muted-foreground text-base font-medium leading-tight text-left'
   const titleInputWidthClassName = 'min-w-56 w-[min(70vw,32rem)]'
   const titleDisplayMaxWidthClassName = 'max-w-[min(70vw,32rem)]'
+
+  useEffect(() => {
+    const handleFocus = () => setIsEditing(true)
+    window.addEventListener(FOCUS_TITLE_EVENT, handleFocus)
+    return () => window.removeEventListener(FOCUS_TITLE_EVENT, handleFocus)
+  }, [])
 
   useEffect(() => {
     if (!isEditing) return

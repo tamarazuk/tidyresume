@@ -6,8 +6,6 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { getDb } from '@/db'
 import * as resumeService from '@/services/resume-service'
 
-export const runtime = 'edge'
-
 async function getResume(id: string) {
   try {
     const { env } = await getCloudflareContext({ async: true })

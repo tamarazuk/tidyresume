@@ -10,6 +10,7 @@ declare namespace Cloudflare {
     WORKER_SELF_REFERENCE: Service<typeof import('./.open-next/worker').default>
     IMAGES: ImagesBinding
     ASSETS: Fetcher
+    RESEND_API_KEY: string
   }
 }
 interface CloudflareEnv extends Cloudflare.Env {}

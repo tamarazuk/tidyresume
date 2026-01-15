@@ -3,8 +3,6 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { getDb } from '@/db'
 import * as resumeService from '@/services/resume-service'
 
-export const runtime = 'edge'
-
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as {

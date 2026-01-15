@@ -20,6 +20,8 @@ import {
 import { useOwnerActionHeader } from '@/hooks/use-owner-action-header'
 import { cn } from '@/lib/utils'
 
+import { MagicLinkDialog } from '@/components/public-view/magic-link-dialog'
+
 interface OwnerActionHeaderProps {
   id: string
   isFullWidth: boolean
@@ -102,6 +104,16 @@ export function OwnerActionHeader({
           />
           <TooltipContent side="right" align="center" sideOffset={8}>
             Edit link
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger
+            render={(props) => (
+              <MagicLinkDialog resumeId={id} triggerProps={props} />
+            )}
+          />
+          <TooltipContent side="right" align="center" sideOffset={8}>
+            Edit on another device
           </TooltipContent>
         </Tooltip>
         <Tooltip>

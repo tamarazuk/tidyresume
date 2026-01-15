@@ -2,18 +2,14 @@
 
 import { ArrowRightIcon, PencilSimpleIcon } from '@phosphor-icons/react/dist/ssr'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useResumeStore } from '@/stores/resume-store'
 import { cn } from '@/lib/utils'
+import { useMounted } from '@/hooks/use-mounted'
 
 export function StartButton() {
-    const [mounted, setMounted] = useState(false)
+    const mounted = useMounted()
     const resumeId = useResumeStore((state) => state.id)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
 
     if (!mounted) {
         return (

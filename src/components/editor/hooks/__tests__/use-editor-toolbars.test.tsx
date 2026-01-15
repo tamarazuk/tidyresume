@@ -54,7 +54,7 @@ class MockFileReader {
   onerror: null | (() => void) = null
   error: Error | null = null
 
-  readAsDataURL(_file?: Blob) {
+  readAsDataURL() {
     this.result = nextFileReaderResult
     this.onload?.()
   }
