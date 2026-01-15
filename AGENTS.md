@@ -2,12 +2,11 @@
 
 Guidelines for AI assistants working on this codebase.
 
-## Architecture Preferences
+## Safety & File Operations
 
-- Keep components focused on layout and content; move business logic into custom hooks or utility modules.
-- Prefer small, single-responsibility modules without over-abstracting or over-engineering.
-- Centralize API calls in shared helpers (avoid large inline `fetch` blocks in hooks/components).
-- Favor reuse of existing hooks/utilities before adding new component logic.
+- **NEVER overwrite files** (especially configuration files like `.env`, `wrangler.jsonc`, etc.) without reading them first.
+- Always check the current content of a file before modifying it.
+- Prefer appending or merging changes over replacing the entire file content, unless explicitly instructed to overwrite.
 
 ## Project Overview
 
@@ -25,7 +24,7 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 | Editor | md-editor-rt |
 | Theming | next-themes |
 | State | zustand (persist to localStorage) |
-| Database | Prisma + Cloudflare D1 (via @prisma/adapter-d1) |
+| Database | Drizzle ORM + Cloudflare D1 |
 | Hosting/Runtime | OpenNext Cloudflare (edge runtime for routes) |
 | Package Manager | pnpm |
 
@@ -43,7 +42,7 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 ### Data Flow and Persistence
 - Local draft state: `src/stores/resume-store.ts` (zustand + persist).
 - Publishing: `src/hooks/use-publish.ts` (manual publish) and `src/hooks/use-resume-sync.ts` (debounced sync once an id exists).
-- Cloud DB: `src/db/index.ts` (Prisma D1 adapter) + `src/services/resume-service.ts` (CRUD helpers).
+- Cloud DB: `src/db/index.ts` (Drizzle D1 client) + `src/services/resume-service.ts` (CRUD helpers).
 - Owner detection: `src/hooks/use-owner-check.ts` compares local id to public view id.
 
 ### Styling

@@ -68,9 +68,10 @@ export async function POST(request: Request) {
     await db.batch(batch as [BatchOp, ...BatchOp[]])
 
     // Send email
-    // Use origin from request
-    const origin = new URL(request.url).origin
-    const magicLink = `${origin}/edit?token=${token}`
+    // Determine base URL
+    // Priority: Environment Variable -> Request Origin
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin
+    const magicLink = `${baseUrl}/edit?token=${token}`
 
     await sendMagicLinkEmail(email, magicLink)
 
