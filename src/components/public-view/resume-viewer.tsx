@@ -14,9 +14,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
-import { useOwnerCheck } from '@/hooks/use-owner-check'
-import { OwnerViewBadge } from '@/components/editor/components/owner-view-badge'
-import { PreviewToggle } from '@/components/editor/components/preview-toggle'
 import { cn } from '@/lib/utils'
 
 import 'md-editor-rt/lib/preview.css'
@@ -38,38 +35,23 @@ export function ResumeViewer({
   const { formatShortcutKeys } = usePlatformShortcuts()
   const shortcutLabel = formatShortcutKeys(['Mod', 'P']).join('+')
   const editorTheme = 'light'
-  const isOwner = useOwnerCheck(id)
 
   return (
     <div className="resume-view flex min-h-screen flex-col">
       <header className="border-border bg-background no-print grid flex-none grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2 border-b border-solid px-6 py-3 sm:grid-cols-[1fr_auto_1fr]">
-        <div className="order-1 flex items-center gap-4">
-          <Link
-            href="/"
-            className="text-foreground flex items-center gap-3"
-            aria-label="TidyResume home"
-          >
-            <div className="flex size-9 items-center justify-center">
-              <AppIcon className="h-full w-full" />
-            </div>
-            <span className="text-base font-semibold tracking-[-0.01em] sm:hidden lg:inline-block">
-              TidyResume
-            </span>
-          </Link>
-          {isOwner && (
-            <div className="hidden items-center gap-2 lg:flex">
-              <OwnerViewBadge />
-              <PreviewToggle />
-            </div>
-          )}
-        </div>
+        <Link
+          href="/"
+          className="text-foreground order-1 flex items-center gap-3 sm:order-1"
+          aria-label="TidyResume home"
+        >
+          <div className="flex size-9 items-center justify-center">
+            <AppIcon className="h-full w-full" />
+          </div>
+          <span className="text-base font-semibold tracking-[-0.01em]">
+            TidyResume
+          </span>
+        </Link>
         <div className="order-2 flex items-center justify-end gap-2 sm:order-3 sm:justify-self-end">
-          {isOwner && (
-            <div className="flex items-center gap-2 lg:hidden">
-              <OwnerViewBadge />
-              <PreviewToggle />
-            </div>
-          )}
           <Tooltip>
             <TooltipTrigger
               render={(props) => <ThemeToggle buttonProps={props} />}

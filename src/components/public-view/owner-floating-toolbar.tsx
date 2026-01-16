@@ -4,12 +4,14 @@ import Link from 'next/link'
 import {
   ArrowsInSimpleIcon,
   ArrowsOutSimpleIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  InfoIcon,
   PencilSimpleIcon,
   ShareFatIcon,
   SpinnerGapIcon,
   TrashIcon,
 } from '@phosphor-icons/react/dist/ssr'
-
 import { SlugSettings } from '@/components/layout/slug-settings'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
@@ -17,25 +19,91 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useOwnerActionHeader } from '@/hooks/use-owner-action-header'
+import { useOwnerFloatingToolbar } from '@/hooks/use-owner-floating-toolbar'
 import { useEditorViewStore } from '@/stores/editor-view-store'
 import { cn } from '@/lib/utils'
 
 import { MagicLinkDialog } from '@/components/public-view/magic-link-dialog'
 
-interface OwnerActionHeaderProps {
+export function OwnerViewInfo() {
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <div
+            {...props}
+            role="status"
+            className="text-muted-foreground/70 flex items-center justify-center p-1 transition-colors hover:text-foreground"
+          >
+            <InfoIcon size={14} weight="bold" />
+            <span className="sr-only">Owner View</span>
+          </div>
+        )}
+      />
+      <TooltipContent side="right" align="center" sideOffset={8}>
+        <p className="max-w-xs text-xs leading-normal">
+          Only you can see these editing controls. Visitors see a clean version
+          of your resume.
+        </p>
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+export function PreviewToggle() {
+  const isPreviewMode = useEditorViewStore(
+    (state) => state.editorViewState.isPreviewMode
+  )
+  const setEditorViewState = useEditorViewStore(
+    (state) => state.setEditorViewState
+  )
+
+  const togglePreview = () => {
+    setEditorViewState({ isPreviewMode: !isPreviewMode })
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => (
+          <Button
+            {...props}
+            variant="secondary"
+            size="sm"
+            onClick={togglePreview}
+            aria-label="Preview as visitor"
+            aria-pressed={isPreviewMode}
+            className={cn('gap-1.5')}
+          >
+            {isPreviewMode ? (
+              <EyeSlashIcon size={16} weight="bold" />
+            ) : (
+              <EyeIcon size={16} weight="bold" />
+            )}
+            <span className="sm:hidden">Preview</span>
+          </Button>
+        )}
+      />
+      <TooltipContent side="bottom" align="center">
+        {isPreviewMode ? 'Return to editing' : 'See what visitors see'}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+interface OwnerFloatingToolbarProps {
   id: string
   isFullWidth: boolean
   onToggleWidth: () => void
 }
 
-export function OwnerActionHeader({
+export function OwnerFloatingToolbar({
   id,
   isFullWidth,
   onToggleWidth,
-}: OwnerActionHeaderProps) {
+}: OwnerFloatingToolbarProps) {
   const { isOwner, isDeleting, handleDelete, handleShare, handleUrlUpdated } =
-    useOwnerActionHeader({ id })
+    useOwnerFloatingToolbar({ id })
   const isPreviewMode = useEditorViewStore(
     (state) => state.editorViewState.isPreviewMode
   )
@@ -43,7 +111,21 @@ export function OwnerActionHeader({
   const widthLabel = isFullWidth ? 'Page width' : 'Full width'
   const widthText = isFullWidth ? 'Page' : 'Full'
 
-  if (!isOwner || isPreviewMode) return null
+  if (!isOwner) return null
+
+  const containerClassName = cn(
+    'no-print border-border bg-background/80 fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border px-3 py-2 shadow-sm backdrop-blur-md sm:top-1/2 sm:right-4 sm:bottom-auto sm:left-auto sm:translate-x-0 sm:-translate-y-1/2 sm:flex-col sm:rounded-2xl sm:px-2 sm:py-3',
+    isPreviewMode && 'sm:py-2' // Slightly tighter in preview mode
+  )
+
+  if (isPreviewMode) {
+    return (
+      <div className={containerClassName}>
+        <PreviewToggle />
+        <OwnerViewInfo />
+      </div>
+    )
+  }
 
   return (
     <>
@@ -64,7 +146,7 @@ export function OwnerActionHeader({
           </div>
         </div>
       ) : null}
-      <div className="no-print border-border bg-background/80 fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border px-3 py-2 shadow-sm backdrop-blur-md sm:top-1/2 sm:right-4 sm:bottom-auto sm:left-auto sm:translate-x-0 sm:-translate-y-1/2 sm:flex-col sm:rounded-2xl sm:px-2 sm:py-3">
+      <div className={containerClassName}>
         <Tooltip>
           <TooltipTrigger
             render={(props) => {
@@ -173,6 +255,9 @@ export function OwnerActionHeader({
             {widthLabel}
           </TooltipContent>
         </Tooltip>
+        <div className="bg-border mx-1 h-4 w-px sm:my-1 sm:h-px sm:w-6" />
+        <PreviewToggle />
+        <OwnerViewInfo />
         <div className="bg-border mx-1 h-4 w-px sm:h-px sm:w-6" />
         <Tooltip>
           <TooltipTrigger

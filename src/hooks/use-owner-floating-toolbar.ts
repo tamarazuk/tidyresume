@@ -6,11 +6,11 @@ import { useOwnerCheck } from '@/hooks/use-owner-check'
 import { deleteResume } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
-interface UseOwnerActionHeaderOptions {
+interface UseOwnerFloatingToolbarOptions {
   id: string
 }
 
-export function useOwnerActionHeader({ id }: UseOwnerActionHeaderOptions) {
+export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) {
   const isOwner = useOwnerCheck(id)
   const router = useRouter()
   const resetResume = useResumeStore((state) => state.resetResume)

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { OwnerActionHeader } from '@/components/public-view/owner-action-header'
+import { OwnerFloatingToolbar } from '@/components/public-view/owner-floating-toolbar'
 import { ResumeViewer } from '@/components/public-view/resume-viewer'
 
 interface PublicResumeViewProps {
@@ -20,7 +20,7 @@ export function PublicResumeView({
 
   return (
     <>
-      <OwnerActionHeader
+      <OwnerFloatingToolbar
         id={id}
         isFullWidth={isFullWidth}
         onToggleWidth={() => setIsFullWidth((prev) => !prev)}

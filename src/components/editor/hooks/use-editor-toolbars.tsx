@@ -41,8 +41,6 @@ import ToolbarImageMenu from '../components/toolbar-image-menu'
 import EditorShortcutsMenu from '../components/toolbar-shortcuts-menu'
 import ToolbarTooltip from '../components/toolbar-tooltip'
 import ToolbarTooltipButton from '../components/toolbar-tooltip-button'
-import { OwnerViewBadge } from '../components/owner-view-badge'
-import { PreviewToggle } from '../components/preview-toggle'
 import { HEADING_LEVELS, type HeadingLevel } from './use-toolbar-heading-menu'
 import {
   ARIA_ONLY_TOOLBAR_ITEMS,
@@ -649,10 +647,6 @@ function useEditorToolbars({
               }
             />
           )
-        case 'ownerBadge':
-          return <OwnerViewBadge key="owner-badge" />
-        case 'previewToggle':
-          return <PreviewToggle key="preview-toggle" />
         default:
           return null
       }
