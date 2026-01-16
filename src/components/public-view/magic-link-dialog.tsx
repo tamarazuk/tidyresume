@@ -1,10 +1,13 @@
 'use client'
 
+import type React from 'react'
 import { useState } from 'react'
+import { mergeProps } from '@base-ui/react/merge-props'
 import { EnvelopeSimpleIcon, PaperPlaneRightIcon } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import {
   Dialog,
   DialogContent,
@@ -17,18 +20,27 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-interface MagicLinkDialogProps {
-  resumeId: string
-  triggerProps?: React.ComponentPropsWithoutRef<typeof DialogTrigger>
+type TriggerButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  ref?: React.Ref<HTMLButtonElement>
 }
 
-export function MagicLinkDialog({ resumeId, triggerProps }: MagicLinkDialogProps) {
+interface MagicLinkDialogProps {
+  resumeId: string
+  triggerProps?: TriggerButtonProps
+  triggerVariant?: React.ComponentProps<typeof Button>['variant']
+}
+
+export function MagicLinkDialog({
+  resumeId,
+  triggerProps,
+  triggerVariant = 'ghost',
+}: MagicLinkDialogProps) {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
     setIsLoading(true)
 
     try {
@@ -53,7 +65,8 @@ export function MagicLinkDialog({ resumeId, triggerProps }: MagicLinkDialogProps
       setEmail('')
     } catch (error) {
       toast.error('Error sending link', {
-        description: error instanceof Error ? error.message : 'Please try again',
+        description:
+          error instanceof Error ? error.message : 'Please try again',
       })
     } finally {
       setIsLoading(false)
@@ -63,19 +76,67 @@ export function MagicLinkDialog({ resumeId, triggerProps }: MagicLinkDialogProps
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger
-        render={(dialogTriggerProps) => (
-          <Button
-            {...triggerProps}
-            {...dialogTriggerProps}
-            variant="secondary"
-            size="sm"
-            className="gap-1.5"
-            aria-label="Edit on another device"
-          >
-            <EnvelopeSimpleIcon size={16} />
-            <span className="sm:hidden">Edit elsewhere</span>
-          </Button>
-        )}
+        render={(dialogTriggerProps) => {
+          const tooltipTriggerProps = (triggerProps ?? {}) as TriggerButtonProps
+          const {
+            ref: tooltipRef,
+            className: tooltipClassName,
+            ...tooltipRest
+          } = tooltipTriggerProps
+
+          const dialogTriggerButtonProps =
+            dialogTriggerProps as TriggerButtonProps
+          const {
+            ref: dialogRef,
+            className: dialogClassName,
+            ...dialogRest
+          } = dialogTriggerButtonProps
+
+          const mergedTriggerProps = mergeProps<'button'>(
+            dialogRest,
+            tooltipRest,
+            {
+              className: cn(dialogClassName, tooltipClassName),
+            }
+          ) as TriggerButtonProps
+
+          const assignRef = (node: HTMLButtonElement | null) => {
+            if (typeof dialogRef === 'function') {
+              dialogRef(node)
+            } else if (dialogRef) {
+              ;(
+                dialogRef as React.MutableRefObject<HTMLButtonElement | null>
+              ).current = node
+            }
+
+            if (typeof tooltipRef === 'function') {
+              tooltipRef(node)
+            } else if (tooltipRef) {
+              ;(
+                tooltipRef as React.MutableRefObject<HTMLButtonElement | null>
+              ).current = node
+            }
+          }
+
+          const {
+            className: mergedTriggerClassName,
+            ...forwardedTriggerProps
+          } = mergedTriggerProps
+
+          return (
+            <Button
+              {...forwardedTriggerProps}
+              ref={assignRef}
+              variant={triggerVariant}
+              size="sm"
+              className={cn('gap-1.5', mergedTriggerClassName)}
+              aria-label="Edit on another device"
+            >
+              <EnvelopeSimpleIcon size={16} />
+              <span className="sm:hidden">Edit elsewhere</span>
+            </Button>
+          )
+        }}
       />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -92,7 +153,7 @@ export function MagicLinkDialog({ resumeId, triggerProps }: MagicLinkDialogProps
               type="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               required
             />
           </div>

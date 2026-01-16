@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { RESUME_TITLE_MAX_LENGTH } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { useEditableResumeTitle } from '@/hooks/use-editable-resume-title'
-import { useEditorViewStore } from '@/stores/editor-view-store'
+import { usePublicViewStore } from '@/stores/public-view-store'
 
 interface EditableResumeTitleProps {
   id: string
@@ -33,8 +33,8 @@ export function EditableResumeTitle({
     handleBlur,
     handleKeyDown,
   } = useEditableResumeTitle({ id, title, content })
-  const isPreviewMode = useEditorViewStore(
-    (state) => state.editorViewState.isPreviewMode
+  const isPreviewMode = usePublicViewStore(
+    (state) => state.publicViewState.isPreviewMode
   )
 
   const baseClassName =

@@ -20,7 +20,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useOwnerFloatingToolbar } from '@/hooks/use-owner-floating-toolbar'
-import { useEditorViewStore } from '@/stores/editor-view-store'
+import { usePublicViewStore } from '@/stores/public-view-store'
 import { cn } from '@/lib/utils'
 
 import { MagicLinkDialog } from '@/components/public-view/magic-link-dialog'
@@ -33,7 +33,7 @@ export function OwnerViewInfo() {
           <div
             {...props}
             role="status"
-            className="text-muted-foreground/70 flex items-center justify-center p-1 transition-colors hover:text-foreground"
+            className="text-muted-foreground/70 hover:text-foreground flex items-center justify-center p-1 transition-colors"
           >
             <InfoIcon size={14} weight="bold" />
             <span className="sr-only">Owner View</span>
@@ -51,15 +51,15 @@ export function OwnerViewInfo() {
 }
 
 export function PreviewToggle() {
-  const isPreviewMode = useEditorViewStore(
-    (state) => state.editorViewState.isPreviewMode
+  const isPreviewMode = usePublicViewStore(
+    (state) => state.publicViewState.isPreviewMode
   )
-  const setEditorViewState = useEditorViewStore(
-    (state) => state.setEditorViewState
+  const setPublicViewState = usePublicViewStore(
+    (state) => state.setPublicViewState
   )
 
   const togglePreview = () => {
-    setEditorViewState({ isPreviewMode: !isPreviewMode })
+    setPublicViewState({ isPreviewMode: !isPreviewMode })
   }
 
   return (
@@ -68,7 +68,7 @@ export function PreviewToggle() {
         render={(props) => (
           <Button
             {...props}
-            variant="secondary"
+            variant="ghost"
             size="sm"
             onClick={togglePreview}
             aria-label="Preview as visitor"
@@ -104,8 +104,8 @@ export function OwnerFloatingToolbar({
 }: OwnerFloatingToolbarProps) {
   const { isOwner, isDeleting, handleDelete, handleShare, handleUrlUpdated } =
     useOwnerFloatingToolbar({ id })
-  const isPreviewMode = useEditorViewStore(
-    (state) => state.editorViewState.isPreviewMode
+  const isPreviewMode = usePublicViewStore(
+    (state) => state.publicViewState.isPreviewMode
   )
   const WidthIcon = isFullWidth ? ArrowsInSimpleIcon : ArrowsOutSimpleIcon
   const widthLabel = isFullWidth ? 'Page width' : 'Full width'
@@ -179,7 +179,7 @@ export function OwnerFloatingToolbar({
                 label="Link"
                 ariaLabel="Edit link"
                 labelClassName="sm:hidden"
-                variant="secondary"
+                variant="ghost"
                 size="sm"
                 popoverSide="right"
                 popoverAlign="start"
@@ -209,7 +209,7 @@ export function OwnerFloatingToolbar({
               return (
                 <Button
                   {...rest}
-                  variant="secondary"
+                  variant="ghost"
                   size="sm"
                   className={cn('gap-1.5', triggerClassName)}
                   onClick={(event) => {
@@ -228,6 +228,7 @@ export function OwnerFloatingToolbar({
             Share
           </TooltipContent>
         </Tooltip>
+        <div className="bg-border mx-1 h-4 w-px sm:my-1 sm:h-px sm:w-6" />
         <Tooltip>
           <TooltipTrigger
             render={(props) => {
@@ -235,7 +236,7 @@ export function OwnerFloatingToolbar({
               return (
                 <Button
                   {...rest}
-                  variant="secondary"
+                  variant="ghost"
                   size="sm"
                   className={cn('gap-1.5', triggerClassName)}
                   onClick={(event) => {
@@ -255,9 +256,9 @@ export function OwnerFloatingToolbar({
             {widthLabel}
           </TooltipContent>
         </Tooltip>
-        <div className="bg-border mx-1 h-4 w-px sm:my-1 sm:h-px sm:w-6" />
+
         <PreviewToggle />
-        <OwnerViewInfo />
+
         <div className="bg-border mx-1 h-4 w-px sm:h-px sm:w-6" />
         <Tooltip>
           <TooltipTrigger
@@ -288,6 +289,7 @@ export function OwnerFloatingToolbar({
             Delete
           </TooltipContent>
         </Tooltip>
+        <OwnerViewInfo />
       </div>
     </>
   )
