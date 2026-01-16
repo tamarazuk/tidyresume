@@ -5,12 +5,12 @@ This plan follows the TDD-first workflow defined in `conductor/workflow.md`.
 ## Phase 1: Foundation & Owner Detection
 Focus on creating the component structure and ensuring it only shows for visitors.
 
-- [ ] Task: Create the `ViralLoopCTA` component shell and base styling
-    - [ ] Write tests for the `ViralLoopCTA` component (Red Phase)
-    - [ ] Implement the basic Pill structure with Tailwind v4 (Green Phase)
-- [ ] Task: Integrate `useOwnerCheck` logic
-    - [ ] Write tests ensuring component is hidden when `isOwner` is true (Red Phase)
-    - [ ] Implement logic to return `null` if user is the owner (Green Phase)
+- [x] Task: Create the `ViralLoopCTA` component shell and base styling (d940fd2)
+    - [x] Write tests for the `ViralLoopCTA` component (Red Phase)
+    - [x] Implement the basic Pill structure with Tailwind v4 (Green Phase)
+- [x] Task: Integrate `useOwnerCheck` logic (d940fd2)
+    - [x] Write tests ensuring component is hidden when `isOwner` is true (Red Phase)
+    - [x] Implement logic to return `null` if user is the owner (Green Phase)
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Owner Detection' (Protocol in workflow.md)
 
 ## Phase 2: Timing & Animation
