@@ -20,10 +20,16 @@ export async function deleteResume(db: Db, id: string) {
 
 function isUniqueConstraintViolation(error: unknown): boolean {
   if (error instanceof Error) {
-    return (
+    if (
       error.message.includes('UNIQUE constraint failed') ||
       error.message.includes('constraint failed')
-    )
+    ) {
+      return true
+    }
+    // Check cause if available (D1 often wraps errors)
+    if (error.cause && error.cause instanceof Error) {
+      return isUniqueConstraintViolation(error.cause)
+    }
   }
   return false
 }
