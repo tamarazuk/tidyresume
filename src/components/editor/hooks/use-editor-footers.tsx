@@ -39,6 +39,7 @@ interface UseEditorFootersOptions {
   cloudStatus?: SyncStatus
   hasCloudCopy?: boolean
   warningMessage?: string | null
+  isPreviewMode?: boolean
 }
 
 interface UseEditorFootersReturn {
@@ -148,168 +149,25 @@ function useEditorFooters({
   cloudStatus,
   hasCloudCopy,
   warningMessage,
+  isPreviewMode,
 }: UseEditorFootersOptions): UseEditorFootersReturn {
   const wordCount = useMemo(() => countWords(value), [value])
   const characterCount = useMemo(() => countCharacters(value), [value])
 
   const buildCustomFooter = useCallback(
     (id: CustomFooterItemId) => {
-      switch (id) {
-        case 'shortcutTips':
-          return (
-            <Popover key="footer-shortcut-tips">
-              <PopoverTrigger
-                type="button"
-                className={cn(
-                  'md-editor-footer-item text-muted-foreground hover:text-foreground hover:bg-accent inline-flex items-center gap-2 rounded-md px-2 py-1 text-xs font-medium transition'
-                )}
-                aria-label="Keyboard shortcuts"
-              >
-                <KeyboardIcon size={14} aria-hidden />
-                Shortcuts
-              </PopoverTrigger>
-              <PopoverContent
-                side="top"
-                align="start"
-                sideOffset={8}
-                className="bg-transparent p-0 shadow-none ring-0"
-              >
-                <EditorShortcutsMenu />
-              </PopoverContent>
-            </Popover>
-          )
-        case 'wordCount':
-          return (
-            <FooterMetric
-              key="footer-word-count"
-              label="Words"
-              value={wordCount}
-            />
-          )
-        case 'characterCount':
-          return (
-            <FooterMetric
-              key="footer-character-count"
-              label="Characters"
-              value={characterCount}
-            />
-          )
-        case 'saveStatus':
-          if (!saveStatus) return null
-          const resolvedCloudStatus = resolveCloudStatus(
-            cloudStatus,
-            hasCloudCopy
-          )
-          return (
-            <div
-              key="footer-save-status"
-              className="md-editor-footer-item flex flex-wrap items-center gap-2"
-            >
-              <Tooltip>
-                <TooltipTrigger
-                  render={(props) => {
-                    const { className: triggerClassName, ...rest } = props
-                    return (
-                      <span
-                        {...rest}
-                        className={cn('inline-flex', triggerClassName)}
-                      >
-                        <Badge
-                          variant="secondary"
-                          data-icon="inline-start"
-                          className={cn(
-                            'border',
-                            saveStatusConfig[saveStatus].badgeClassName
-                          )}
-                        >
-                          {saveStatusConfig[saveStatus].icon}
-                          <span>{saveStatusConfig[saveStatus].label}</span>
-                        </Badge>
-                      </span>
-                    )
-                  }}
-                />
-                <TooltipContent>{saveStatusTooltip}</TooltipContent>
-              </Tooltip>
-              {resolvedCloudStatus ? (
-                <Tooltip>
-                  <TooltipTrigger
-                    render={(props) => {
-                      const { className: triggerClassName, ...rest } = props
-                      return (
-                        <span
-                          {...rest}
-                          className={cn('inline-flex', triggerClassName)}
-                        >
-                          <Badge
-                            variant="secondary"
-                            data-icon="inline-start"
-                            className={cn(
-                              'border',
-                              cloudStatusConfig[resolvedCloudStatus]
-                                .badgeClassName
-                            )}
-                          >
-                            {cloudStatusConfig[resolvedCloudStatus].icon}
-                            <span>
-                              {cloudStatusConfig[resolvedCloudStatus].label}
-                            </span>
-                          </Badge>
-                        </span>
-                      )
-                    }}
-                  />
-                  <TooltipContent>
-                    {cloudStatusTooltip[resolvedCloudStatus]}
-                  </TooltipContent>
-                </Tooltip>
-              ) : null}
-            </div>
-          )
-        case 'warning':
-          if (!warningMessage) return null
-          return (
-            <div key="footer-warning" className="md-editor-footer-item">
-              <Tooltip>
-                <TooltipTrigger
-                  render={(props) => {
-                    const { className: triggerClassName, ...rest } = props
-                    return (
-                      <span
-                        {...rest}
-                        className={cn('inline-flex', triggerClassName)}
-                      >
-                        <Badge
-                          variant="secondary"
-                          data-icon="inline-start"
-                          className="border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300"
-                        >
-                          <WarningCircleIcon size={12} aria-hidden />
-                          <span>{warningMessage}</span>
-                        </Badge>
-                      </span>
-                    )
-                  }}
-                />
-                <TooltipContent>{warningTooltip}</TooltipContent>
-              </Tooltip>
-            </div>
-          )
-        default:
-          return null
-      }
-    },
-    [
-      characterCount,
-      cloudStatus,
-      hasCloudCopy,
-      saveStatus,
-      warningMessage,
-      wordCount,
-    ]
+// ...
+    }
+// ...
   )
 
   const { footers, defFooters } = useMemo(() => {
+    if (isPreviewMode) {
+      return {
+        defFooters: [],
+        footers: [],
+      }
+    }
     const footerElements: Array<string | ReactElement> = []
     const footerLayout: Footers[] = []
 

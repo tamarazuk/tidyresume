@@ -1,0 +1,8 @@
+{
+  "track_id": "owner_privacy_assurance_20260115",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-15T12:00:00Z",
+  "updated_at": "2026-01-15T12:00:00Z",
+  "description": "When an owner is viewing a public view of their resume, we need to make it clear to them that only they are able to see the additional edit buttons like the edit toolbar and the edit around the title. plan how to display this, either info icon within the toolbar or something similar that tells them not to worry, only they are able to see the edit flow."
+}

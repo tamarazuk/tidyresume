@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { RESUME_TITLE_MAX_LENGTH } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { useEditableResumeTitle } from '@/hooks/use-editable-resume-title'
+import { useEditorViewStore } from '@/stores/editor-view-store'
 
 interface EditableResumeTitleProps {
   id: string
@@ -32,11 +33,15 @@ export function EditableResumeTitle({
     handleBlur,
     handleKeyDown,
   } = useEditableResumeTitle({ id, title, content })
+  const isPreviewMode = useEditorViewStore(
+    (state) => state.editorViewState.isPreviewMode
+  )
+
   const baseClassName =
     'text-center text-lg font-semibold tracking-[-0.015em] text-foreground break-words sm:text-xl md:text-xl'
   const titleWidthClassName = 'min-w-72 w-[min(90vw,40rem)]'
 
-  if (!isOwner) {
+  if (!isOwner || isPreviewMode) {
     return (
       <div
         className={cn(baseClassName, titleWidthClassName, 'mx-auto', className)}

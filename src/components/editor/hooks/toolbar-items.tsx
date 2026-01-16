@@ -49,6 +49,8 @@ export type CustomToolbarItemId =
   | 'viewEditor'
   | 'viewSplit'
   | 'viewPreview'
+  | 'ownerBadge'
+  | 'previewToggle'
 
 export type AriaToolbarItemId =
   | 'bold'
@@ -161,6 +163,8 @@ export type ToolbarLayoutItem =
   | { type: 'align' }
 
 export const TOOLBAR_LAYOUT: ToolbarLayoutItem[] = [
+  { type: 'custom', id: 'ownerBadge' },
+  { type: 'separator' },
   { type: 'custom', id: 'undo' },
   { type: 'custom', id: 'redo' },
   { type: 'separator' },
@@ -185,6 +189,7 @@ export const TOOLBAR_LAYOUT: ToolbarLayoutItem[] = [
   { type: 'custom', id: 'editLink' },
   { type: 'custom', id: 'print' },
   { type: 'separator' },
+  { type: 'custom', id: 'previewToggle' },
   { type: 'custom', id: 'fullWidth' },
   { type: 'custom', id: 'viewEditor' },
   { type: 'custom', id: 'viewSplit' },

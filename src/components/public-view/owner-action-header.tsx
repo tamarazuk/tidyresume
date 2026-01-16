@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useOwnerActionHeader } from '@/hooks/use-owner-action-header'
+import { useEditorViewStore } from '@/stores/editor-view-store'
 import { cn } from '@/lib/utils'
 
 import { MagicLinkDialog } from '@/components/public-view/magic-link-dialog'
@@ -35,11 +36,14 @@ export function OwnerActionHeader({
 }: OwnerActionHeaderProps) {
   const { isOwner, isDeleting, handleDelete, handleShare, handleUrlUpdated } =
     useOwnerActionHeader({ id })
+  const isPreviewMode = useEditorViewStore(
+    (state) => state.editorViewState.isPreviewMode
+  )
   const WidthIcon = isFullWidth ? ArrowsInSimpleIcon : ArrowsOutSimpleIcon
   const widthLabel = isFullWidth ? 'Page width' : 'Full width'
   const widthText = isFullWidth ? 'Page' : 'Full'
 
-  if (!isOwner) return null
+  if (!isOwner || isPreviewMode) return null
 
   return (
     <>
