@@ -4,6 +4,7 @@ interface EditorViewState {
   preview: boolean
   previewOnly: boolean
   htmlPreview: boolean
+  isPreviewMode: boolean
 }
 
 interface EditorViewStore {
@@ -16,6 +17,7 @@ export const useEditorViewStore = create<EditorViewStore>((set) => ({
     preview: true,
     previewOnly: false,
     htmlPreview: false,
+    isPreviewMode: false,
   },
   setEditorViewState: (next) =>
     set((state) => ({
