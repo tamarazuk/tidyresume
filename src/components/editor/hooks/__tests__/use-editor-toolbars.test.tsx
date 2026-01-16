@@ -126,6 +126,7 @@ describe('useEditorToolbars image handling', () => {
         insert,
         on: vi.fn(),
         off: vi.fn(),
+        togglePreviewOnly: vi.fn(),
       },
     } as unknown as RefObject<ExposeParam | null>
 
@@ -156,6 +157,7 @@ describe('useEditorToolbars image handling', () => {
         insert,
         on: vi.fn(),
         off: vi.fn(),
+        togglePreviewOnly: vi.fn(),
       },
     } as unknown as RefObject<ExposeParam | null>
 

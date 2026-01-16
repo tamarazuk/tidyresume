@@ -5,7 +5,6 @@ import { sanitizeHtml } from '@/lib/sanitize-html'
 import { cn } from '@/lib/utils'
 import { initMdEditorConfig } from './config/editor-config'
 import { useEditorState } from './hooks'
-import { useEditorViewStore } from '@/stores/editor-view-store'
 import 'md-editor-rt/lib/style.css'
 
 import './styles.css'
@@ -25,9 +24,6 @@ export default function Editor() {
     footers,
     defFooters,
   } = useEditorState()
-  const isPreviewMode = useEditorViewStore(
-    (state) => state.editorViewState.isPreviewMode
-  )
 
   return (
     <div className="flex h-full flex-col">

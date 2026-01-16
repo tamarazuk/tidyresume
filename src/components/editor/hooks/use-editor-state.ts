@@ -5,7 +5,6 @@ import { usePrintCleanup } from '@/hooks/use-print-cleanup'
 import { usePrintTitle } from '@/hooks/use-print-title'
 import { useResumeSync } from '@/hooks/use-resume-sync'
 import { useResumeStore } from '@/stores/resume-store'
-import { useEditorViewStore } from '@/stores/editor-view-store'
 import { useEditorFooters } from './use-editor-footers'
 import { useEditorToolbars } from './use-editor-toolbars'
 
@@ -22,9 +21,6 @@ export function useEditorState() {
   const imageWarning = useResumeStore((state) => state.imageWarning)
   const contentWarning = useResumeStore((state) => state.contentWarning)
   const setText = useResumeStore((state) => state.setMarkdown)
-  const isPreviewMode = useEditorViewStore(
-    (state) => state.editorViewState.isPreviewMode
-  )
   const [isFullWidth, setIsFullWidth] = useState(false)
   const editorTheme = useTheme()
   const toggleFullWidth = useCallback(() => {
@@ -42,7 +38,6 @@ export function useEditorState() {
     cloudStatus: syncStatus,
     hasCloudCopy: Boolean(resumeId),
     warningMessage: contentWarning ?? imageWarning,
-    isPreviewMode,
   })
 
   return {
