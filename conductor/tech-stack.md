@@ -15,6 +15,8 @@ The core technologies used in TidyResume, chosen for performance, type safety, a
 - **ORM:** Drizzle ORM
 - **Database:** Cloudflare D1 (SQLite)
 - **Deployment:** Cloudflare Pages via OpenNext.
+- **Email:** Resend for transactional magic link delivery.
+- **Security:** Cloudflare Rate Limiting for abuse prevention on magic link and sync endpoints.
 
 ## Design & Theme
 - **Theme:** `next-themes` for Dark/Light mode support.
