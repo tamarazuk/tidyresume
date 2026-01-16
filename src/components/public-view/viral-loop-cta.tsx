@@ -3,6 +3,7 @@
 import { MagicWandIcon } from '@phosphor-icons/react/dist/ssr'
 import { cn } from '@/lib/utils'
 import { useOwnerCheck } from '@/hooks/use-owner-check'
+import { useState, useEffect } from 'react'
 
 interface ViralLoopCTAProps {
   resumeId: string
@@ -10,8 +11,19 @@ interface ViralLoopCTAProps {
 
 export function ViralLoopCTA({ resumeId }: ViralLoopCTAProps) {
   const isOwner = useOwnerCheck(resumeId)
+  const [isVisible, setIsVisible] = useState(false)
 
-  if (isOwner) {
+  useEffect(() => {
+    if (isOwner) return
+
+    const timer = setTimeout(() => {
+      setIsVisible(true)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [isOwner])
+
+  if (isOwner || !isVisible) {
     return null
   }
 
