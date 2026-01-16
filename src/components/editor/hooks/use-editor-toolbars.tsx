@@ -83,9 +83,8 @@ function useEditorToolbars({
   const resumeId = useResumeStore((state) => state.id)
   const setImageWarning = useResumeStore((state) => state.setImageWarning)
 
-  const viewMode = editorViewState.isPreviewMode
-    ? 'preview'
-    : editorViewState.previewOnly || editorViewState.htmlPreview
+  const viewMode =
+    editorViewState.previewOnly || editorViewState.htmlPreview
       ? 'preview'
       : editorViewState.preview
         ? 'split'
@@ -129,14 +128,6 @@ function useEditorToolbars({
       }
     }
   }, [editorRef, setEditorViewState])
-
-  useEffect(() => {
-    if (editorViewState.isPreviewMode) {
-      editorRef.current?.togglePreviewOnly(true)
-    } else {
-      editorRef.current?.togglePreviewOnly(false)
-    }
-  }, [editorViewState.isPreviewMode, editorRef])
 
   const insertDivider = useCallback(() => {
     editorRef.current?.insert(() => ({
@@ -679,7 +670,6 @@ function useEditorToolbars({
   const { defToolbars, toolbars } = useMemo(() => {
     const toolbarElements: ReactElement[] = []
     const toolbarLayout: ToolbarNames[] = []
-    const isPreviewMode = editorViewState.isPreviewMode
 
     const pushToolbar = (element: ReactElement | null) => {
       if (!element) return
@@ -689,17 +679,6 @@ function useEditorToolbars({
     }
 
     TOOLBAR_LAYOUT.forEach((item: ToolbarLayoutItem) => {
-      // In preview mode, only show specific items
-      if (isPreviewMode) {
-        if (item.type === 'custom' && item.id === 'previewToggle') {
-          pushToolbar(buildCustomToolbar(item.id))
-        }
-        if (item.type === 'custom' && item.id === 'ownerBadge') {
-          pushToolbar(buildCustomToolbar(item.id))
-        }
-        return
-      }
-
       if (item.type === 'separator') {
         toolbarLayout.push('-')
         return
@@ -749,7 +728,6 @@ function useEditorToolbars({
     }
   }, [
     buildCustomToolbar,
-    editorViewState.isPreviewMode,
     formatShortcutKeys,
     handleAriaToolbarAction,
     renderShortcutTooltip,
