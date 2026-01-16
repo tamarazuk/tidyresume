@@ -14,6 +14,15 @@ export async function POST(request: Request) {
     }
 
     const { env } = await getCloudflareContext({ async: true })
+
+    // Rate limiting
+    if (env.RATE_LIMITER) {
+      const { success } = await env.RATE_LIMITER.limit({ key: `magic-link:${email}` })
+      if (!success) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+      }
+    }
+
     const db = getDb(env.DB)
 
     // Check if resume exists
