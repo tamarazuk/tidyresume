@@ -27,7 +27,7 @@ Implement ownership verification for both claimed and anonymous resumes.
 - [x] Task: Update `publishResume` to generate and return `deleteSecret` for new anonymous resumes 6494dec
 - [x] Task: Update frontend to store `deleteSecret` in localStorage for anonymous resumes 6494dec
 - [x] Task: Implement ownership verification in the `DELETE` API route 6494dec
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Secure Resume Deletion' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Secure Resume Deletion' (Protocol in workflow.md)
 
 ## Phase 4: Reliable Resume Sync
 Enhance the sync mechanism with automatic retries and a manual recovery UI.
@@ -35,7 +35,7 @@ Enhance the sync mechanism with automatic retries and a manual recovery UI.
 - [x] Task: Write failing unit tests for `useResumeSync` retry logic (using fake timers) 6494dec
 - [x] Task: Implement exponential backoff retry in `useResumeSync` (up to 3 attempts) 6494dec
 - [x] Task: Update the editor footer to include a "Retry" button when sync remains in error state 6494dec
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Reliable Resume Sync' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Reliable Resume Sync' (Protocol in workflow.md)
 
 ## Future Tasks
-- [ ] Task: Re-test email rate limiting in a production-like environment (Preview/Staging) to confirm limits are enforced.
+- [x] Task: Re-test email rate limiting in a production-like environment (Preview/Staging) to confirm limits are enforced.
