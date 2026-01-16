@@ -90,6 +90,10 @@ export default function ComponentName({
 }: ComponentNameProps) { }
 ```
 
+### React 19
+- **Avoid `forwardRef`**: React 19 allows passing `ref` as a regular prop to function components. Do not use `forwardRef`.
+- **Use Actions**: Prefer React Server Actions for form submissions and mutations where applicable.
+
 ### Styling
 ```tsx
 // Use cn() for conditional classes
