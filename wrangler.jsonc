@@ -43,7 +43,7 @@
         "namespace_id": "1001",
         "simple": {
           "limit": 3,
-          "period": 3600
+          "period": 60
         }
       }
     ]

@@ -19,7 +19,12 @@ export async function POST(request: Request) {
     // Construct the view URL
     const url = result.slug ? `/r/${result.slug}` : `/r/${result.id}`
 
-    return NextResponse.json({ id: result.id, slug: result.slug, url })
+    return NextResponse.json({
+      id: result.id,
+      slug: result.slug,
+      url,
+      deleteSecret: result.deleteSecret,
+    })
   } catch (error: unknown) {
     if (error instanceof Error && error.message === 'Slug already taken') {
       return NextResponse.json({ error: 'Slug already taken' }, { status: 409 })
