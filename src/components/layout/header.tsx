@@ -41,7 +41,7 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
       <div className="flex items-center gap-4">
         <Link
           href="/"
-          className="flex size-10 items-center justify-center"
+          className="flex size-12 items-center justify-center"
           aria-label="TidyResume home"
         >
           <AppIcon className="h-full w-full" />
