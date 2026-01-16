@@ -33,12 +33,12 @@ Finalize the link behavior and hover states.
 - [x] Task: Implement New Tab Navigation (2e3e696)
     - [x] Write tests to verify clicking the button opens `/edit` in a new tab (Red Phase)
     - [x] Implement `ButtonLink` or standard `a` tag with `target="_blank"` (Green Phase)
-- [~] Task: Add Hover Tooltip
-    - [ ] Write tests for tooltip visibility on hover (Red Phase)
-    - [ ] Implement tooltip using `@base-ui/react` primitives (Green Phase)
-- [ ] Task: Hide from Print
-    - [ ] Verify `print:hidden` is applied (Red Phase)
-    - [ ] Implement `print:hidden` utility class (Green Phase)
+- [x] Task: Add Hover Tooltip (cc1b593)
+    - [x] Write tests for tooltip visibility on hover (Red Phase)
+    - [x] Implement tooltip using `@base-ui/react` primitives (Green Phase)
+- [x] Task: Hide from Print (cc1b593)
+    - [x] Verify `print:hidden` is applied (Red Phase)
+    - [x] Implement `print:hidden` utility class (Green Phase)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Interactions & Tooltip' (Protocol in workflow.md)
 
 ## Phase 4: Phase 4 Cleanup
