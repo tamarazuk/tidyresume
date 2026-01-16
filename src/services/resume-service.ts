@@ -44,12 +44,15 @@ export async function publishResume(
   }
 ) {
   let resumeId = data.id
-  let deleteSecret: string | undefined
 
   if (!resumeId) {
     resumeId = crypto.randomUUID()
-    deleteSecret = crypto.randomUUID()
   }
+
+  // Always generate a candidate secret.
+  // If it's an INSERT (new or previously deleted), this will be used.
+  // If it's an UPDATE (existing), this will be ignored because it's not in the 'set' clause.
+  const candidateDeleteSecret = crypto.randomUUID()
 
   const slugVal = data.slug ?? null
 
@@ -58,15 +61,12 @@ export async function publishResume(
     title: data.title,
     content: data.content,
     slug: slugVal,
-  }
-
-  if (deleteSecret) {
-    values.deleteSecret = deleteSecret
+    deleteSecret: candidateDeleteSecret,
   }
 
   try {
     // Drizzle SQLite upsert
-    await db
+    const results = await db
       .insert(resumes)
       .values(values)
       .onConflictDoUpdate({
@@ -78,12 +78,17 @@ export async function publishResume(
           updatedAt: new Date(),
         },
       })
+      .returning({
+        id: resumes.id,
+        slug: resumes.slug,
+        deleteSecret: resumes.deleteSecret,
+      })
+
+    return results[0]
   } catch (error) {
     if (isUniqueConstraintViolation(error)) {
       throw new Error('Slug already taken')
     }
     throw error
   }
-
-  return { id: resumeId, slug: slugVal, deleteSecret }
 }

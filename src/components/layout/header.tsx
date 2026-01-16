@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import {
   CloudArrowUpIcon,
+  CloudSlashIcon,
   EyeIcon,
   SpinnerGapIcon,
 } from '@phosphor-icons/react/dist/ssr'
@@ -31,8 +32,10 @@ interface HeaderProps {
 }
 
 export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
-  const { isPublishing, publishResume } = usePublish()
+  const { isPublishing, isUnpublishing, publishResume, unpublishResume } =
+    usePublish()
   const resumeId = useResumeStore((state) => state.id)
+  const isPublished = useResumeStore((state) => state.isPublished)
   const resumeTitle = useResumeStore((state) => state.resumeTitle)
   const isUntitled = resumeTitle === DEFAULT_RESUME_TITLE
 
@@ -61,30 +64,54 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
           <TooltipContent>Toggle theme</TooltipContent>
         </Tooltip>
         <div className="ml-1 flex items-center gap-2 sm:ml-3">
-          {resumeId ? (
-            <Tooltip>
-              <TooltipTrigger
-                render={(props) => (
-                  <Link
-                    {...props}
-                    href={getResumeUrl(
-                      resumeId,
-                      useResumeStore.getState().slug
-                    )}
-                    target="_blank"
-                    className={cn(
-                      buttonVariants({ variant: 'default' }),
-                      'gap-2'
-                    )}
-                    aria-label="View resume"
-                  >
-                    <EyeIcon size={16} />
-                    View
-                  </Link>
-                )}
-              />
-              <TooltipContent>View</TooltipContent>
-            </Tooltip>
+          {isPublished ? (
+            <div className="flex items-center gap-2">
+              <Tooltip>
+                <TooltipTrigger
+                  render={(props) => (
+                    <Button
+                      {...props}
+                      variant="ghost"
+                      size="icon"
+                      onClick={unpublishResume}
+                      disabled={isUnpublishing}
+                      className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive h-10 w-10"
+                      aria-label="Unpublish resume"
+                    >
+                      {isUnpublishing ? (
+                        <SpinnerGapIcon size={16} className="animate-spin" />
+                      ) : (
+                        <CloudSlashIcon size={16} />
+                      )}
+                    </Button>
+                  )}
+                />
+                <TooltipContent>Unpublish</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger
+                  render={(props) => (
+                    <Link
+                      {...props}
+                      href={getResumeUrl(
+                        resumeId,
+                        useResumeStore.getState().slug
+                      )}
+                      target="_blank"
+                      className={cn(
+                        buttonVariants({ variant: 'default' }),
+                        'gap-2'
+                      )}
+                      aria-label="View resume"
+                    >
+                      <EyeIcon size={16} />
+                      View
+                    </Link>
+                  )}
+                />
+                <TooltipContent>View</TooltipContent>
+              </Tooltip>
+            </div>
           ) : isUntitled ? (
             <Popover>
               <PopoverTrigger

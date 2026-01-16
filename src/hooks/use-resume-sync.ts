@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { publishResume, type PublishResumePayload } from '@/lib/resume-api'
+import { publishResume, type PublishResumePayload, isResumeApiError } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
 const CLOUD_SYNC_DEBOUNCE_MS = 2500
@@ -9,6 +9,7 @@ export function useResumeSync() {
   const title = useResumeStore((state) => state.resumeTitle)
   const content = useResumeStore((state) => state.markdown)
   const slug = useResumeStore((state) => state.slug)
+  const isPublished = useResumeStore((state) => state.isPublished)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const [retryTrigger, setRetryTrigger] = useState(0)
 
@@ -28,8 +29,8 @@ export function useResumeSync() {
       return
     }
 
-    // Only sync if we have an ID (already published)
-    if (!id) {
+    // Only sync if we have an ID AND it is currently published
+    if (!id || !isPublished) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
@@ -87,6 +88,12 @@ export function useResumeSync() {
         } catch (error) {
           if ((error as Error).name === 'AbortError') return
 
+          // If the resume no longer exists on the server (404), stop syncing and unpublish
+          if (isResumeApiError(error) && error.status === 404) {
+            useResumeStore.getState().unpublish()
+            return
+          }
+
           attempt++
           if (attempt >= maxRetries) {
             console.error('Auto-sync error:', error)
@@ -109,7 +116,7 @@ export function useResumeSync() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [id, title, content, slug, setSyncStatus, retryTrigger])
+  }, [id, title, content, slug, isPublished, setSyncStatus, retryTrigger])
 
   return { retry: () => setRetryTrigger((prev) => prev + 1) }
 }

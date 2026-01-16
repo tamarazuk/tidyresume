@@ -14,6 +14,17 @@ export async function POST(request: Request) {
     const { env } = await getCloudflareContext({ async: true })
     const db = getDb(env.DB)
 
+    // Security Check: If updating an existing resume, verify the deleteSecret
+    if (body.id) {
+      const existingResume = await resumeService.getResume(db, body.id)
+      if (existingResume) {
+        const secretHeader = request.headers.get('X-Delete-Secret')
+        if (!existingResume.deleteSecret || secretHeader !== existingResume.deleteSecret) {
+          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+      }
+    }
+
     const result = await resumeService.publishResume(db, body)
 
     // Construct the view URL

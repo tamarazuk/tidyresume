@@ -6,6 +6,7 @@ import { publishResume } from '@/lib/resume-api'
 // Mock dependencies
 vi.mock('@/lib/resume-api', () => ({
   publishResume: vi.fn(),
+  isResumeApiError: vi.fn((err) => 'status' in err),
 }))
 
 const setSyncStatus = vi.fn()
@@ -14,6 +15,7 @@ let storeState = {
   resumeTitle: 'Title',
   markdown: 'Content',
   slug: 'slug',
+  isPublished: true,
   setSyncStatus,
 }
 
@@ -30,6 +32,7 @@ describe('useResumeSync', () => {
       resumeTitle: 'Title',
       markdown: 'Content',
       slug: 'slug',
+      isPublished: true,
       setSyncStatus,
     }
   })

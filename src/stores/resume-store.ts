@@ -20,6 +20,7 @@ interface ResumeState {
   markdown: string
   saveStatus: SaveStatus
   syncStatus: 'synced' | 'syncing' | 'error' | 'unsaved'
+  isPublished: boolean
   imageWarning: string | null
   contentWarning: string | null
   setResumeTitle: (resumeTitle: string) => void
@@ -31,8 +32,10 @@ interface ResumeState {
   setId: (id: ResumeId | null) => void
   setSlug: (slug: ResumeSlug) => void
   setDeleteSecret: (deleteSecret: string | null) => void
+  setIsPublished: (isPublished: boolean) => void
   setImageWarning: (imageWarning: string | null) => void
   setContentWarning: (contentWarning: string | null) => void
+  unpublish: () => void
   resetResume: () => void
 }
 
@@ -60,6 +63,7 @@ export const useResumeStore = create<ResumeState>()(
         markdown: DEFAULT_RESUME,
         saveStatus: 'saved',
         syncStatus: 'unsaved',
+        isPublished: false,
         imageWarning: null,
         contentWarning: null,
         setResumeTitle: (resumeTitle) => {
@@ -84,8 +88,10 @@ export const useResumeStore = create<ResumeState>()(
         setId: (id) => set({ id }),
         setSlug: (slug) => set({ slug }),
         setDeleteSecret: (deleteSecret) => set({ deleteSecret }),
+        setIsPublished: (isPublished) => set({ isPublished }),
         setImageWarning: (imageWarning) => set({ imageWarning }),
         setContentWarning: (contentWarning) => set({ contentWarning }),
+        unpublish: () => set({ syncStatus: 'unsaved', isPublished: false }),
         resetResume: () =>
           set({
             id: null,
@@ -95,6 +101,7 @@ export const useResumeStore = create<ResumeState>()(
             markdown: '',
             saveStatus: 'saved',
             syncStatus: 'unsaved',
+            isPublished: false,
             imageWarning: null,
             contentWarning: null,
           }),
@@ -117,6 +124,7 @@ export const useResumeStore = create<ResumeState>()(
           id: state.id ?? null,
           slug: state.slug ?? null,
           deleteSecret: state.deleteSecret ?? null,
+          isPublished: state.isPublished ?? false,
           syncStatus: 'unsaved', // Reset to unsaved on migration
           imageWarning: state.imageWarning ?? null,
           contentWarning: state.contentWarning ?? null,

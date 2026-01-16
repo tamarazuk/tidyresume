@@ -4,6 +4,7 @@ import { useTheme } from '@/hooks/use-theme'
 import { usePrintCleanup } from '@/hooks/use-print-cleanup'
 import { usePrintTitle } from '@/hooks/use-print-title'
 import { useResumeSync } from '@/hooks/use-resume-sync'
+import { useRemoteStatus } from '@/hooks/use-remote-status'
 import { useResumeStore } from '@/stores/resume-store'
 import { useEditorFooters } from './use-editor-footers'
 import { useEditorToolbars } from './use-editor-toolbars'
@@ -12,6 +13,7 @@ export function useEditorState() {
   usePrintCleanup()
   usePrintTitle()
   const { retry } = useResumeSync()
+  useRemoteStatus()
 
   const editorRef = useRef<ExposeParam>(null)
   const text = useResumeStore((state) => state.markdown)

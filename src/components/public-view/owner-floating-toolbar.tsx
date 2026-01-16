@@ -4,13 +4,13 @@ import Link from 'next/link'
 import {
   ArrowsInSimpleIcon,
   ArrowsOutSimpleIcon,
+  CloudSlashIcon,
   EyeIcon,
   EyeSlashIcon,
   InfoIcon,
   PencilSimpleIcon,
   ShareFatIcon,
   SpinnerGapIcon,
-  TrashIcon,
 } from '@phosphor-icons/react/dist/ssr'
 import { SlugSettings } from '@/components/layout/slug-settings'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -102,8 +102,13 @@ export function OwnerFloatingToolbar({
   isFullWidth,
   onToggleWidth,
 }: OwnerFloatingToolbarProps) {
-  const { isOwner, isDeleting, handleDelete, handleShare, handleUrlUpdated } =
-    useOwnerFloatingToolbar({ id })
+  const {
+    isOwner,
+    isUnpublishing,
+    handleUnpublish,
+    handleShare,
+    handleUrlUpdated,
+  } = useOwnerFloatingToolbar({ id })
   const isPreviewMode = usePublicViewStore(
     (state) => state.publicViewState.isPreviewMode
   )
@@ -129,7 +134,7 @@ export function OwnerFloatingToolbar({
 
   return (
     <>
-      {isDeleting ? (
+      {isUnpublishing ? (
         <div className="no-print bg-background/80 fixed inset-0 z-60 flex items-center justify-center px-4 backdrop-blur-sm">
           <div
             className="border-border bg-background text-foreground flex max-w-sm items-center gap-3 rounded-lg border px-4 py-3 shadow-lg"
@@ -138,7 +143,7 @@ export function OwnerFloatingToolbar({
           >
             <SpinnerGapIcon size={20} className="text-primary animate-spin" />
             <div className="space-y-0.5 text-sm">
-              <p className="font-medium">Deleting resume...</p>
+              <p className="font-medium">Unpublishing resume...</p>
               <p className="text-muted-foreground text-xs">
                 You will be redirected shortly.
               </p>
@@ -275,18 +280,18 @@ export function OwnerFloatingToolbar({
                   )}
                   onClick={(event) => {
                     onClick?.(event)
-                    handleDelete()
+                    handleUnpublish()
                   }}
-                  disabled={isDeleting}
-                  aria-label="Delete resume"
+                  disabled={isUnpublishing}
+                  aria-label="Unpublish resume"
                 >
-                  <TrashIcon size={16} />
+                  <CloudSlashIcon size={16} />
                 </Button>
               )
             }}
           />
           <TooltipContent side="right" align="center" sideOffset={8}>
-            Delete
+            Unpublish
           </TooltipContent>
         </Tooltip>
         <OwnerViewInfo />

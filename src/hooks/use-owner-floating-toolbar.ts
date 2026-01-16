@@ -13,10 +13,10 @@ interface UseOwnerFloatingToolbarOptions {
 export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) {
   const isOwner = useOwnerCheck(id)
   const router = useRouter()
-  const resetResume = useResumeStore((state) => state.resetResume)
+  const unpublish = useResumeStore((state) => state.unpublish)
   const slug = useResumeStore((state) => state.slug)
   const deleteSecret = useResumeStore((state) => state.deleteSecret)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isUnpublishing, setIsUnpublishing] = useState(false)
 
   const getShareUrl = () => {
     const shareId = slug || id
@@ -29,23 +29,20 @@ export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) 
     })
   }
 
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this resume?')) return
+  const handleUnpublish = async () => {
+    if (!confirm('Are you sure? Your public link will stop working immediately.')) return
 
-    setIsDeleting(true)
-    let didRedirect = false
+    setIsUnpublishing(true)
     try {
       await deleteResume(id, { deleteSecret })
-      resetResume()
-      didRedirect = true
-      router.push('/?toast=resume-deleted')
+      unpublish()
+      toast.success('Resume unpublished successfully')
+      router.push('/edit')
     } catch (error) {
-      console.error(`An error occured while deleting the resume: ${error}`)
-      toast.error('Failed to delete resume')
+      console.error(`An error occured while unpublishing the resume: ${error}`)
+      toast.error('Failed to unpublish resume')
     } finally {
-      if (!didRedirect) {
-        setIsDeleting(false)
-      }
+      setIsUnpublishing(false)
     }
   }
 
@@ -70,8 +67,8 @@ export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) 
 
   return {
     isOwner,
-    isDeleting,
-    handleDelete,
+    isUnpublishing,
+    handleUnpublish,
     handleShare,
     handleUrlUpdated,
   }

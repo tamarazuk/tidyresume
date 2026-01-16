@@ -18,6 +18,7 @@ export async function GET(
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { deleteSecret: _deleteSecret, userEmail: _userEmail, ...safeResume } = resume
     return NextResponse.json(safeResume)
   } catch (error) {

@@ -28,6 +28,19 @@ describe('resume-service', () => {
 
     // Setup insert chain mock
     const onConflictDoUpdateMock = vi.fn().mockResolvedValue(undefined)
+    // .returning() mock needed:
+    const returningMock = vi.fn().mockResolvedValue([{ id: 'id', deleteSecret: 'ds' }])
+    
+    // In the failing test case, onConflictDoUpdate throws, so returning won't be called,
+    // BUT the mock setup in beforeEach needs to handle the structure.
+    // AND the implementation calls .returning() AFTER .onConflictDoUpdate().
+    
+    // The implementation:
+    // await db.insert().values().onConflictDoUpdate().returning()
+    
+    // So onConflictDoUpdate should return an object that has .returning()
+    onConflictDoUpdateMock.mockReturnValue({ returning: returningMock })
+
     const valuesMock = vi.fn().mockReturnValue({
       onConflictDoUpdate: onConflictDoUpdateMock,
     })
@@ -50,7 +63,13 @@ describe('resume-service', () => {
     uniqueConstraintError.cause = { code: 'SQLITE_CONSTRAINT' }
 
     const valuesMock = mockDb.insert().values
-    valuesMock().onConflictDoUpdate.mockRejectedValueOnce(uniqueConstraintError)
+    const onConflictDoUpdateMock = valuesMock().onConflictDoUpdate
+    
+    // The implementation calls .returning(), so we must simulate the error there
+    // because .onConflictDoUpdate is now a builder step, not the final awaitable.
+    onConflictDoUpdateMock.mockReturnValueOnce({
+      returning: vi.fn().mockRejectedValueOnce(uniqueConstraintError)
+    })
 
     await expect(
       publishResume(mockDb, {
