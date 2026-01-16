@@ -11,7 +11,10 @@ Focus on creating the component structure and ensuring it only shows for visitor
 - [x] Task: Integrate `useOwnerCheck` logic (d940fd2)
     - [x] Write tests ensuring component is hidden when `isOwner` is true (Red Phase)
     - [x] Implement logic to return `null` if user is the owner (Green Phase)
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Owner Detection' (Protocol in workflow.md)
+- [x] Task: Integrate `ViralLoopCTA` into `src/app/r/[slug]/page.tsx` (4ddb98a)
+    - [x] Verify the component renders in the page layout (Red Phase)
+    - [x] Place component in the root div of the page (Green Phase)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Owner Detection' (Protocol in workflow.md)
 
 ## Phase 2: Timing & Animation
 Add the 2-second delay and the slide-up entry animation.
@@ -38,10 +41,6 @@ Finalize the link behavior and hover states.
     - [ ] Implement `print:hidden` utility class (Green Phase)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Interactions & Tooltip' (Protocol in workflow.md)
 
-## Phase 4: Integration
-Add the component to the main public resume page.
+## Phase 4: Phase 4 Cleanup
+Final Polish and check.
 
-- [ ] Task: Integrate `ViralLoopCTA` into `src/app/r/[slug]/page.tsx`
-    - [ ] Verify the component renders in the page layout (Red Phase)
-    - [ ] Place component in the root div of the page (Green Phase)
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Integration' (Protocol in workflow.md)
