@@ -2,7 +2,7 @@
 
 This plan follows the TDD-first workflow defined in `conductor/workflow.md`.
 
-## Phase 1: Foundation & Owner Detection
+## Phase 1: Foundation & Owner Detection [checkpoint: ae18ff9]
 Focus on creating the component structure and ensuring it only shows for visitors.
 
 - [x] Task: Create the `ViralLoopCTA` component shell and base styling (d940fd2)
