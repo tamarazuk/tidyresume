@@ -27,8 +27,7 @@ Add the 2-second delay and the slide-up entry animation.
     - [x] Implement Tailwind transition/animation classes (Green Phase)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Timing & Animation' (Protocol in workflow.md)
 
-## Phase 3: Interactions & Tooltip
-Finalize the link behavior and hover states.
+## Phase 3: Interactions & Tooltip [checkpoint: 2a58019]
 
 - [x] Task: Implement New Tab Navigation (2e3e696)
     - [x] Write tests to verify clicking the button opens `/edit` in a new tab (Red Phase)
@@ -39,8 +38,10 @@ Finalize the link behavior and hover states.
 - [x] Task: Hide from Print (cc1b593)
     - [x] Verify `print:hidden` is applied (Red Phase)
     - [x] Implement `print:hidden` utility class (Green Phase)
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Interactions & Tooltip' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Interactions & Tooltip' (Protocol in workflow.md)
 
 ## Phase 4: Phase 4 Cleanup
 Final Polish and check.
+
+- [x] Task: Conductor - Final Track Review
 
