@@ -1,2 +1,6 @@
-# Initial Concept
-Add a tasteful floating button or something that shows in the public view for users who are viewing a resume (so it's not their resume) that gives a little bit of a call to action to "want to create your own resume?" or something cleverer and then open a new tap to our editor so they can start a fresh resume for themselves
+# Product Definition
+
+## Core Features
+
+### Viral Growth
+- **Viral Loop CTA:** A tasteful, pill-shaped floating CTA on public resume views that invites visitors to "Tidy up your resume". It features a 2-second delayed slide-up animation, a helpful hover tooltip, and opens the editor in a new tab. It is automatically hidden for resume owners and excluded from print layouts.
