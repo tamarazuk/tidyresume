@@ -18,7 +18,7 @@ let storeState = {
 }
 
 vi.mock('@/stores/resume-store', () => ({
-  useResumeStore: (selector: any) => selector(storeState),
+  useResumeStore: <T>(selector: (state: typeof storeState) => T) => selector(storeState),
 }))
 
 describe('useResumeSync', () => {

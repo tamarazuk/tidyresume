@@ -57,7 +57,7 @@ export function ViralLoopCTA({ resumeId }: ViralLoopCTAProps) {
           )}
         />
         <TooltipContent side="left" sideOffset={16}>
-          It's free and takes minutes
+          It&apos;s free and takes minutes
         </TooltipContent>
       </Tooltip>
     </div>

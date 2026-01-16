@@ -24,7 +24,9 @@ describe('POST /api/auth/generate-token', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(getCloudflareContext).mockResolvedValue({ env: mockEnv } as any)
+    vi.mocked(getCloudflareContext).mockResolvedValue({
+      env: mockEnv,
+    } as unknown as Awaited<ReturnType<typeof getCloudflareContext>>)
   })
 
   it('should return 429 when rate limit is exceeded', async () => {

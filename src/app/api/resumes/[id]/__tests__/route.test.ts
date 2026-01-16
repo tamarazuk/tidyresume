@@ -22,15 +22,17 @@ describe('DELETE /api/resumes/[id]', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(getCloudflareContext).mockResolvedValue({ env: { DB: {} } } as any)
-    vi.mocked(getDb).mockReturnValue(mockDb as any)
+    vi.mocked(getCloudflareContext).mockResolvedValue({
+      env: { DB: {} },
+    } as unknown as Awaited<ReturnType<typeof getCloudflareContext>>)
+    vi.mocked(getDb).mockReturnValue(mockDb as unknown as ReturnType<typeof getDb>)
   })
 
   it('should return 401 if delete secret header is missing', async () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'test-id',
       deleteSecret: 'secret-123',
-    } as any)
+    } as unknown as Awaited<ReturnType<typeof resumeService.getResume>>)
 
     const request = new Request('http://localhost/api/resumes/test-id', {
       method: 'DELETE',
@@ -44,7 +46,7 @@ describe('DELETE /api/resumes/[id]', () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'test-id',
       deleteSecret: 'secret-123',
-    } as any)
+    } as unknown as Awaited<ReturnType<typeof resumeService.getResume>>)
 
     const request = new Request('http://localhost/api/resumes/test-id', {
       method: 'DELETE',
@@ -61,7 +63,7 @@ describe('DELETE /api/resumes/[id]', () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'test-id',
       deleteSecret: 'secret-123',
-    } as any)
+    } as unknown as Awaited<ReturnType<typeof resumeService.getResume>>)
 
     const request = new Request('http://localhost/api/resumes/test-id', {
       method: 'DELETE',

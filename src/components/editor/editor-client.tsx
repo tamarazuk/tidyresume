@@ -75,7 +75,7 @@ function TokenHandler() {
     }
 
     verifyToken()
-  }, [token, router, setId, setSlug, setResumeTitle, setMarkdown])
+  }, [token, router, setId, setSlug, setResumeTitle, setMarkdown, setDeleteSecret])
 
   return null
 }
