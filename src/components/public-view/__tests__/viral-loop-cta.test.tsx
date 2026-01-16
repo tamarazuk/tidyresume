@@ -45,14 +45,14 @@ describe('ViralLoopCTA', () => {
     
     render(<ViralLoopCTA resumeId="test-id" />)
     
-    // Should not be visible immediately
-    expect(screen.queryByText(/Tidy up your resume/i)).not.toBeInTheDocument()
+    // Should be invisible immediately
+    expect(screen.getByRole('button').parentElement).toHaveClass('opacity-0')
     
-    // Advance timers by 1999ms - still should not be visible
+    // Advance timers by 1999ms - still should be invisible
     act(() => {
       vi.advanceTimersByTime(1999)
     })
-    expect(screen.queryByText(/Tidy up your resume/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('button').parentElement).toHaveClass('opacity-0')
 
     // Advance to 2000ms
     act(() => {
@@ -60,6 +60,19 @@ describe('ViralLoopCTA', () => {
     })
     
     // Should be visible now
-    expect(screen.getByText(/Tidy up your resume/i)).toBeInTheDocument()
+    expect(screen.getByRole('button').parentElement).toHaveClass('opacity-100')
+  })
+
+  it('applies animation classes when visible', () => {
+    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    render(<ViralLoopCTA resumeId="test-id" />)
+    
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
+
+    const container = screen.getByRole('button').parentElement
+    expect(container).toHaveClass('translate-y-0', 'opacity-100')
+    expect(container).not.toHaveClass('translate-y-10', 'opacity-0')
   })
 })
