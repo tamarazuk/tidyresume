@@ -44,7 +44,9 @@ export async function sendMagicLinkEmail(email: string, link: string) {
   const emailsDisabled = outboundEmailsDisabled || legacyMagicLinkDisabled
 
   if (emailsDisabled) {
-    logMagicLink('Emails Disabled', link)
+    if (isDevelopment) {
+      logMagicLink('Emails Disabled', link)
+    }
     return
   }
 
@@ -81,7 +83,9 @@ export async function sendMagicLinkEmail(email: string, link: string) {
       throw new Error(error.message)
     }
 
-    console.log(`Email sent to ${email}, ID: ${data?.id}`)
+    if (isDevelopment) {
+      console.log(`Email sent to ${email}, ID: ${data?.id}`)
+    }
   } catch (error) {
     console.error('Failed to send email:', error)
     throw error
