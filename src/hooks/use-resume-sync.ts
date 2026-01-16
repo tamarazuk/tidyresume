@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { publishResume, type PublishResumePayload } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
@@ -10,6 +10,7 @@ export function useResumeSync() {
   const content = useResumeStore((state) => state.markdown)
   const slug = useResumeStore((state) => state.slug)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
+  const [retryTrigger, setRetryTrigger] = useState(0)
 
   const mounted = useRef(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -46,7 +47,8 @@ export function useResumeSync() {
     }
 
     const payloadKey = JSON.stringify(payload)
-    if (payloadKey === lastSyncedKeyRef.current) {
+    // If retry triggered, ignore the key check to force retry
+    if (payloadKey === lastSyncedKeyRef.current && retryTrigger === 0) {
       return
     }
 
@@ -59,7 +61,12 @@ export function useResumeSync() {
 
     timeoutRef.current = setTimeout(async () => {
       const pending = pendingRef.current
-      if (!pending || pending.key === lastSyncedKeyRef.current) {
+      if (!pending) {
+        return
+      }
+      
+      // If NOT a manual retry (retryTrigger > 0), check if we already synced this key
+      if (retryTrigger === 0 && pending.key === lastSyncedKeyRef.current) {
         return
       }
 
@@ -67,22 +74,42 @@ export function useResumeSync() {
       const controller = new AbortController()
       abortControllerRef.current = controller
 
-      try {
-        await publishResume(pending.payload, { signal: controller.signal })
+      const maxRetries = 3
+      let attempt = 0
+      let success = false
 
+      while (attempt < maxRetries && !success) {
+        if (controller.signal.aborted) return
+
+        try {
+          await publishResume(pending.payload, { signal: controller.signal })
+          success = true
+        } catch (error) {
+          if ((error as Error).name === 'AbortError') return
+
+          attempt++
+          if (attempt >= maxRetries) {
+            console.error('Auto-sync error:', error)
+            setSyncStatus('error')
+            return
+          }
+
+          // Exponential backoff: 1s, 2s, 4s
+          const delay = Math.pow(2, attempt - 1) * 1000
+          await new Promise((resolve) => setTimeout(resolve, delay))
+        }
+      }
+
+      if (success) {
         lastSyncedKeyRef.current = pending.key
         setSyncStatus('synced')
-      } catch (error) {
-        if ((error as Error).name === 'AbortError') {
-          return
-        }
-        console.error('Auto-sync error:', error)
-        setSyncStatus('error')
       }
     }, CLOUD_SYNC_DEBOUNCE_MS)
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [id, title, content, slug, setSyncStatus])
+  }, [id, title, content, slug, setSyncStatus, retryTrigger])
+
+  return { retry: () => setRetryTrigger((prev) => prev + 1) }
 }

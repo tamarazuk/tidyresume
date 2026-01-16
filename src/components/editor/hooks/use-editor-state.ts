@@ -11,7 +11,7 @@ import { useEditorToolbars } from './use-editor-toolbars'
 export function useEditorState() {
   usePrintCleanup()
   usePrintTitle()
-  useResumeSync()
+  const { retry } = useResumeSync()
 
   const editorRef = useRef<ExposeParam>(null)
   const text = useResumeStore((state) => state.markdown)
@@ -38,6 +38,7 @@ export function useEditorState() {
     cloudStatus: syncStatus,
     hasCloudCopy: Boolean(resumeId),
     warningMessage: contentWarning ?? imageWarning,
+    onRetry: retry,
   })
 
   return {

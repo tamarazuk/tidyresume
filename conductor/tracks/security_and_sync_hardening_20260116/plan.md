@@ -22,19 +22,19 @@ Protect the magic link endpoint from abuse using Cloudflare's native rate limiti
 ## Phase 3: Secure Resume Deletion
 Implement ownership verification for both claimed and anonymous resumes.
 
-- [ ] Task: Update schema to support `deleteSecret` for anonymous resumes
-- [ ] Task: Write failing tests for `DELETE /api/resumes/[id]` (unauthorized, claimed owner, anonymous with secret)
-- [ ] Task: Update `publishResume` to generate and return `deleteSecret` for new anonymous resumes
-- [ ] Task: Update frontend to store `deleteSecret` in localStorage for anonymous resumes
-- [ ] Task: Implement ownership verification in the `DELETE` API route
+- [x] Task: Update schema to support `deleteSecret` for anonymous resumes 6494dec
+- [x] Task: Write failing tests for `DELETE /api/resumes/[id]` (unauthorized, claimed owner, anonymous with secret) 6494dec
+- [x] Task: Update `publishResume` to generate and return `deleteSecret` for new anonymous resumes 6494dec
+- [x] Task: Update frontend to store `deleteSecret` in localStorage for anonymous resumes 6494dec
+- [x] Task: Implement ownership verification in the `DELETE` API route 6494dec
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Secure Resume Deletion' (Protocol in workflow.md)
 
 ## Phase 4: Reliable Resume Sync
 Enhance the sync mechanism with automatic retries and a manual recovery UI.
 
-- [ ] Task: Write failing unit tests for `useResumeSync` retry logic (using fake timers)
-- [ ] Task: Implement exponential backoff retry in `useResumeSync` (up to 3 attempts)
-- [ ] Task: Update the editor footer to include a "Retry" button when sync remains in error state
+- [x] Task: Write failing unit tests for `useResumeSync` retry logic (using fake timers) 6494dec
+- [x] Task: Implement exponential backoff retry in `useResumeSync` (up to 3 attempts) 6494dec
+- [x] Task: Update the editor footer to include a "Retry" button when sync remains in error state 6494dec
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Reliable Resume Sync' (Protocol in workflow.md)
 
 ## Future Tasks

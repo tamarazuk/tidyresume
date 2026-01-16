@@ -1,6 +1,7 @@
 import { useCallback, useMemo, type ReactElement } from 'react'
 import type { Footers } from 'md-editor-rt'
 import {
+  ArrowCounterClockwiseIcon,
   CheckCircleIcon,
   CircleIcon,
   CloudCheckIcon,
@@ -10,6 +11,7 @@ import {
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
@@ -39,6 +41,7 @@ interface UseEditorFootersOptions {
   cloudStatus?: SyncStatus
   hasCloudCopy?: boolean
   warningMessage?: string | null
+  onRetry?: () => void
 }
 
 interface UseEditorFootersReturn {
@@ -148,6 +151,7 @@ function useEditorFooters({
   cloudStatus,
   hasCloudCopy,
   warningMessage,
+  onRetry,
 }: UseEditorFootersOptions): UseEditorFootersReturn {
   const wordCount = useMemo(() => countWords(value), [value])
   const characterCount = useMemo(() => countCharacters(value), [value])
@@ -232,37 +236,58 @@ function useEditorFooters({
                 <TooltipContent>{saveStatusTooltip}</TooltipContent>
               </Tooltip>
               {resolvedCloudStatus ? (
-                <Tooltip>
-                  <TooltipTrigger
-                    render={(props) => {
-                      const { className: triggerClassName, ...rest } = props
-                      return (
-                        <span
-                          {...rest}
-                          className={cn('inline-flex', triggerClassName)}
-                        >
-                          <Badge
-                            variant="secondary"
-                            data-icon="inline-start"
-                            className={cn(
-                              'border',
-                              cloudStatusConfig[resolvedCloudStatus]
-                                .badgeClassName
-                            )}
+                <div className="flex items-center gap-1">
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={(props) => {
+                        const { className: triggerClassName, ...rest } = props
+                        return (
+                          <span
+                            {...rest}
+                            className={cn('inline-flex', triggerClassName)}
                           >
-                            {cloudStatusConfig[resolvedCloudStatus].icon}
-                            <span>
-                              {cloudStatusConfig[resolvedCloudStatus].label}
-                            </span>
-                          </Badge>
-                        </span>
-                      )
-                    }}
-                  />
-                  <TooltipContent>
-                    {cloudStatusTooltip[resolvedCloudStatus]}
-                  </TooltipContent>
-                </Tooltip>
+                            <Badge
+                              variant="secondary"
+                              data-icon="inline-start"
+                              className={cn(
+                                'border',
+                                cloudStatusConfig[resolvedCloudStatus]
+                                  .badgeClassName
+                              )}
+                            >
+                              {cloudStatusConfig[resolvedCloudStatus].icon}
+                              <span>
+                                {cloudStatusConfig[resolvedCloudStatus].label}
+                              </span>
+                            </Badge>
+                          </span>
+                        )
+                      }}
+                    />
+                    <TooltipContent>
+                      {cloudStatusTooltip[resolvedCloudStatus]}
+                    </TooltipContent>
+                  </Tooltip>
+                  {resolvedCloudStatus === 'error' && onRetry && (
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={(props) => (
+                          <Button
+                            {...props}
+                            variant="ghost"
+                            size="icon"
+                            className="text-muted-foreground hover:text-foreground h-5 w-5 p-0"
+                            onClick={onRetry}
+                            aria-label="Retry sync"
+                          >
+                            <ArrowCounterClockwiseIcon size={12} />
+                          </Button>
+                        )}
+                      />
+                      <TooltipContent>Retry sync</TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
               ) : null}
             </div>
           )
@@ -306,6 +331,7 @@ function useEditorFooters({
       saveStatus,
       warningMessage,
       wordCount,
+      onRetry,
     ]
   )
 
