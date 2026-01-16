@@ -14,9 +14,9 @@ Refactor slug assignment to rely on database constraints for race-condition safe
 ## Phase 2: Rate Limiting for Token Generation
 Protect the magic link endpoint from abuse using Cloudflare's native rate limiting.
 
-- [ ] Task: Update `wrangler.jsonc` to include the `rate-limit` binding
-- [ ] Task: Write failing tests for `POST /api/auth/generate-token` exceeding limits (mocking the binding)
-- [ ] Task: Implement rate limiting logic in the `generate-token` API route
+- [x] Task: Update `wrangler.jsonc` to include the `rate-limit` binding 3254e9c
+- [x] Task: Write failing tests for `POST /api/auth/generate-token` exceeding limits (mocking the binding) 3254e9c
+- [x] Task: Implement rate limiting logic in the `generate-token` API route 3254e9c
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Rate Limiting for Token Generation' (Protocol in workflow.md)
 
 ## Phase 3: Secure Resume Deletion
