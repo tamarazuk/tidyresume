@@ -11,13 +11,13 @@ Refactor slug assignment to rely on database constraints for race-condition safe
 - [x] Task: Ensure the API route returns `409 Conflict` on slug collision 6494dec
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Robust Slug Uniqueness' (Protocol in workflow.md) be914d5
 
-## Phase 2: Rate Limiting for Token Generation
+## Phase 2: Rate Limiting for Token Generation [checkpoint: fb0ef23]
 Protect the magic link endpoint from abuse using Cloudflare's native rate limiting.
 
 - [x] Task: Update `wrangler.jsonc` to include the `rate-limit` binding 3254e9c
 - [x] Task: Write failing tests for `POST /api/auth/generate-token` exceeding limits (mocking the binding) 3254e9c
 - [x] Task: Implement rate limiting logic in the `generate-token` API route 3254e9c
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Rate Limiting for Token Generation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Rate Limiting for Token Generation' (Protocol in workflow.md) fb0ef23
 
 ## Phase 3: Secure Resume Deletion
 Implement ownership verification for both claimed and anonymous resumes.
@@ -36,3 +36,6 @@ Enhance the sync mechanism with automatic retries and a manual recovery UI.
 - [ ] Task: Implement exponential backoff retry in `useResumeSync` (up to 3 attempts)
 - [ ] Task: Update the editor footer to include a "Retry" button when sync remains in error state
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Reliable Resume Sync' (Protocol in workflow.md)
+
+## Future Tasks
+- [ ] Task: Re-test email rate limiting in a production-like environment (Preview/Staging) to confirm limits are enforced.
