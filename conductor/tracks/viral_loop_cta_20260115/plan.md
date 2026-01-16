@@ -30,10 +30,10 @@ Add the 2-second delay and the slide-up entry animation.
 ## Phase 3: Interactions & Tooltip
 Finalize the link behavior and hover states.
 
-- [ ] Task: Implement New Tab Navigation
-    - [ ] Write tests to verify clicking the button opens `/edit` in a new tab (Red Phase)
-    - [ ] Implement `ButtonLink` or standard `a` tag with `target="_blank"` (Green Phase)
-- [ ] Task: Add Hover Tooltip
+- [x] Task: Implement New Tab Navigation (2e3e696)
+    - [x] Write tests to verify clicking the button opens `/edit` in a new tab (Red Phase)
+    - [x] Implement `ButtonLink` or standard `a` tag with `target="_blank"` (Green Phase)
+- [~] Task: Add Hover Tooltip
     - [ ] Write tests for tooltip visibility on hover (Red Phase)
     - [ ] Implement tooltip using `@base-ui/react` primitives (Green Phase)
 - [ ] Task: Hide from Print
