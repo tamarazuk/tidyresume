@@ -46,13 +46,14 @@ describe('ViralLoopCTA', () => {
     render(<ViralLoopCTA resumeId="test-id" />)
     
     // Should be invisible immediately
-    expect(screen.getByRole('button').parentElement).toHaveClass('opacity-0')
+    const cta = screen.getByText(/Tidy up your resume/i).closest('div.fixed')
+    expect(cta).toHaveClass('opacity-0')
     
     // Advance timers by 1999ms - still should be invisible
     act(() => {
       vi.advanceTimersByTime(1999)
     })
-    expect(screen.getByRole('button').parentElement).toHaveClass('opacity-0')
+    expect(cta).toHaveClass('opacity-0')
 
     // Advance to 2000ms
     act(() => {
@@ -60,7 +61,7 @@ describe('ViralLoopCTA', () => {
     })
     
     // Should be visible now
-    expect(screen.getByRole('button').parentElement).toHaveClass('opacity-100')
+    expect(cta).toHaveClass('opacity-100')
   })
 
   it('applies animation classes when visible', () => {
@@ -71,9 +72,9 @@ describe('ViralLoopCTA', () => {
       vi.advanceTimersByTime(2000)
     })
 
-    const container = screen.getByRole('button').parentElement
-    expect(container).toHaveClass('translate-y-0', 'opacity-100')
-    expect(container).not.toHaveClass('translate-y-10', 'opacity-0')
+    const cta = screen.getByText(/Tidy up your resume/i).closest('div.fixed')
+    expect(cta).toHaveClass('translate-y-0', 'opacity-100')
+    expect(cta).not.toHaveClass('translate-y-10', 'opacity-0')
   })
 
   it('links to /edit and opens in a new tab', () => {
@@ -84,9 +85,48 @@ describe('ViralLoopCTA', () => {
       vi.advanceTimersByTime(2000)
     })
 
-    const link = screen.getByRole('button', { name: /Tidy up your resume/i })
-    expect(link.tagName).toBe('A')
+    const link = screen.getByText(/Tidy up your resume/i).closest('a')
+    expect(link).toBeInTheDocument()
     expect(link).toHaveAttribute('href', '/edit')
     expect(link).toHaveAttribute('target', '_blank')
+  })
+
+  it('shows tooltip on hover', async () => {
+    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    render(<ViralLoopCTA resumeId="test-id" />)
+    
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
+
+    const trigger = screen.getByText(/Tidy up your resume/i).closest('[data-slot="tooltip-trigger"]')
+    expect(trigger).toBeInTheDocument()
+    
+    // Tooltip should not be visible initially
+    expect(screen.queryByText(/It's free and takes minutes/i)).not.toBeInTheDocument()
+
+    // Trigger hover
+    await act(async () => {
+      trigger!.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    })
+
+    // Advance timers for tooltip
+    act(() => {
+      vi.advanceTimersByTime(100)
+    })
+
+    expect(screen.getByText(/It's free and takes minutes/i)).toBeInTheDocument()
+  })
+
+  it('is hidden during print', () => {
+    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    render(<ViralLoopCTA resumeId="test-id" />)
+    
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
+
+    const cta = screen.getByText(/Tidy up your resume/i).closest('div.fixed')
+    expect(cta).toHaveClass('print:hidden')
   })
 })

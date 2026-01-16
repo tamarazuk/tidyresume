@@ -12,7 +12,9 @@ interface ButtonLinkProps
 export default function ButtonLink({ href, ...props }: ButtonLinkProps) {
   return (
     <Button
-      render={(buttonProps) => <Link href={href} {...buttonProps} />}
+      render={({ asChild: _asChild, ...buttonProps }) => (
+        <Link href={href} {...buttonProps} />
+      )}
       nativeButton={false}
       {...props}
     />
