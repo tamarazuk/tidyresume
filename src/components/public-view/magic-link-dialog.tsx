@@ -62,17 +62,21 @@ export function MagicLinkDialog({ resumeId, triggerProps }: MagicLinkDialogProps
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger {...triggerProps}>
-        <Button
+      <DialogTrigger
+        render={(dialogTriggerProps) => (
+          <Button
+            {...triggerProps}
+            {...dialogTriggerProps}
             variant="secondary"
             size="sm"
             className="gap-1.5"
             aria-label="Edit on another device"
-        >
-          <EnvelopeSimpleIcon size={16} />
-          <span className="sm:hidden">Edit elsewhere</span>
-        </Button>
-      </DialogTrigger>
+          >
+            <EnvelopeSimpleIcon size={16} />
+            <span className="sm:hidden">Edit elsewhere</span>
+          </Button>
+        )}
+      />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit on another device</DialogTitle>
