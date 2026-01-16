@@ -18,6 +18,16 @@ export async function deleteResume(db: Db, id: string) {
   return db.delete(resumes).where(eq(resumes.id, id))
 }
 
+function isUniqueConstraintViolation(error: unknown): boolean {
+  if (error instanceof Error) {
+    return (
+      error.message.includes('UNIQUE constraint failed') ||
+      error.message.includes('constraint failed')
+    )
+  }
+  return false
+}
+
 export async function publishResume(
   db: Db,
   data: {
@@ -33,38 +43,33 @@ export async function publishResume(
     resumeId = crypto.randomUUID()
   }
 
-  // Check slug uniqueness if provided
-  if (data.slug) {
-    const existing = await db.query.resumes.findFirst({
-      where: eq(resumes.slug, data.slug),
-    })
-
-    // If slug exists and belongs to a DIFFERENT resume, throw error
-    if (existing && existing.id !== resumeId) {
-      throw new Error('Slug already taken')
-    }
-  }
-
   const slugVal = data.slug ?? null
 
-  // Drizzle SQLite upsert
-  await db
-    .insert(resumes)
-    .values({
-      id: resumeId,
-      title: data.title,
-      content: data.content,
-      slug: slugVal,
-    })
-    .onConflictDoUpdate({
-      target: resumes.id,
-      set: {
+  try {
+    // Drizzle SQLite upsert
+    await db
+      .insert(resumes)
+      .values({
+        id: resumeId,
         title: data.title,
         content: data.content,
         slug: slugVal,
-        updatedAt: new Date(),
-      },
-    })
+      })
+      .onConflictDoUpdate({
+        target: resumes.id,
+        set: {
+          title: data.title,
+          content: data.content,
+          slug: slugVal,
+          updatedAt: new Date(),
+        },
+      })
+  } catch (error) {
+    if (isUniqueConstraintViolation(error)) {
+      throw new Error('Slug already taken')
+    }
+    throw error
+  }
 
   return { id: resumeId, slug: slugVal }
 }
