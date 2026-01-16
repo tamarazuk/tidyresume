@@ -16,7 +16,7 @@ Focus on creating the component structure and ensuring it only shows for visitor
     - [x] Place component in the root div of the page (Green Phase)
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & Owner Detection' (Protocol in workflow.md)
 
-## Phase 2: Timing & Animation
+## Phase 2: Timing & Animation [checkpoint: 0cad4b4]
 Add the 2-second delay and the slide-up entry animation.
 
 - [x] Task: Implement the 2-second delay (af0d145)
