@@ -38,23 +38,31 @@ export async function publishResume(
   }
 ) {
   let resumeId = data.id
+  let deleteSecret: string | undefined
 
   if (!resumeId) {
     resumeId = crypto.randomUUID()
+    deleteSecret = crypto.randomUUID()
   }
 
   const slugVal = data.slug ?? null
+
+  const values: typeof resumes.$inferInsert = {
+    id: resumeId,
+    title: data.title,
+    content: data.content,
+    slug: slugVal,
+  }
+
+  if (deleteSecret) {
+    values.deleteSecret = deleteSecret
+  }
 
   try {
     // Drizzle SQLite upsert
     await db
       .insert(resumes)
-      .values({
-        id: resumeId,
-        title: data.title,
-        content: data.content,
-        slug: slugVal,
-      })
+      .values(values)
       .onConflictDoUpdate({
         target: resumes.id,
         set: {
@@ -71,5 +79,5 @@ export async function publishResume(
     throw error
   }
 
-  return { id: resumeId, slug: slugVal }
+  return { id: resumeId, slug: slugVal, deleteSecret }
 }

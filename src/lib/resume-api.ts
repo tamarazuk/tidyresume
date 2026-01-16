@@ -11,6 +11,7 @@ export interface PublishResumeResponse {
   id: ResumeId
   slug: ResumeSlug
   url?: string
+  deleteSecret?: string
 }
 
 export class ResumeApiError extends Error {
@@ -79,10 +80,16 @@ export async function fetchResume(
 
 export async function deleteResume(
   id: string,
-  options: { signal?: AbortSignal } = {}
+  options: { signal?: AbortSignal; deleteSecret?: string | null } = {}
 ): Promise<{ success: boolean }> {
+  const headers: HeadersInit = {}
+  if (options.deleteSecret) {
+    headers['X-Delete-Secret'] = options.deleteSecret
+  }
+
   const response = await fetch(`/api/resumes/${id}`, {
     method: 'DELETE',
+    headers,
     signal: options.signal,
   })
 

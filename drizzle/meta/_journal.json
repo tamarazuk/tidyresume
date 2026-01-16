@@ -8,6 +8,13 @@
       "when": 1768516728386,
       "tag": "0000_fine_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1768596528624,
+      "tag": "0001_concerned_northstar",
+      "breakpoints": true
     }
   ]
 }

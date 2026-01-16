@@ -15,6 +15,7 @@ export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) 
   const router = useRouter()
   const resetResume = useResumeStore((state) => state.resetResume)
   const slug = useResumeStore((state) => state.slug)
+  const deleteSecret = useResumeStore((state) => state.deleteSecret)
   const [isDeleting, setIsDeleting] = useState(false)
 
   const getShareUrl = () => {
@@ -34,7 +35,7 @@ export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) 
     setIsDeleting(true)
     let didRedirect = false
     try {
-      await deleteResume(id)
+      await deleteResume(id, { deleteSecret })
       resetResume()
       didRedirect = true
       router.push('/?toast=resume-deleted')

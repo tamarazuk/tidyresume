@@ -18,7 +18,8 @@ export async function GET(
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
     }
 
-    return NextResponse.json(resume)
+    const { deleteSecret, userEmail, ...safeResume } = resume
+    return NextResponse.json(safeResume)
   } catch (error) {
     console.error('Fetch error:', error)
     return NextResponse.json(
@@ -36,6 +37,23 @@ export async function DELETE(
     const { id } = await params
     const { env } = await getCloudflareContext({ async: true })
     const db = getDb(env.DB)
+
+    const resume = await resumeService.getResume(db, id)
+
+    if (!resume) {
+      return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
+    }
+
+    const secretHeader = request.headers.get('X-Delete-Secret')
+    
+    // Resume must have a deleteSecret to be deleted via this API
+    // If it doesn't (legacy?), we might default to blocking or allowing.
+    // Given the migration, all new ones have it. 
+    // Secure by default: Block if secret mismatch.
+    
+    if (!resume.deleteSecret || secretHeader !== resume.deleteSecret) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     await resumeService.deleteResume(db, id)
 

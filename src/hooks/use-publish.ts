@@ -13,6 +13,7 @@ export function usePublish() {
   const resumeSlug = useResumeStore((state) => state.slug)
   const setResumeId = useResumeStore((state) => state.setId)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
+  const setDeleteSecret = useResumeStore((state) => state.setDeleteSecret)
 
   const publishResume = async () => {
     setIsPublishing(true)
@@ -22,6 +23,9 @@ export function usePublish() {
         content: resumeContent,
       })
       setResumeId(data.id)
+      if (data.deleteSecret) {
+        setDeleteSecret(data.deleteSecret)
+      }
       setSyncStatus('synced')
       const resumeUrl = getResumeUrl(data.id, data.slug ?? resumeSlug)
       toast.success('Resume published', {

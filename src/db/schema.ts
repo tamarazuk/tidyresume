@@ -7,6 +7,7 @@ export const resumes = sqliteTable('resumes', {
   title: text('title').notNull(),
   content: text('content').notNull(), // Markdown content
   userEmail: text('user_email'),
+  deleteSecret: text('delete_secret'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdate(() => new Date()),
 })
