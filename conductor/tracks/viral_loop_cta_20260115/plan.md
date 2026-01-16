@@ -22,9 +22,9 @@ Add the 2-second delay and the slide-up entry animation.
 - [x] Task: Implement the 2-second delay (af0d145)
     - [x] Write tests using fake timers to verify delayed visibility (Red Phase)
     - [x] Implement `useEffect` with `setTimeout` to manage visibility state (Green Phase)
-- [~] Task: Add Slide-up Animation
-    - [ ] Write tests/Verify animation classes are applied correctly (Red Phase)
-    - [ ] Implement Tailwind transition/animation classes (Green Phase)
+- [x] Task: Add Slide-up Animation (a3f08fb)
+    - [x] Write tests/Verify animation classes are applied correctly (Red Phase)
+    - [x] Implement Tailwind transition/animation classes (Green Phase)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Timing & Animation' (Protocol in workflow.md)
 
 ## Phase 3: Interactions & Tooltip
