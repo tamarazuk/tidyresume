@@ -19,10 +19,10 @@ Focus on creating the component structure and ensuring it only shows for visitor
 ## Phase 2: Timing & Animation
 Add the 2-second delay and the slide-up entry animation.
 
-- [ ] Task: Implement the 2-second delay
-    - [ ] Write tests using fake timers to verify delayed visibility (Red Phase)
-    - [ ] Implement `useEffect` with `setTimeout` to manage visibility state (Green Phase)
-- [ ] Task: Add Slide-up Animation
+- [x] Task: Implement the 2-second delay (af0d145)
+    - [x] Write tests using fake timers to verify delayed visibility (Red Phase)
+    - [x] Implement `useEffect` with `setTimeout` to manage visibility state (Green Phase)
+- [~] Task: Add Slide-up Animation
     - [ ] Write tests/Verify animation classes are applied correctly (Red Phase)
     - [ ] Implement Tailwind transition/animation classes (Green Phase)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Timing & Animation' (Protocol in workflow.md)
