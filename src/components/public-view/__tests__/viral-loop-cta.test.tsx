@@ -75,4 +75,18 @@ describe('ViralLoopCTA', () => {
     expect(container).toHaveClass('translate-y-0', 'opacity-100')
     expect(container).not.toHaveClass('translate-y-10', 'opacity-0')
   })
+
+  it('links to /edit and opens in a new tab', () => {
+    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    render(<ViralLoopCTA resumeId="test-id" />)
+    
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
+
+    const link = screen.getByRole('button', { name: /Tidy up your resume/i })
+    expect(link.tagName).toBe('A')
+    expect(link).toHaveAttribute('href', '/edit')
+    expect(link).toHaveAttribute('target', '_blank')
+  })
 })
