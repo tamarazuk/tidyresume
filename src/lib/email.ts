@@ -3,17 +3,61 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { render } from '@react-email/render'
 import MagicLinkEmail from '@/emails/magic-link'
 
+const LOG_SEPARATOR = '----------------------------------------'
+
+const logMagicLink = (label: string, link: string) => {
+  console.log(LOG_SEPARATOR)
+  console.log(`[${label}] Magic Link dispatched`)
+  console.log(`Link: ${link}`)
+  console.log(LOG_SEPARATOR)
+}
+
+const resolveFlag = (
+  localValue: string | undefined,
+  remoteValue: string | undefined
+) => (localValue ?? remoteValue)?.toLowerCase() === 'true'
+
+type CloudflareEnvRecord = Record<string, string | undefined>
+
 export async function sendMagicLinkEmail(email: string, link: string) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('----------------------------------------')
-    console.log(`[Dev Mode] Sending Magic Link to ${email}`)
-    console.log(`Link: ${link}`)
-    console.log('----------------------------------------')
+  const isDevelopment = process.env.NODE_ENV === 'development'
+
+  let cloudflareEnv: CloudflareEnvRecord = {}
+
+  try {
+    const { env } = await getCloudflareContext({ async: true })
+    cloudflareEnv = (env ?? {}) as unknown as CloudflareEnvRecord
+  } catch (error) {
+    if (!isDevelopment) {
+      console.warn('Cloudflare env unavailable when sending magic link.', error)
+    }
+  }
+
+  const outboundEmailsDisabled = resolveFlag(
+    process.env.DISABLE_OUTBOUND_EMAILS,
+    cloudflareEnv.DISABLE_OUTBOUND_EMAILS
+  )
+  const legacyMagicLinkDisabled = resolveFlag(
+    process.env.DISABLE_MAGIC_LINK_EMAILS,
+    cloudflareEnv.DISABLE_MAGIC_LINK_EMAILS
+  )
+  const emailsDisabled = outboundEmailsDisabled || legacyMagicLinkDisabled
+
+  if (emailsDisabled) {
+    logMagicLink('Emails Disabled', link)
     return
   }
 
-  const { env } = await getCloudflareContext({ async: true })
-  const apiKey = process.env.RESEND_API_KEY || env.RESEND_API_KEY
+  const apiKey =
+    (isDevelopment
+      ? (process.env.RESEND_DEV_API_KEY ?? cloudflareEnv.RESEND_DEV_API_KEY)
+      : undefined) ??
+    process.env.RESEND_API_KEY ??
+    cloudflareEnv.RESEND_API_KEY
+
+  if (isDevelopment) {
+    logMagicLink('Dev Mode', link)
+  }
 
   if (!apiKey) {
     console.error('RESEND_API_KEY is not set')
