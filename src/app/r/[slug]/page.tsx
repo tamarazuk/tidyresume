@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 
 import { PublicResumeView } from '@/components/public-view/public-resume-view'
+import { ViralLoopCTA } from '@/components/public-view/viral-loop-cta'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { getDb } from '@/db'
 import * as resumeService from '@/services/resume-service'
@@ -61,6 +62,8 @@ export default async function PublicResumePage({
         title={resume.title}
         content={resume.content}
       />
+      <ViralLoopCTA resumeId={resume.id} />
     </div>
   )
 }
+
