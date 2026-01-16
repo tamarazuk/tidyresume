@@ -2,14 +2,14 @@
 
 This plan follows the TDD-first workflow defined in `conductor/workflow.md`.
 
-## Phase 1: Robust Slug Uniqueness
+## Phase 1: Robust Slug Uniqueness [checkpoint: be914d5]
 Refactor slug assignment to rely on database constraints for race-condition safety.
 
 - [x] Task: Write failing integration tests for slug collisions during `publishResume` 6494dec
 - [x] Task: Implement `isUniqueConstraintViolation` helper for D1/SQLite 6494dec
 - [x] Task: Update `publishResume` service to catch uniqueness errors and throw a specific "Slug already taken" error 6494dec
 - [x] Task: Ensure the API route returns `409 Conflict` on slug collision 6494dec
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Robust Slug Uniqueness' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Robust Slug Uniqueness' (Protocol in workflow.md) be914d5
 
 ## Phase 2: Rate Limiting for Token Generation
 Protect the magic link endpoint from abuse using Cloudflare's native rate limiting.
