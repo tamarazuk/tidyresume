@@ -749,6 +749,7 @@ function useEditorToolbars({
     }
   }, [
     buildCustomToolbar,
+    editorViewState.isPreviewMode,
     formatShortcutKeys,
     handleAriaToolbarAction,
     renderShortcutTooltip,
