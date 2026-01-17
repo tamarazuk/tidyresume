@@ -35,19 +35,16 @@
       "service": "tidyresume",
     },
   ],
-  "unsafe": {
-    "bindings": [
-      {
-        "name": "RATE_LIMITER",
-        "type": "ratelimit",
-        "namespace_id": "1001",
-        "simple": {
-          "limit": 3,
-          "period": 60
-        }
-      }
-    ]
-  },
+  "ratelimits": [
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 3,
+        "period": 60,
+      },
+    },
+  ],
   "observability": {
     "enabled": true,
   },
