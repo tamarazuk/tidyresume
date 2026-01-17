@@ -55,15 +55,15 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
           </h2>
           <ResumeTitleInput />
         </div>
-      </div>
-      <div className="flex items-center gap-3">
         <Tooltip>
           <TooltipTrigger
             render={(props) => <ThemeToggle buttonProps={props} />}
           />
           <TooltipContent>Toggle theme</TooltipContent>
         </Tooltip>
-        <div className="ml-1 flex items-center gap-2 sm:ml-3">
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {isPublished ? (
             <div className="flex items-center gap-2">
               <Tooltip>
