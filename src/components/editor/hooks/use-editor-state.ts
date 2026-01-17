@@ -19,7 +19,7 @@ export function useEditorState() {
   const text = useResumeStore((state) => state.markdown)
   const saveStatus = useResumeStore((state) => state.saveStatus)
   const syncStatus = useResumeStore((state) => state.syncStatus)
-  const resumeId = useResumeStore((state) => state.id)
+  const isPublished = useResumeStore((state) => state.isPublished)
   const imageWarning = useResumeStore((state) => state.imageWarning)
   const contentWarning = useResumeStore((state) => state.contentWarning)
   const setText = useResumeStore((state) => state.setMarkdown)
@@ -38,7 +38,7 @@ export function useEditorState() {
     value: text,
     saveStatus,
     cloudStatus: syncStatus,
-    hasCloudCopy: Boolean(resumeId),
+    hasCloudCopy: isPublished,
     warningMessage: contentWarning ?? imageWarning,
     onRetry: retry,
   })
