@@ -2,6 +2,7 @@ import { Resend } from 'resend'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { render } from '@react-email/render'
 import MagicLinkEmail from '@/emails/magic-link'
+import { getBaseUrl } from '@/lib/constants'
 
 const LOG_SEPARATOR = '----------------------------------------'
 
@@ -69,10 +70,16 @@ export async function sendMagicLinkEmail(email: string, link: string) {
   const resend = new Resend(apiKey)
 
   try {
-    const emailHtml = await render(MagicLinkEmail({ link }))
+    const iconUrl = `${getBaseUrl()}/logo`
+    const emailHtml = await render(MagicLinkEmail({ link, iconUrl }))
+
+    const fromEmail =
+      process.env.EMAIL_FROM ||
+      cloudflareEnv.EMAIL_FROM ||
+      'noreply@tidyresume.tzuk.app'
 
     const { data, error } = await resend.emails.send({
-      from: 'TidyResume <noreply@tidyresume.tzuk.app>', // Update this with your verified domain
+      from: `TidyResume <${fromEmail}>`,
       to: email,
       subject: 'Access your resume',
       html: emailHtml,

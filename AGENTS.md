@@ -157,6 +157,17 @@ Apply `.resume-theme` or `.resume-preview-theme` to the container to switch to t
 ### Printing / PDF export
 Printing is built-in: the editor and public view provide print buttons, and browser print (menu or shortcut) prints only the resume content. Users can save to PDF using the browser's native print dialog.
 
+### Branding & Assets
+The app uses dynamic SVG-to-PNG generation for the brand logo and favicons via `next/og`.
+
+- **Endpoints:**
+  - `/logo` — Standard brand logo (sharper rounding, used in emails).
+  - `/icon` — Favicon (highly rounded for small browser tab contexts).
+- **Caching & Invalidation:**
+  - Logos are served with high-performance caching headers (`public, max-age=31536000, immutable`).
+  - **Cache Busting:** To update the logo across all clients (especially email proxies like Gmail), increment the `APP_VERSION` string in `src/lib/constants.ts`.
+  - Email templates automatically append this version as a query parameter (`?v=...`) to ensure immediate updates.
+
 ## Testing
 
 Vitest is configured for unit tests with Testing Library and jsdom. Prefer Playwright for E2E tests if/when added.
