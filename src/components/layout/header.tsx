@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+
 import {
   CloudArrowUpIcon,
   CloudSlashIcon,
@@ -104,7 +105,6 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
                         resumeId,
                         useResumeStore.getState().slug
                       )}
-                      target="_blank"
                       className={cn(
                         buttonVariants({ variant: 'default' }),
                         'gap-2'

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useResumeStore } from '@/stores/resume-store'
 import {
@@ -10,6 +11,7 @@ import {
 import { getResumeUrl } from '@/lib/utils'
 
 export function usePublish() {
+  const router = useRouter()
   const [isPublishing, setIsPublishing] = useState(false)
   const [isUnpublishing, setIsUnpublishing] = useState(false)
   const resumeId = useResumeStore((state) => state.id)
@@ -51,7 +53,7 @@ export function usePublish() {
         action: {
           label: 'View resume',
           onClick: () => {
-            window.open(resumeUrl, '_blank', 'noopener,noreferrer')
+            router.push(resumeUrl)
           },
         },
       })
