@@ -20,7 +20,9 @@ export default function SiteHeader() {
               TidyResume
             </h2>
           </Link>
-          <ThemeToggle />
+          <ThemeToggle
+            buttonProps={{ className: 'text-muted-foreground' }}
+          />
         </div>
         <div className="flex items-center gap-3">
           <HeaderCta />

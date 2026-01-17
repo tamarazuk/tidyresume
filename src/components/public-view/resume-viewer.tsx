@@ -55,7 +55,14 @@ export function ResumeViewer({
           </Link>
           <Tooltip>
             <TooltipTrigger
-              render={(props) => <ThemeToggle buttonProps={props} />}
+              render={(props) => (
+                <ThemeToggle
+                  buttonProps={{
+                    ...props,
+                    className: cn('text-muted-foreground', props.className),
+                  }}
+                />
+              )}
             />
             <TooltipContent>Toggle theme</TooltipContent>
           </Tooltip>

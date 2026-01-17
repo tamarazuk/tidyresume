@@ -41,7 +41,7 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
 
   return (
     <header className="border-border bg-background no-print z-20 flex flex-none items-center justify-between border-b border-solid px-6 py-3 whitespace-nowrap">
-      <div className="flex items-center gap-4">
+      <div className="flex items-start gap-4">
         <Link
           href="/"
           className="flex size-12 items-center justify-center"
@@ -57,7 +57,14 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
         </div>
         <Tooltip>
           <TooltipTrigger
-            render={(props) => <ThemeToggle buttonProps={props} />}
+            render={(props) => (
+              <ThemeToggle
+                buttonProps={{
+                  ...props,
+                  className: cn('text-muted-foreground', props.className),
+                }}
+              />
+            )}
           />
           <TooltipContent>Toggle theme</TooltipContent>
         </Tooltip>
