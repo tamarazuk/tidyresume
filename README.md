@@ -2,7 +2,7 @@
 
 A markdown-based resume builder that lets you create professional resumes in Markdown with local-first saving, PDF export, and shareable links.
 
-![TidyResume Editor](/.github/images/editor-preview.png)
+![TidyResume Editor](/.github/images/editor-preview-publish.png)
 
 ## Features
 
