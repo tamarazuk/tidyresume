@@ -45,7 +45,7 @@ describe('POST /api/resumes/publish', () => {
 
     const response = await POST(request)
     expect(response.status).toBe(200)
-    const data = await response.json()
+    const data = (await response.json()) as { id?: string }
     expect(data.id).toBe('new-uuid')
   })
 

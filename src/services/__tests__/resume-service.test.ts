@@ -61,7 +61,7 @@ describe('resume-service', () => {
     const uniqueConstraintError = new Error(
       'D1_ERROR: UNIQUE constraint failed: resumes.slug'
     )
-    // @ts-expect-error -- Simulating potential driver shapes
+
     uniqueConstraintError.cause = { code: 'SQLITE_CONSTRAINT' }
 
     const valuesMock = mockDb.insert().values
@@ -77,6 +77,31 @@ describe('resume-service', () => {
       publishResume(mockDb, {
         title: 'Test Resume',
         content: 'Markdown content',
+        slug: 'taken-slug',
+      })
+    ).rejects.toThrow('Slug already taken')
+  })
+
+  it('should throw "Slug already taken" when update fails with unique constraint violation', async () => {
+    const updateMock = vi.fn().mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          returning: vi
+            .fn()
+            .mockRejectedValue(
+              new Error('D1_ERROR: UNIQUE constraint failed: resumes.slug')
+            ),
+        }),
+      }),
+    })
+
+    mockDb.update = updateMock
+
+    await expect(
+      publishResume(mockDb, {
+        id: 'existing-id',
+        title: 'Updated Title',
+        content: 'Updated content',
         slug: 'taken-slug',
       })
     ).rejects.toThrow('Slug already taken')

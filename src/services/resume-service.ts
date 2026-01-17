@@ -47,28 +47,35 @@ export async function publishResume(
 
   // CASE 1: Update existing resume
   if (data.id) {
-    const results = await db
-      .update(resumes)
-      .set({
-        title: data.title,
-        content: data.content,
-        slug: slugVal,
-        updatedAt: new Date(),
-      })
-      .where(eq(resumes.id, data.id))
-      .returning({
-        id: resumes.id,
-        slug: resumes.slug,
-        editSecret: resumes.editSecret,
-      })
+    try {
+      const results = await db
+        .update(resumes)
+        .set({
+          title: data.title,
+          content: data.content,
+          slug: slugVal,
+          updatedAt: new Date(),
+        })
+        .where(eq(resumes.id, data.id))
+        .returning({
+          id: resumes.id,
+          slug: resumes.slug,
+          editSecret: resumes.editSecret,
+        })
 
-    if (results.length === 0) {
-      // Client provided an ID, but it doesn't exist.
-      // We do NOT create it. We consider this an invalid update attempt.
-      throw new Error('Resume not found')
+      if (results.length === 0) {
+        // Client provided an ID, but it doesn't exist.
+        // We do NOT create it. We consider this an invalid update attempt.
+        throw new Error('Resume not found')
+      }
+
+      return results[0]
+    } catch (error) {
+      if (isUniqueConstraintViolation(error)) {
+        throw new Error('Slug already taken')
+      }
+      throw error
     }
-
-    return results[0]
   }
 
   // CASE 2: Create new resume

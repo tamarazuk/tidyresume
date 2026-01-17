@@ -20,6 +20,7 @@ export function useEditableResumeTitle({
 }: UseEditableResumeTitleOptions) {
   const isOwner = useOwnerCheck(id)
   const setResumeTitle = useResumeStore((state) => state.setResumeTitle)
+  const editSecret = useResumeStore((state) => state.editSecret)
   const [currentTitle, setCurrentTitle] = useState(title)
   const [draftTitle, setDraftTitle] = useState(title)
   const [isEditing, setIsEditing] = useState(false)
@@ -60,11 +61,16 @@ export function useEditableResumeTitle({
 
     setIsSaving(true)
     try {
-      await publishResume({
-        id,
-        title: nextTitle,
-        content,
-      })
+      await publishResume(
+        {
+          id,
+          title: nextTitle,
+          content,
+        },
+        {
+          editSecret: editSecret ?? undefined,
+        }
+      )
 
       setCurrentTitle(nextTitle)
       setDraftTitle(nextTitle)

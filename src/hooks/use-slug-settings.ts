@@ -13,6 +13,7 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
   const slug = useResumeStore((state) => state.slug)
   const setSlug = useResumeStore((state) => state.setSlug)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
+  const editSecret = useResumeStore((state) => state.editSecret)
 
   const [isOpen, setIsOpen] = useState(false)
   const [inputValue, setInputValue] = useState<string>(slug ?? id ?? '')
@@ -51,7 +52,9 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
         content,
         slug: cleanedSlug === '' ? null : cleanedSlug,
       }
-      const data = await publishResume(id ? { ...payload, id } : payload)
+      const data = await publishResume(id ? { ...payload, id } : payload, {
+        editSecret: editSecret ?? undefined,
+      })
       setSlug(data.slug)
       setSyncStatus('synced')
       setStatus('success')
@@ -62,10 +65,17 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
       setTimeout(() => setIsOpen(false), 1000)
     } catch (error) {
       console.error(error)
-      if (isResumeApiError(error) && error.status === 409) {
-        setStatus('error')
-        setErrorMessage('Slug already taken')
-        return
+      if (isResumeApiError(error)) {
+        if (error.status === 409 || error.message === 'Slug already taken') {
+          setStatus('error')
+          setErrorMessage('Slug already taken')
+          return
+        }
+        if (error.status === 401 || error.status === 403) {
+          setStatus('error')
+          setErrorMessage('You do not have permission to edit this slug')
+          return
+        }
       }
       setStatus('error')
       setErrorMessage('Something went wrong')
