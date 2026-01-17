@@ -1,4 +1,4 @@
-# TidyResume
+# <img src="https://tidyresume.tzuk.app/logo-icon.svg" alt="TidyResume" width="32" align="top" />&nbsp;&nbsp;TidyResume
 
 A markdown-based resume builder that lets you create professional resumes in Markdown with local-first saving, PDF export, and shareable links.
 
