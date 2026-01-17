@@ -1,6 +1,6 @@
 # TidyResume
 
-A markdown-based resume builder that lets you create professional resumes in Markdown with local-first saving and PDF export. Shareable URLs are coming soon.
+A markdown-based resume builder that lets you create professional resumes in Markdown with local-first saving, PDF export, and shareable links.
 
 ![TidyResume Editor](/.github/images/editor-preview.png)
 
@@ -8,8 +8,9 @@ A markdown-based resume builder that lets you create professional resumes in Mar
 
 - **Markdown Editor** — Write your resume in familiar Markdown syntax with live preview
 - **Local-first Saving** — Drafts stay in your browser (no account required)
-- **PDF Export** — Print or export a clean, ATS-friendly PDF
-- **Shareable URLs** — Publishing is coming soon
+- **Print to PDF** — Use your browser to export a clean, ATS-friendly PDF
+- **One-click PDF Export** — Coming soon
+- **Shareable URLs** — Publish and share a public link
 - **Multiple Templates** — Additional layouts are coming soon
 - **Dark Mode** — Editor UI supports dark mode (preview stays light)
 
@@ -108,12 +109,13 @@ When adding new UI primitives, use Base UI (`@base-ui/react`) instead of Radix.
 - [x] Markdown editor with live preview
 - [x] Landing page
 - [x] Dark mode support
-- [ ] Publish flow with shareable URLs
+- [x] Publish flow with shareable URLs
 - [ ] Edit via secret token (no auth)
+- [x] Print to PDF (browser)
 - [ ] PDF export
 - [ ] Multiple resume templates
 - [ ] Guided editor mode (form-based)
-- [ ] Custom slug selection
+- [x] Custom slug selection
 
 ## Contributing
 

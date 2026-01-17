@@ -1,32 +1,10 @@
 'use client'
 
-import { useSyncExternalStore } from 'react'
 import ButtonLink from '@/components/ui/button-link'
-
-const RESUME_STORAGE_KEY = 'tidyresume-editor'
-
-function subscribeToResumeDraft(callback: () => void) {
-  if (typeof window === 'undefined') return () => {}
-  const handleStorage = (event: StorageEvent) => {
-    if (event.key === RESUME_STORAGE_KEY) {
-      callback()
-    }
-  }
-  window.addEventListener('storage', handleStorage)
-  return () => window.removeEventListener('storage', handleStorage)
-}
-
-function getResumeDraftSnapshot() {
-  if (typeof window === 'undefined') return false
-  return Boolean(localStorage.getItem(RESUME_STORAGE_KEY))
-}
+import { useResumeDraftStatus } from '@/hooks/use-resume-draft-status'
 
 export default function HeaderCta() {
-  const hasStoredDraft = useSyncExternalStore(
-    subscribeToResumeDraft,
-    getResumeDraftSnapshot,
-    () => false
-  )
+  const hasStoredDraft = useResumeDraftStatus()
   const ctaLabel = hasStoredDraft ? 'Continue Writing' : 'Start Writing'
 
   return (

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <clipPath id="logo-icon-clip">
+      <rect width="100" height="100" rx="12"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#logo-icon-clip)">
+    <path fill="#6366F1" d="M0 12A12 12 0 0 1 12 0h76a12 12 0 0 1 12 12v18H0zM0 36h40a6 6 0 0 1 6 6v58H12a12 12 0 0 1-12-12zM54 42a6 6 0 0 1 6-6h40v52a12 12 0 0 1-12 12H54z"/>
+  </g>
+</svg>

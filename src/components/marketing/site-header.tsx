@@ -20,7 +20,9 @@ export default function SiteHeader() {
           </h2>
         </Link>
         <div className="flex items-center gap-3">
-          <ThemeToggle />
+          <ThemeToggle
+            buttonProps={{ className: 'text-muted-foreground' }}
+          />
           <HeaderCta />
         </div>
       </div>

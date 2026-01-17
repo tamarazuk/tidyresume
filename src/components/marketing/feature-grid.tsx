@@ -1,8 +1,12 @@
 import {
-  CodeIcon,
+  LockSimpleIcon,
   FilePdfIcon,
   LinkSimpleIcon,
   UserMinusIcon,
+  DevicesIcon,
+  LayoutIcon,
+  LightningIcon,
+  MarkdownLogoIcon,
 } from '@phosphor-icons/react/dist/ssr'
 import {
   Card,
@@ -14,28 +18,51 @@ import { Badge } from '@/components/ui/badge'
 
 const features = [
   {
+    icon: MarkdownLogoIcon,
+    title: 'Just write',
+    description:
+      'Markdown handles the formatting so you can focus on what you actually did.',
+  },
+  {
+    icon: LightningIcon,
+    title: 'See it instantly',
+    description:
+      'Live preview updates as you type. No more save, refresh, squint.',
+  },
+  {
+    icon: UserMinusIcon,
     title: 'No account needed',
     description:
-      'Start right away. Your resume stays in your browser while you build.',
-    icon: UserMinusIcon,
+      'Start building immediately. No sign-up forms, no email verification.',
   },
   {
-    title: 'Markdown-first',
+    icon: LockSimpleIcon,
+    title: 'Private by default',
     description:
-      'Write in plain text with Markdown. Quick to edit, easy to keep consistent.',
-    icon: CodeIcon,
+      'Drafts stay in your browser. We only store it if you choose to publish.',
   },
   {
-    title: 'Shareable link',
-    description:
-      'Public links are coming soon. For now, export a PDF to share anywhere.',
     icon: LinkSimpleIcon,
+    title: 'One link to share',
+    description:
+      'Publish to get a clean URL you can drop in LinkedIn or send to recruiters. Update anytime without resending.',
+  },
+  {
+    icon: FilePdfIcon,
+    title: 'PDF when you need it',
+    description:
+      'Print to PDF straight from your browser. ATS-friendly, no watermarks.',
+  },
+  {
+    icon: LayoutIcon,
+    title: 'Multiple templates',
+    description: 'Switch layouts without rewriting anything.',
     comingSoon: true,
   },
   {
-    title: 'PDF export',
-    description: 'Download a clean, print-friendly PDF when you’re ready.',
-    icon: FilePdfIcon,
+    icon: DevicesIcon,
+    title: 'Works everywhere',
+    description: 'Edit on your laptop, check it on your phone.',
   },
 ]
 

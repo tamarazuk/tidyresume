@@ -1,5 +1,5 @@
 import { FileTextIcon } from '@phosphor-icons/react/dist/ssr'
-import ButtonLink from '@/components/ui/button-link'
+import { StartButton } from '@/components/marketing/start-button'
 
 function HeroMockup() {
   return (
@@ -185,13 +185,7 @@ export default function Hero() {
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-3 pt-4">
-            <ButtonLink
-              href="/edit"
-              size="lg"
-              className="shadow-primary/30 h-12 min-w-35 px-6 text-base shadow-xl"
-            >
-              Start Writing Now
-            </ButtonLink>
+            <StartButton />
           </div>
         </div>
         <HeroMockup />

@@ -14,6 +14,8 @@ export type FooterLayoutItem =
   | { type: 'align' }
 
 export const FOOTER_LAYOUT: FooterLayoutItem[] = [
+  { type: 'custom', id: 'shortcutTips' },
+  { type: 'divider' },
   { type: 'custom', id: 'saveStatus' },
   { type: 'custom', id: 'warning' },
   { type: 'align' },

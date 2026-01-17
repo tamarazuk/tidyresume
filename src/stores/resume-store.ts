@@ -1,7 +1,11 @@
+'use client'
+
 import { useSyncExternalStore } from 'react'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
+import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
+import type { ResumeId, ResumeSlug } from '@/lib/resume-types'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
 
@@ -9,16 +13,30 @@ const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
 
 interface ResumeState {
+  id: ResumeId | null
+  slug: ResumeSlug
+  deleteSecret: string | null
   resumeTitle: string
   markdown: string
   saveStatus: SaveStatus
+  syncStatus: 'synced' | 'syncing' | 'error' | 'unsaved'
+  isPublished: boolean
   imageWarning: string | null
   contentWarning: string | null
   setResumeTitle: (resumeTitle: string) => void
   setMarkdown: (markdown: string) => void
   setSaveStatus: (saveStatus: SaveStatus) => void
+  setSyncStatus: (
+    syncStatus: 'synced' | 'syncing' | 'error' | 'unsaved'
+  ) => void
+  setId: (id: ResumeId | null) => void
+  setSlug: (slug: ResumeSlug) => void
+  setDeleteSecret: (deleteSecret: string | null) => void
+  setIsPublished: (isPublished: boolean) => void
   setImageWarning: (imageWarning: string | null) => void
   setContentWarning: (contentWarning: string | null) => void
+  unpublish: () => void
+  resetResume: () => void
 }
 
 const createSaveStatusDebouncer = (
@@ -38,9 +56,14 @@ export const useResumeStore = create<ResumeState>()(
     (set) => {
       const scheduleSaveStatus = createSaveStatusDebouncer(set)
       return {
-        resumeTitle: 'Untitled Resume',
+        id: null,
+        slug: null,
+        deleteSecret: null,
+        resumeTitle: DEFAULT_RESUME_TITLE,
         markdown: DEFAULT_RESUME,
         saveStatus: 'saved',
+        syncStatus: 'unsaved',
+        isPublished: false,
         imageWarning: null,
         contentWarning: null,
         setResumeTitle: (resumeTitle) => {
@@ -61,13 +84,38 @@ export const useResumeStore = create<ResumeState>()(
           scheduleSaveStatus()
         },
         setSaveStatus: (saveStatus) => set({ saveStatus }),
+        setSyncStatus: (syncStatus) => set({ syncStatus }),
+        setId: (id) => set({ id }),
+        setSlug: (slug) => set({ slug }),
+        setDeleteSecret: (deleteSecret) => set({ deleteSecret }),
+        setIsPublished: (isPublished) => set({ isPublished }),
         setImageWarning: (imageWarning) => set({ imageWarning }),
         setContentWarning: (contentWarning) => set({ contentWarning }),
+        unpublish: () =>
+          set({
+            syncStatus: 'unsaved',
+            isPublished: false,
+            id: null,
+            deleteSecret: null,
+          }),
+        resetResume: () =>
+          set({
+            id: null,
+            slug: null,
+            deleteSecret: null,
+            resumeTitle: DEFAULT_RESUME_TITLE,
+            markdown: '',
+            saveStatus: 'saved',
+            syncStatus: 'unsaved',
+            isPublished: false,
+            imageWarning: null,
+            contentWarning: null,
+          }),
       }
     },
     {
       name: 'tidyresume-editor',
-      version: 1,
+      version: 4, // Bump version
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },
@@ -78,6 +126,12 @@ export const useResumeStore = create<ResumeState>()(
           resumeTitle: state.resumeTitle ?? 'Untitled Resume',
           markdown: state.markdown ?? DEFAULT_RESUME,
           saveStatus: state.saveStatus ?? 'saved',
+
+          id: state.id ?? null,
+          slug: state.slug ?? null,
+          deleteSecret: state.deleteSecret ?? null,
+          isPublished: state.isPublished ?? false,
+          syncStatus: 'unsaved', // Reset to unsaved on migration
           imageWarning: state.imageWarning ?? null,
           contentWarning: state.contentWarning ?? null,
         }

@@ -19,12 +19,30 @@
     // see https://opennext.js.org/cloudflare/howtos/image
     "binding": "IMAGES",
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tidyresume-db",
+      "database_id": "f9160017-87bb-448b-9e1a-6f432a17850d",
+      "migrations_dir": "drizzle",
+    },
+  ],
   "services": [
     {
       // Self-reference service binding, the service name must match the worker name
       // see https://opennext.js.org/cloudflare/caching
       "binding": "WORKER_SELF_REFERENCE",
       "service": "tidyresume",
+    },
+  ],
+  "ratelimits": [
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 3,
+        "period": 60,
+      },
     },
   ],
   "observability": {

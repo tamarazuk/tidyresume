@@ -33,6 +33,8 @@ describe('useEditorFooters', () => {
         value: '',
         layout,
         saveStatus: 'saved',
+        cloudStatus: 'synced',
+        hasCloudCopy: true,
         warningMessage: 'Image too large',
       })
     )
@@ -40,6 +42,7 @@ describe('useEditorFooters', () => {
     render(<>{result.current.defFooters}</>)
 
     expect(screen.getByText('Saved locally')).toBeInTheDocument()
+    expect(screen.getByText('Saved to cloud')).toBeInTheDocument()
     expect(screen.getByText('Image too large')).toBeInTheDocument()
   })
 })
