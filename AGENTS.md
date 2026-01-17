@@ -8,6 +8,13 @@ Guidelines for AI assistants working on this codebase.
 - Always check the current content of a file before modifying it.
 - Prefer appending or merging changes over replacing the entire file content, unless explicitly instructed to overwrite.
 
+### Code Modification Best Practices
+
+- **Preserve Integrity:** When using the `replace` tool, ensure you identify a unique block of code to replace, but **NEVER truncate** the surrounding code or the function body unless explicitly intended.
+- **Context is Key:** Always include enough context in your `old_string` to ensure uniqueness, but verify that your `new_string` contains the *complete* replacement logic, including any closing braces or return statements that were part of the original block.
+- **Read First:** Always read the file content immediately before modifying it to ensure you are working with the latest version.
+- **Verify:** After any modification, read the file again or run a quick build/test to ensure no syntax errors were introduced (e.g., missing `}`).
+
 ## Project Overview
 
 TidyResume is a markdown-based resume builder built with Next.js 15 (App Router), TypeScript, and Tailwind CSS v4. Users write resumes in Markdown, see a live preview, and export/print to PDF. Drafts are stored locally; publishing saves to Cloudflare D1 and generates a shareable public view at `/r/[slug]`.
