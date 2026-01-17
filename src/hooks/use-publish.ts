@@ -3,21 +3,24 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useResumeStore } from '@/stores/resume-store'
-import { publishResume as publishResumeRequest, deleteResume as deleteResumeRequest } from '@/lib/resume-api'
+import {
+  publishResume as publishResumeRequest,
+  deleteResume as deleteResumeRequest,
+} from '@/lib/resume-api'
 import { getResumeUrl } from '@/lib/utils'
 
 export function usePublish() {
   const [isPublishing, setIsPublishing] = useState(false)
   const [isUnpublishing, setIsUnpublishing] = useState(false)
   const resumeId = useResumeStore((state) => state.id)
-  const deleteSecret = useResumeStore((state) => state.deleteSecret)
+  const editSecret = useResumeStore((state) => state.editSecret)
   const resumeTitle = useResumeStore((state) => state.resumeTitle)
   const resumeContent = useResumeStore((state) => state.markdown)
   const resumeSlug = useResumeStore((state) => state.slug)
   const setResumeId = useResumeStore((state) => state.setId)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const setIsPublished = useResumeStore((state) => state.setIsPublished)
-  const setDeleteSecret = useResumeStore((state) => state.setDeleteSecret)
+  const setEditSecret = useResumeStore((state) => state.setEditSecret)
 
   const publishResume = async () => {
     setIsPublishing(true)
@@ -31,15 +34,15 @@ export function usePublish() {
           id: resumeId ?? undefined,
         },
         {
-          deleteSecret: deleteSecret ?? undefined,
+          editSecret: editSecret ?? undefined,
         }
       )
 
       if (data.id) {
         setResumeId(data.id)
       }
-      if (data.deleteSecret) {
-        setDeleteSecret(data.deleteSecret)
+      if (data.editSecret) {
+        setEditSecret(data.editSecret)
       }
       setIsPublished(true)
       setSyncStatus('synced')
@@ -62,11 +65,16 @@ export function usePublish() {
 
   const unpublishResume = async () => {
     if (!resumeId) return
-    if (!confirm('Are you sure? Your public link will stop working immediately.')) return
+    if (
+      !confirm('Are you sure? Your public link will stop working immediately.')
+    )
+      return
 
     setIsUnpublishing(true)
     try {
-      await deleteResumeRequest(resumeId, { deleteSecret: deleteSecret ?? undefined })
+      await deleteResumeRequest(resumeId, {
+        editSecret: editSecret ?? undefined,
+      })
       useResumeStore.getState().unpublish()
       toast.success('Resume unpublished successfully')
     } catch (error) {

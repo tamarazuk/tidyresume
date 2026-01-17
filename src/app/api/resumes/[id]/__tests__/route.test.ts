@@ -25,55 +25,66 @@ describe('DELETE /api/resumes/[id]', () => {
     vi.mocked(getCloudflareContext).mockResolvedValue({
       env: { DB: {} },
     } as unknown as Awaited<ReturnType<typeof getCloudflareContext>>)
-    vi.mocked(getDb).mockReturnValue(mockDb as unknown as ReturnType<typeof getDb>)
+    vi.mocked(getDb).mockReturnValue(
+      mockDb as unknown as ReturnType<typeof getDb>
+    )
   })
 
-  it('should return 401 if delete secret header is missing', async () => {
+  it('should return 401 if edit secret header is missing', async () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'test-id',
-      deleteSecret: 'secret-123',
+      editSecret: 'secret-123',
     } as unknown as Awaited<ReturnType<typeof resumeService.getResume>>)
 
     const request = new Request('http://localhost/api/resumes/test-id', {
       method: 'DELETE',
     })
 
-    const response = await DELETE(request, { params: Promise.resolve({ id: 'test-id' }) })
+    const response = await DELETE(request, {
+      params: Promise.resolve({ id: 'test-id' }),
+    })
     expect(response.status).toBe(401)
   })
 
-  it('should return 401 if delete secret is incorrect', async () => {
+  it('should return 401 if edit secret is incorrect', async () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'test-id',
-      deleteSecret: 'secret-123',
+      editSecret: 'secret-123',
     } as unknown as Awaited<ReturnType<typeof resumeService.getResume>>)
 
     const request = new Request('http://localhost/api/resumes/test-id', {
       method: 'DELETE',
       headers: {
-        'X-Delete-Secret': 'wrong-secret',
+        'X-Edit-Secret': 'wrong-secret',
       },
     })
 
-    const response = await DELETE(request, { params: Promise.resolve({ id: 'test-id' }) })
+    const response = await DELETE(request, {
+      params: Promise.resolve({ id: 'test-id' }),
+    })
     expect(response.status).toBe(401)
   })
 
-  it('should delete if delete secret is correct', async () => {
+  it('should delete if edit secret is correct', async () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'test-id',
-      deleteSecret: 'secret-123',
+      editSecret: 'secret-123',
     } as unknown as Awaited<ReturnType<typeof resumeService.getResume>>)
 
     const request = new Request('http://localhost/api/resumes/test-id', {
       method: 'DELETE',
       headers: {
-        'X-Delete-Secret': 'secret-123',
+        'X-Edit-Secret': 'secret-123',
       },
     })
 
-    const response = await DELETE(request, { params: Promise.resolve({ id: 'test-id' }) })
+    const response = await DELETE(request, {
+      params: Promise.resolve({ id: 'test-id' }),
+    })
     expect(response.status).toBe(200)
-    expect(resumeService.deleteResume).toHaveBeenCalledWith(expect.anything(), 'test-id')
+    expect(resumeService.deleteResume).toHaveBeenCalledWith(
+      expect.anything(),
+      'test-id'
+    )
   })
 })

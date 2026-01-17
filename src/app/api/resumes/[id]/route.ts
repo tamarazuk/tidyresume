@@ -19,7 +19,11 @@ export async function GET(
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { deleteSecret: _deleteSecret, userEmail: _userEmail, ...safeResume } = resume
+    const {
+      editSecret: _editSecret,
+      userEmail: _userEmail,
+      ...safeResume
+    } = resume
     return NextResponse.json(safeResume)
   } catch (error) {
     console.error('Fetch error:', error)
@@ -45,14 +49,14 @@ export async function DELETE(
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
     }
 
-    const secretHeader = request.headers.get('X-Delete-Secret')
-    
-    // Resume must have a deleteSecret to be deleted via this API
+    const secretHeader = request.headers.get('X-Edit-Secret')
+
+    // Resume must have an editSecret to be deleted via this API
     // If it doesn't (legacy?), we might default to blocking or allowing.
-    // Given the migration, all new ones have it. 
+    // Given the migration, all new ones have it.
     // Secure by default: Block if secret mismatch.
-    
-    if (!resume.deleteSecret || secretHeader !== resume.deleteSecret) {
+
+    if (!resume.editSecret || secretHeader !== resume.editSecret) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

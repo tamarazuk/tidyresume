@@ -22,10 +22,10 @@ Protect the magic link endpoint from abuse using Cloudflare's native rate limiti
 ## Phase 3: Secure Resume Deletion
 Implement ownership verification for both claimed and anonymous resumes.
 
-- [x] Task: Update schema to support `deleteSecret` for anonymous resumes 6494dec
+- [x] Task: Update schema to support `editSecret` for anonymous resumes 6494dec
 - [x] Task: Write failing tests for `DELETE /api/resumes/[id]` (unauthorized, claimed owner, anonymous with secret) 6494dec
-- [x] Task: Update `publishResume` to generate and return `deleteSecret` for new anonymous resumes 6494dec
-- [x] Task: Update frontend to store `deleteSecret` in localStorage for anonymous resumes 6494dec
+- [x] Task: Update `publishResume` to generate and return `editSecret` for new anonymous resumes 6494dec
+- [x] Task: Update frontend to store `editSecret` in localStorage for anonymous resumes 6494dec
 - [x] Task: Implement ownership verification in the `DELETE` API route 6494dec
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Secure Resume Deletion' (Protocol in workflow.md)
 

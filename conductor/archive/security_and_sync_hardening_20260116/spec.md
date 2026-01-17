@@ -7,8 +7,8 @@ This track addresses several security vulnerabilities and stability issues ident
 
 ### 1. Secure Resume Deletion
 -   **Claimed Resumes:** Update the `DELETE /api/resumes/[id]` endpoint to require a valid authentication token. The token must be verified against the resume owner's email.
--   **Anonymous Resumes:** Implement a `deleteSecret` mechanism.
-    -   When an anonymous resume is created, generate a cryptographically secure `deleteSecret`.
+-   **Anonymous Resumes:** Implement an `editSecret` mechanism.
+    -   When an anonymous resume is created, generate a cryptographically secure `editSecret`.
     -   Return this secret to the client and store it in browser localStorage.
     -   The `DELETE` endpoint must require this secret if no owner email is associated with the resume.
 
@@ -26,12 +26,12 @@ This track addresses several security vulnerabilities and stability issues ident
 -   **Manual Retry:** If automatic retries fail, display a "Retry" button in the editor footer next to the "Cloud sync error" status.
 
 ## Non-Functional Requirements
--   **Security:** Ensure no sensitive secrets (like `deleteSecret`) are logged or exposed in public views.
+-   **Security:** Ensure no sensitive secrets (like `editSecret`) are logged or exposed in public views.
 -   **Performance:** Rate limiting should be performed at the edge using Cloudflare's native capabilities.
 
 ## Acceptance Criteria
 -   Unauthorized DELETE requests to `/api/resumes/[id]` return `401` or `403`.
--   Authorized DELETE requests succeed only with a valid token (claimed) or `deleteSecret` (anonymous).
+-   Authorized DELETE requests succeed only with a valid token (claimed) or `editSecret` (anonymous).
 -   `generate-token` endpoint returns `429 Too Many Requests` when limits are exceeded.
 -   Concurrent requests for the same slug result in one success and one `409` error.
 -   The editor UI shows a "Retry" button when sync fails after all automatic attempts.

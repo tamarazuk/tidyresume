@@ -23,7 +23,7 @@ export function UnpublishButton({ id }: UnpublishButtonProps) {
   const isOwner = useOwnerCheck(id)
   const router = useRouter()
   const unpublish = useResumeStore((state) => state.unpublish)
-  const deleteSecret = useResumeStore((state) => state.deleteSecret)
+  const editSecret = useResumeStore((state) => state.editSecret)
   const [isUnpublishing, setIsUnpublishing] = useState(false)
 
   if (!isOwner) return null
@@ -36,7 +36,7 @@ export function UnpublishButton({ id }: UnpublishButtonProps) {
 
     setIsUnpublishing(true)
     try {
-      await deleteResume(id, { deleteSecret })
+      await deleteResume(id, { editSecret })
       unpublish()
       toast.success('Resume unpublished successfully')
       router.push('/edit')

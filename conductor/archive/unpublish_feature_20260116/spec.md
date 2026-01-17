@@ -14,7 +14,7 @@ Change the current "Delete" functionality to an "Unpublish" model. Instead of er
 - **Labeling**: Update tooltips and confirmation dialogs to use "Unpublish" instead of "Delete".
 - **Logic**:
     - The "Unpublish" action will trigger the `DELETE` API call to the backend.
-    - **Crucially**, it will NOT clear the `id`, `slug`, or `deleteSecret` from the local `resume-store`.
+    - **Crucially**, it will NOT clear the `id`, `slug`, or `editSecret` from the local `resume-store`.
     - It will reset the `syncStatus` to `idle` (or a state representing "Not Published").
 - **Confirmation**: Show a standard dialog: *"Are you sure? Your public link will stop working immediately."*
 

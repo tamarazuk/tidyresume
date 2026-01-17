@@ -15,7 +15,7 @@ Refactor the frontend to use the "Unpublish" terminology and preserve local stat
 
 - [x] Task: Update `useResumeStore` to include a method for resetting sync status without clearing resume data
 - [x] Task: Refactor the Delete dialog/button in the editor to use the `CloudSlash` icon and "Unpublish" labels
-- [x] Task: Update the unpublish handler to call the delete API but retain the local `id`, `slug`, and `deleteSecret`
+- [x] Task: Update the unpublish handler to call the delete API but retain the local `id`, `slug`, and `editSecret`
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Unpublish UI & Logic' (Protocol in workflow.md)
 
 ## Phase 3: Remote Status Sync (Existence Checks)
@@ -31,5 +31,5 @@ Implement the background logic to detect if a resume has been unpublished elsewh
 Ensure robustness during sync failures and edge cases.
 
 - [x] Task: Update `use-resume-sync.ts` to detect 404 errors during auto-save and transition to "Unpublished" state instead of showing a persistent sync error cca39c3
-- [x] Task: Verify that re-publishing a previously unpublished resume works seamlessly (same ID, new deleteSecret) cca39c3
+- [x] Task: Verify that re-publishing a previously unpublished resume works seamlessly (same ID, new editSecret) cca39c3
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Error Handling & Edge Cases' (Protocol in workflow.md) cca39c3

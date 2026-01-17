@@ -11,7 +11,7 @@ export interface PublishResumeResponse {
   id: ResumeId
   slug: ResumeSlug
   url?: string
-  deleteSecret?: string
+  editSecret?: string
 }
 
 export class ResumeApiError extends Error {
@@ -51,11 +51,11 @@ async function parseJsonResponse<T>(
 
 export async function publishResume(
   payload: PublishResumePayload,
-  options: { signal?: AbortSignal; deleteSecret?: string } = {}
+  options: { signal?: AbortSignal; editSecret?: string } = {}
 ): Promise<PublishResumeResponse> {
   const headers: HeadersInit = { 'Content-Type': 'application/json' }
-  if (options.deleteSecret) {
-    headers['X-Delete-Secret'] = options.deleteSecret
+  if (options.editSecret) {
+    headers['X-Edit-Secret'] = options.editSecret
   }
 
   const response = await fetch('/api/resumes/publish', {
@@ -85,11 +85,11 @@ export async function fetchResume(
 
 export async function deleteResume(
   id: string,
-  options: { signal?: AbortSignal; deleteSecret?: string | null } = {}
+  options: { signal?: AbortSignal; editSecret?: string | null } = {}
 ): Promise<{ success: boolean }> {
   const headers: HeadersInit = {}
-  if (options.deleteSecret) {
-    headers['X-Delete-Secret'] = options.deleteSecret
+  if (options.editSecret) {
+    headers['X-Edit-Secret'] = options.editSecret
   }
 
   const response = await fetch(`/api/resumes/${id}`, {

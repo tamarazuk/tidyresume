@@ -14,12 +14,15 @@ export async function POST(request: Request) {
     const { env } = await getCloudflareContext({ async: true })
     const db = getDb(env.DB)
 
-    // Security Check: If updating an existing resume, verify the deleteSecret
+    // Security Check: If updating an existing resume, verify the edit secret
     if (body.id) {
       const existingResume = await resumeService.getResume(db, body.id)
       if (existingResume) {
-        const secretHeader = request.headers.get('X-Delete-Secret')
-        if (!existingResume.deleteSecret || secretHeader !== existingResume.deleteSecret) {
+        const secretHeader = request.headers.get('X-Edit-Secret')
+        if (
+          !existingResume.editSecret ||
+          secretHeader !== existingResume.editSecret
+        ) {
           return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
       }
@@ -34,7 +37,7 @@ export async function POST(request: Request) {
       id: result.id,
       slug: result.slug,
       url,
-      deleteSecret: result.deleteSecret,
+      editSecret: result.editSecret,
     })
   } catch (error: unknown) {
     if (error instanceof Error && error.message === 'Slug already taken') {

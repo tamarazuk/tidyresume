@@ -59,7 +59,7 @@ export async function publishResume(
       .returning({
         id: resumes.id,
         slug: resumes.slug,
-        deleteSecret: resumes.deleteSecret,
+        editSecret: resumes.editSecret,
       })
 
     if (results.length === 0) {
@@ -73,25 +73,22 @@ export async function publishResume(
 
   // CASE 2: Create new resume
   const resumeId = crypto.randomUUID()
-  const deleteSecret = crypto.randomUUID()
+  const editSecret = crypto.randomUUID()
 
   const values: typeof resumes.$inferInsert = {
     id: resumeId,
     title: data.title,
     content: data.content,
     slug: slugVal,
-    deleteSecret: deleteSecret,
+    editSecret: editSecret,
   }
 
   try {
-    const results = await db
-      .insert(resumes)
-      .values(values)
-      .returning({
-        id: resumes.id,
-        slug: resumes.slug,
-        deleteSecret: resumes.deleteSecret,
-      })
+    const results = await db.insert(resumes).values(values).returning({
+      id: resumes.id,
+      slug: resumes.slug,
+      editSecret: resumes.editSecret,
+    })
 
     return results[0]
   } catch (error) {

@@ -26,14 +26,16 @@ describe('POST /api/resumes/publish', () => {
     vi.mocked(getCloudflareContext).mockResolvedValue({
       env: { DB: {} },
     } as unknown as Awaited<ReturnType<typeof getCloudflareContext>>)
-    vi.mocked(getDb).mockReturnValue(mockDb as unknown as ReturnType<typeof getDb>)
+    vi.mocked(getDb).mockReturnValue(
+      mockDb as unknown as ReturnType<typeof getDb>
+    )
   })
 
   it('should allow publishing a new resume (no ID)', async () => {
     vi.mocked(resumeService.publishResume).mockResolvedValue({
       id: 'new-uuid',
       slug: null,
-      deleteSecret: 'new-secret'
+      editSecret: 'new-secret',
     })
 
     const request = new Request('http://localhost/api/resumes/publish', {
@@ -50,12 +52,16 @@ describe('POST /api/resumes/publish', () => {
   it('should return 401 if updating existing resume without secret', async () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'existing-id',
-      deleteSecret: 'correct-secret',
+      editSecret: 'correct-secret',
     } as unknown as typeof resumes.$inferSelect)
 
     const request = new Request('http://localhost/api/resumes/publish', {
       method: 'POST',
-      body: JSON.stringify({ id: 'existing-id', title: 'Update', content: 'Content' }),
+      body: JSON.stringify({
+        id: 'existing-id',
+        title: 'Update',
+        content: 'Content',
+      }),
     })
 
     const response = await POST(request)
@@ -65,20 +71,24 @@ describe('POST /api/resumes/publish', () => {
   it('should allow updating existing resume with correct secret', async () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'existing-id',
-      deleteSecret: 'correct-secret',
+      editSecret: 'correct-secret',
     } as unknown as typeof resumes.$inferSelect)
     vi.mocked(resumeService.publishResume).mockResolvedValue({
       id: 'existing-id',
       slug: null,
-      deleteSecret: 'correct-secret'
+      editSecret: 'correct-secret',
     })
 
     const request = new Request('http://localhost/api/resumes/publish', {
       method: 'POST',
       headers: {
-        'X-Delete-Secret': 'correct-secret',
+        'X-Edit-Secret': 'correct-secret',
       },
-      body: JSON.stringify({ id: 'existing-id', title: 'Update', content: 'Content' }),
+      body: JSON.stringify({
+        id: 'existing-id',
+        title: 'Update',
+        content: 'Content',
+      }),
     })
 
     const response = await POST(request)
@@ -92,12 +102,16 @@ describe('POST /api/resumes/publish', () => {
     vi.mocked(resumeService.publishResume).mockResolvedValue({
       id: 'unpublished-id',
       slug: null,
-      deleteSecret: 'new-secret'
+      editSecret: 'new-secret',
     })
 
     const request = new Request('http://localhost/api/resumes/publish', {
       method: 'POST',
-      body: JSON.stringify({ id: 'unpublished-id', title: 'Republish', content: 'Content' }),
+      body: JSON.stringify({
+        id: 'unpublished-id',
+        title: 'Republish',
+        content: 'Content',
+      }),
     })
 
     const response = await POST(request)

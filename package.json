@@ -14,6 +14,8 @@
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "deploy:cf": "opennextjs-cloudflare deploy",
+    "migrate:local": "wrangler d1 migrations apply tidyresume-db",
+    "migrate:prod": "wrangler d1 migrations apply tidyresume-db --remote",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {

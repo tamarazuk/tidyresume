@@ -21,7 +21,7 @@ function TokenHandler() {
   const setResumeTitle = useResumeStore((state) => state.setResumeTitle)
   const setId = useResumeStore((state) => state.setId)
   const setSlug = useResumeStore((state) => state.setSlug)
-  const setDeleteSecret = useResumeStore((state) => state.setDeleteSecret)
+  const setEditSecret = useResumeStore((state) => state.setEditSecret)
 
   useEffect(() => {
     if (!token) return
@@ -43,7 +43,7 @@ function TokenHandler() {
             slug: string | null
             title: string
             content: string
-            deleteSecret?: string | null
+            editSecret?: string | null
           }
           error?: string
         }
@@ -58,8 +58,8 @@ function TokenHandler() {
         setSlug(resume.slug)
         setResumeTitle(resume.title)
         setMarkdown(resume.content)
-        if (resume.deleteSecret) {
-          setDeleteSecret(resume.deleteSecret)
+        if (resume.editSecret) {
+          setEditSecret(resume.editSecret)
         }
 
         toast.success('Resume loaded successfully', { id: toastId })
@@ -75,7 +75,15 @@ function TokenHandler() {
     }
 
     verifyToken()
-  }, [token, router, setId, setSlug, setResumeTitle, setMarkdown, setDeleteSecret])
+  }, [
+    token,
+    router,
+    setId,
+    setSlug,
+    setResumeTitle,
+    setMarkdown,
+    setEditSecret,
+  ])
 
   return null
 }

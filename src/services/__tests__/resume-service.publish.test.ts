@@ -6,13 +6,13 @@ vi.mock('@/db/schema', async () => {
   const actual = await vi.importActual('@/db/schema')
   return {
     ...actual,
-    resumes: { 
-      id: 'resumes', 
-      title: 'title', 
-      content: 'content', 
+    resumes: {
+      id: 'resumes',
+      title: 'title',
+      content: 'content',
       slug: 'slug',
-      deleteSecret: 'deleteSecret',
-      updatedAt: 'updatedAt'
+      editSecret: 'editSecret',
+      updatedAt: 'updatedAt',
     },
   }
 })
@@ -27,12 +27,18 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
     vi.clearAllMocks()
   })
 
-  it('should ensure a deleteSecret is present in values even if ID is provided (handling republish)', async () => {
+  it('should ensure an editSecret is present in values even if ID is provided (handling republish)', async () => {
     // Setup the chain: insert().values().onConflictDoUpdate().returning() -> resolves to array
-    const returningMock = vi.fn().mockResolvedValue([{ deleteSecret: 'new-secret-from-db' }])
-    const onConflictDoUpdateMock = vi.fn().mockReturnValue({ returning: returningMock })
-    const valuesMock = vi.fn().mockReturnValue({ onConflictDoUpdate: onConflictDoUpdateMock })
-    
+    const returningMock = vi
+      .fn()
+      .mockResolvedValue([{ editSecret: 'new-secret-from-db' }])
+    const onConflictDoUpdateMock = vi
+      .fn()
+      .mockReturnValue({ returning: returningMock })
+    const valuesMock = vi
+      .fn()
+      .mockReturnValue({ onConflictDoUpdate: onConflictDoUpdateMock })
+
     mockDb.insert.mockReturnValue({ values: valuesMock })
 
     const result = await publishResume(mockDb, {
@@ -44,13 +50,13 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
     // 1. Verify we called values()
     expect(valuesMock).toHaveBeenCalled()
     const valuesCall = valuesMock.mock.calls[0][0]
-    
-    // CRITICAL: We expect deleteSecret to be generated and passed in values
+
+    // CRITICAL: We expect editSecret to be generated and passed in values
     // even though ID was provided.
-    expect(valuesCall.deleteSecret).toBeDefined()
-    expect(typeof valuesCall.deleteSecret).toBe('string')
+    expect(valuesCall.editSecret).toBeDefined()
+    expect(typeof valuesCall.editSecret).toBe('string')
 
     // 2. Verify we return the secret from the DB
-    expect(result.deleteSecret).toBe('new-secret-from-db')
+    expect(result.editSecret).toBe('new-secret-from-db')
   })
 })

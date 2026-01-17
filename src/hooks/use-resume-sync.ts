@@ -14,7 +14,7 @@ export function useResumeSync() {
   const content = useResumeStore((state) => state.markdown)
   const slug = useResumeStore((state) => state.slug)
   const isPublished = useResumeStore((state) => state.isPublished)
-  const deleteSecret = useResumeStore((state) => state.deleteSecret)
+  const editSecret = useResumeStore((state) => state.editSecret)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const [retryTrigger, setRetryTrigger] = useState(0)
 
@@ -90,7 +90,7 @@ export function useResumeSync() {
         try {
           await publishResume(pending.payload, {
             signal: controller.signal,
-            deleteSecret: deleteSecret ?? undefined,
+            editSecret: editSecret ?? undefined,
           })
           success = true
         } catch (error) {
@@ -130,7 +130,7 @@ export function useResumeSync() {
     content,
     slug,
     isPublished,
-    deleteSecret,
+    editSecret,
     setSyncStatus,
     retryTrigger,
   ])

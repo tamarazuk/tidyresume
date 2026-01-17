@@ -15,7 +15,7 @@ const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
 interface ResumeState {
   id: ResumeId | null
   slug: ResumeSlug
-  deleteSecret: string | null
+  editSecret: string | null
   resumeTitle: string
   markdown: string
   saveStatus: SaveStatus
@@ -31,7 +31,7 @@ interface ResumeState {
   ) => void
   setId: (id: ResumeId | null) => void
   setSlug: (slug: ResumeSlug) => void
-  setDeleteSecret: (deleteSecret: string | null) => void
+  setEditSecret: (editSecret: string | null) => void
   setIsPublished: (isPublished: boolean) => void
   setImageWarning: (imageWarning: string | null) => void
   setContentWarning: (contentWarning: string | null) => void
@@ -58,7 +58,7 @@ export const useResumeStore = create<ResumeState>()(
       return {
         id: null,
         slug: null,
-        deleteSecret: null,
+        editSecret: null,
         resumeTitle: DEFAULT_RESUME_TITLE,
         markdown: DEFAULT_RESUME,
         saveStatus: 'saved',
@@ -87,7 +87,7 @@ export const useResumeStore = create<ResumeState>()(
         setSyncStatus: (syncStatus) => set({ syncStatus }),
         setId: (id) => set({ id }),
         setSlug: (slug) => set({ slug }),
-        setDeleteSecret: (deleteSecret) => set({ deleteSecret }),
+        setEditSecret: (editSecret) => set({ editSecret }),
         setIsPublished: (isPublished) => set({ isPublished }),
         setImageWarning: (imageWarning) => set({ imageWarning }),
         setContentWarning: (contentWarning) => set({ contentWarning }),
@@ -96,13 +96,13 @@ export const useResumeStore = create<ResumeState>()(
             syncStatus: 'unsaved',
             isPublished: false,
             id: null,
-            deleteSecret: null,
+            editSecret: null,
           }),
         resetResume: () =>
           set({
             id: null,
             slug: null,
-            deleteSecret: null,
+            editSecret: null,
             resumeTitle: DEFAULT_RESUME_TITLE,
             markdown: '',
             saveStatus: 'saved',
@@ -115,7 +115,7 @@ export const useResumeStore = create<ResumeState>()(
     },
     {
       name: 'tidyresume-editor',
-      version: 4, // Bump version
+      version: 5, // Bump version
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },
@@ -129,7 +129,7 @@ export const useResumeStore = create<ResumeState>()(
 
           id: state.id ?? null,
           slug: state.slug ?? null,
-          deleteSecret: state.deleteSecret ?? null,
+          editSecret: state.editSecret ?? null,
           isPublished: state.isPublished ?? false,
           syncStatus: 'unsaved', // Reset to unsaved on migration
           imageWarning: state.imageWarning ?? null,

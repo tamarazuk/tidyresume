@@ -7,9 +7,14 @@ export const resumes = sqliteTable('resumes', {
   title: text('title').notNull(),
   content: text('content').notNull(), // Markdown content
   userEmail: text('user_email'),
-  deleteSecret: text('delete_secret'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`).$onUpdate(() => new Date()),
+  editSecret: text('edit_secret'),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$onUpdate(() => new Date()),
 })
 
 export const resumesRelations = relations(resumes, ({ many }) => ({
@@ -19,11 +24,15 @@ export const resumesRelations = relations(resumes, ({ many }) => ({
 export const authTokens = sqliteTable('auth_tokens', {
   id: text('id').primaryKey(),
   token: text('token').unique().notNull(),
-  resumeId: text('resume_id').notNull().references(() => resumes.id, { onDelete: 'cascade' }),
+  resumeId: text('resume_id')
+    .notNull()
+    .references(() => resumes.id, { onDelete: 'cascade' }),
   email: text('email').notNull(),
   expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
   usedAt: integer('used_at', { mode: 'timestamp' }),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })
 
 export const authTokensRelations = relations(authTokens, ({ one }) => ({
