@@ -1,0 +1,507 @@
+/* Resume Components - Specific styling for resume sections */
+
+/* ========================================
+   HEADER & CONTACT INFORMATION
+   ======================================== */
+
+/* Resume header container */
+.resume-header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width-thick) solid
+    var(--color-text-primary, #1a202c);
+}
+
+/* Name styling */
+.resume-name {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary, #1a202c);
+  margin-bottom: var(--space-2);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Professional title */
+.resume-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary, #4a5568);
+  margin-bottom: var(--space-4);
+}
+
+/* Contact information */
+.resume-contact {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-muted, #718096);
+}
+
+.resume-contact a {
+  color: var(--color-accent-primary, #2563eb);
+  text-decoration: none;
+}
+
+.resume-contact a:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   SECTION HEADERS
+   ======================================== */
+
+.resume-section {
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-6);
+}
+
+.resume-section:first-of-type {
+  margin-top: 0;
+}
+
+.resume-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-accent-primary, #2563eb);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width-thin) solid
+    var(--color-border-light, #e2e8f0);
+}
+
+/* ========================================
+   WORK EXPERIENCE COMPONENTS
+   ======================================== */
+
+.resume-experience-item {
+  margin-bottom: var(--space-6);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.resume-experience-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Company name and location */
+.resume-company {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary, #1a202c);
+  margin-bottom: var(--space-1);
+  line-height: var(--line-height-tight);
+}
+
+/* Job title and dates */
+.resume-position {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary, #4a5568);
+  margin-bottom: var(--space-3);
+  line-height: var(--line-height-normal);
+}
+
+.resume-position strong {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary, #1a202c);
+}
+
+.resume-position em {
+  font-style: italic;
+  color: var(--color-text-muted, #718096);
+  font-size: var(--font-size-sm);
+}
+
+/* Experience description */
+.resume-description {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary, #4a5568);
+  margin-bottom: var(--space-3);
+}
+
+/* Achievement bullets */
+.resume-achievements {
+  margin-left: var(--space-5);
+  margin-bottom: 0;
+}
+
+.resume-achievements li {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary, #4a5568);
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-1);
+}
+
+.resume-achievements li:last-child {
+  margin-bottom: 0;
+}
+
+.resume-achievements li::marker {
+  color: var(--color-text-muted, #718096);
+}
+
+/* ========================================
+   EDUCATION COMPONENTS
+   ======================================== */
+
+.resume-education-item {
+  margin-bottom: var(--space-4);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.resume-education-item:last-child {
+  margin-bottom: 0;
+}
+
+.resume-institution {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary, #1a202c);
+  margin-bottom: var(--space-1);
+}
+
+.resume-degree {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary, #4a5568);
+  line-height: var(--line-height-normal);
+}
+
+/* ========================================
+   SKILLS COMPONENTS
+   ======================================== */
+
+.resume-skills-category {
+  margin-bottom: var(--space-3);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.resume-skills-category:last-child {
+  margin-bottom: 0;
+}
+
+.resume-skills-label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary, #1a202c);
+  margin-bottom: var(--space-1);
+  display: inline;
+}
+
+.resume-skills-list {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary, #4a5568);
+  line-height: var(--line-height-normal);
+  display: inline;
+  margin-left: var(--space-2);
+}
+
+/* Alternative: Skills as bullet list */
+.resume-skills-bullets {
+  margin-left: var(--space-5);
+  margin-bottom: 0;
+}
+
+.resume-skills-bullets li {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary, #4a5568);
+  margin-bottom: var(--space-1);
+}
+
+/* ========================================
+   PROJECTS COMPONENTS
+   ======================================== */
+
+.resume-project-item {
+  margin-bottom: var(--space-5);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.resume-project-item:last-child {
+  margin-bottom: 0;
+}
+
+.resume-project-name {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary, #1a202c);
+  margin-bottom: var(--space-1);
+}
+
+.resume-project-links {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted, #718096);
+  margin-bottom: var(--space-2);
+}
+
+.resume-project-links a {
+  color: var(--color-accent-primary, #2563eb);
+  text-decoration: none;
+  margin-right: var(--space-4);
+}
+
+.resume-project-links a:hover {
+  text-decoration: underline;
+}
+
+.resume-project-description {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary, #4a5568);
+}
+
+/* ========================================
+   METADATA & DATES
+   ======================================== */
+
+.resume-date-range {
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.resume-location {
+  color: var(--color-text-muted, #718096);
+  font-weight: normal;
+}
+
+/* Pipe separator for inline metadata */
+.resume-separator {
+  margin: 0 var(--space-2);
+  color: var(--color-text-muted, #718096);
+}
+
+/* ========================================
+   LINKS & CONTACT ACTIONS
+   ======================================== */
+
+.resume-link {
+  color: var(--color-accent-primary, #2563eb);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.resume-link:hover {
+  text-decoration: underline;
+}
+
+.resume-link:focus {
+  outline: var(--outline-width) solid var(--color-accent-primary, #2563eb);
+  outline-offset: var(--outline-offset);
+  border-radius: var(--border-radius-sm);
+}
+
+/* Email and phone links */
+.resume-contact-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.resume-contact-link:hover {
+  color: var(--color-accent-primary, #2563eb);
+  text-decoration: underline;
+}
+
+/* ========================================
+   SPECIAL FORMATTING
+   ======================================== */
+
+/* Emphasis within content */
+.resume-highlight {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary, #1a202c);
+}
+
+/* Subtle emphasis */
+.resume-subtle {
+  color: var(--color-text-muted, #718096);
+  font-style: italic;
+}
+
+/* Small caps for certain elements */
+.resume-small-caps {
+  font-variant: small-caps;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* ========================================
+   RESPONSIVE ADJUSTMENTS
+   ======================================== */
+
+@media (max-width: 640px) {
+  .resume-header {
+    text-align: left;
+    margin-bottom: var(--space-6);
+  }
+
+  .resume-name {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-1);
+  }
+
+  .resume-title {
+    font-size: var(--font-size-md);
+    margin-bottom: var(--space-3);
+  }
+
+  .resume-contact {
+    font-size: var(--font-size-sm);
+  }
+
+  .resume-section {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+
+  .resume-achievements,
+  .resume-skills-bullets {
+    margin-left: var(--space-4);
+  }
+}
+
+/* ========================================
+   PRINT OPTIMIZATIONS
+   ======================================== */
+
+@media print {
+  .resume-header {
+    margin-bottom: 16pt;
+    padding-bottom: 8pt;
+    border-bottom-width: 1pt;
+  }
+
+  .resume-name {
+    font-size: 18pt;
+    margin-bottom: 4pt;
+  }
+
+  .resume-title {
+    font-size: 12pt;
+    margin-bottom: 8pt;
+  }
+
+  .resume-contact {
+    font-size: 9pt;
+  }
+
+  .resume-section {
+    margin-top: 16pt;
+    margin-bottom: 12pt;
+  }
+
+  .resume-section-title {
+    font-size: 9pt;
+    margin-bottom: 8pt;
+    padding-bottom: 2pt;
+  }
+
+  .resume-experience-item {
+    margin-bottom: 12pt;
+  }
+
+  .resume-company {
+    font-size: 11pt;
+    margin-bottom: 2pt;
+  }
+
+  .resume-position {
+    font-size: 10pt;
+    margin-bottom: 6pt;
+  }
+
+  .resume-description {
+    font-size: 10pt;
+    margin-bottom: 6pt;
+  }
+
+  .resume-achievements li {
+    font-size: 10pt;
+    margin-bottom: 3pt;
+  }
+
+  .resume-education-item {
+    margin-bottom: 8pt;
+  }
+
+  .resume-institution,
+  .resume-degree {
+    font-size: 10pt;
+  }
+
+  .resume-skills-category {
+    margin-bottom: 6pt;
+  }
+
+  .resume-skills-label,
+  .resume-skills-list {
+    font-size: 10pt;
+  }
+
+  .resume-project-item {
+    margin-bottom: 10pt;
+  }
+
+  .resume-project-name {
+    font-size: 10pt;
+  }
+
+  .resume-project-links {
+    font-size: 9pt;
+  }
+
+  .resume-project-description {
+    font-size: 10pt;
+  }
+
+  /* Ensure links print properly */
+  .resume-link,
+  .resume-contact-link {
+    color: black !important;
+    text-decoration: none !important;
+  }
+
+  /* Print URLs after links for important contact info */
+  .resume-contact a[href^='http']:after {
+    content: ' (' attr(href) ')';
+    font-size: 8pt;
+    color: #666;
+  }
+
+  .resume-contact a[href^='mailto']:after {
+    content: '';
+  }
+
+  .resume-contact a[href^='tel']:after {
+    content: '';
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ======================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .resume-section-title {
+    border-bottom-width: 2px;
+  }
+
+  .resume-link,
+  .resume-contact-link:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Focus management for interactive elements */
+.resume-link:focus-visible,
+.resume-contact-link:focus-visible {
+  outline: 2px solid var(--color-accent-primary, #2563eb);
+  outline-offset: 2px;
+  border-radius: 2px;
+}

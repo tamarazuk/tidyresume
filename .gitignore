@@ -23,7 +23,7 @@
 # misc
 .DS_Store
 *.pem
-/_mockups
+/_internal
 
 # debug
 npm-debug.log*

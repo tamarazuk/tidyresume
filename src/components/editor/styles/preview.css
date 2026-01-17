@@ -1,3 +1,41 @@
-@import './preview/base.css';
+/* Resume Preview Styles - Now using optimized template */
+
+/* Import the new optimized resume template */
+@import '../../../styles/resume/index.css';
+
+/* Keep code block styling for markdown syntax highlighting */
 @import './preview/code-blocks.css';
-@import './preview/theme-default.css';
+
+/* Integration overrides for md-editor-rt compatibility */
+.md-editor-preview-wrapper,
+.md-editor-previewOnly {
+  /* Ensure the new styles take precedence */
+  --preview-integration: true;
+}
+
+/* Ensure proper theme integration */
+.resume-theme .md-editor-preview,
+.resume-preview-theme .md-editor-preview,
+.resume-theme-dark .md-editor-preview,
+.resume-theme-light .md-editor-preview {
+  /* Let the optimized styles handle theming */
+  background: var(--color-background-white, #ffffff);
+  color: var(--color-text-primary, #1a202c);
+}
+
+/* Override any conflicting md-editor-rt default styles */
+.md-editor-preview {
+  /* Ensure our typography takes precedence */
+  font-family: var(
+    --font-family-primary,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    Arial,
+    sans-serif
+  ) !important;
+  font-size: var(--font-size-base, 0.875rem) !important;
+  line-height: var(--line-height-normal, 1.4) !important;
+}

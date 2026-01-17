@@ -1,0 +1,483 @@
+/* Resume Layout Styles - Container and Responsive Design */
+
+/* ========================================
+   LAYOUT CUSTOM PROPERTIES
+   ======================================== */
+
+:root {
+  /* Container dimensions */
+  --layout-paper-width: 8.5in;
+  --layout-paper-height: 11in;
+
+  /* Padding and margins - optimized for split-screen editing */
+  --layout-paper-padding: 15mm; /* Reduced from 0.75in for better split-screen UX */
+  --layout-wrapper-padding: clamp(16px, 3vw, 32px);
+  --layout-mobile-padding: clamp(1rem, 4vw, 1.5rem);
+
+  /* Visual styling */
+  --layout-border-radius: 4px;
+  --layout-border-color: #e5e7eb;
+  --layout-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --layout-background: #f8fafc;
+
+  /* Responsive breakpoints */
+  --layout-tablet-breakpoint: 768px;
+  --layout-mobile-breakpoint: 640px;
+}
+
+/* ========================================
+   PREVIEW CONTAINER & WRAPPER
+   ======================================== */
+
+/* Main preview wrapper */
+.md-editor-preview-wrapper,
+.md-editor-previewOnly {
+  background-color: var(--layout-background);
+  padding: var(--layout-wrapper-padding);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.md-editor-previewOnly {
+  display: block;
+  overflow-y: visible;
+  min-height: auto;
+}
+
+/* Resume paper/document container */
+.md-editor-preview {
+  /* Page dimensions */
+  width: var(--layout-paper-width);
+  max-width: var(--layout-paper-width);
+  min-height: var(--layout-paper-height);
+
+  /* Professional spacing - optimized for split-screen editing */
+  padding: var(--layout-paper-padding);
+  margin: 0 auto;
+
+  /* Paper appearance */
+  background: var(--color-background-white, white);
+  border: 1px solid var(--layout-border-color);
+  border-radius: var(--layout-border-radius);
+  box-shadow: var(--layout-shadow);
+
+  /* Typography base */
+  font-family: var(
+    --font-family-primary,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    Arial,
+    sans-serif
+  );
+  color: var(--color-text-primary, #1a202c);
+  line-height: var(--line-height-normal, 1.4);
+
+  /* Content flow */
+  position: relative;
+  overflow: visible;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ========================================
+   RESPONSIVE LAYOUT
+   ======================================== */
+
+/* Tablet and smaller screens */
+@media (max-width: 768px) {
+  .md-editor-preview-wrapper,
+  .md-editor-previewOnly {
+    padding: clamp(8px, 2vw, 16px);
+    background-color: var(--color-background-white, white);
+  }
+
+  .md-editor-preview {
+    width: 100%;
+    max-width: 100%;
+    min-height: auto;
+    padding: var(--layout-mobile-padding);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  /* Public view responsive - remove paper effect on tablet */
+  .resume-view .md-editor-preview-wrapper,
+  .resume-view .md-editor-previewOnly {
+    background-color: var(--color-background-white, white) !important;
+    padding: clamp(8px, 2vw, 16px) !important;
+  }
+
+  .resume-view .md-editor-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* Mobile screens */
+@media (max-width: 640px) {
+  .md-editor-preview-wrapper,
+  .md-editor-previewOnly {
+    padding: 0;
+  }
+
+  .md-editor-preview {
+    padding: var(--space-4, 1rem);
+  }
+
+  /* Public view mobile - ensure no paper effect */
+  .resume-view .md-editor-preview-wrapper,
+  .resume-view .md-editor-previewOnly {
+    padding: 0 !important;
+    background-color: var(--color-background-white, white) !important;
+  }
+
+  .resume-view .md-editor-preview {
+    padding: var(--space-4, 1rem) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* ========================================
+   RESUME VIEW CONTAINERS
+   ======================================== */
+
+/* Public resume view container - maintains paper effect */
+.resume-view .md-editor-preview {
+  width: var(--layout-paper-width) !important;
+  max-width: var(--layout-paper-width) !important;
+  margin: 0 auto !important;
+  flex: none !important;
+
+  /* Ensure paper effect is maintained in public view - override old styles */
+  border: 1px solid var(--layout-border-color) !important;
+  border-radius: var(--layout-border-radius) !important;
+  box-shadow: var(--layout-shadow) !important;
+  background: var(--color-background-white, white) !important;
+}
+
+/* Full-width view mode */
+.resume-view-full {
+  background-color: var(--color-background-white, white);
+}
+
+.resume-view-full .md-editor-preview-wrapper,
+.resume-view-full .md-editor-previewOnly {
+  background-color: var(--color-background-white, white);
+  padding: 0;
+}
+
+.resume-view-full .md-editor-preview {
+  width: 100%;
+  max-width: 100%;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+  background: var(--color-background-white, white);
+}
+
+/* Desktop full-width adjustments */
+/* Desktop adjustments */
+@media (min-width: 769px) {
+  /* Ensure public view maintains paper effect on desktop - override old styles */
+  .resume-view .md-editor-preview-wrapper,
+  .resume-view .md-editor-previewOnly {
+    background-color: var(--layout-background) !important;
+    padding: var(--layout-wrapper-padding) !important;
+  }
+
+  .resume-view .md-editor-preview {
+    width: var(--layout-paper-width) !important;
+    max-width: var(--layout-paper-width) !important;
+    padding: var(--layout-paper-padding) !important;
+    border: 1px solid var(--layout-border-color) !important;
+    border-radius: var(--layout-border-radius) !important;
+    box-shadow: var(--layout-shadow) !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (min-width: 640px) {
+  .resume-view-full .md-editor-preview-wrapper,
+  .resume-view-full .md-editor-previewOnly {
+    padding-left: clamp(1.5rem, 3vw, 2.5rem);
+    padding-right: clamp(4.5rem, 10vw, 7.75rem);
+    padding-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+
+/* ========================================
+   RESUME CONTENT SECTIONS
+   ======================================== */
+
+/* Header section (name, title, contact) */
+.md-editor-preview h1,
+.md-editor-preview h1 + h2,
+.md-editor-preview h1 + h2 + p {
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .md-editor-preview h1,
+  .md-editor-preview h1 + h2,
+  .md-editor-preview h1 + h2 + p {
+    text-align: left;
+  }
+}
+
+/* Section spacing for better organization */
+.md-editor-preview h2:not(:first-child) {
+  margin-top: var(--space-8, 2rem);
+  clear: both;
+}
+
+/* Company/project sections */
+.md-editor-preview h3 {
+  clear: both;
+}
+
+/* Ensure proper section breaks */
+.md-editor-preview h2 + * {
+  margin-top: 0;
+}
+
+.md-editor-preview h3 + * {
+  margin-top: 0;
+}
+
+/* ========================================
+   CONTENT FLOW & SPACING
+   ======================================== */
+
+/* Remove excessive spacing for tighter layout */
+.md-editor-preview > *:first-child {
+  margin-top: 0;
+}
+
+.md-editor-preview > *:last-child {
+  margin-bottom: 0;
+}
+
+/* List positioning and flow */
+.md-editor-preview ul,
+.md-editor-preview ol {
+  margin-left: var(--space-5, 1.25rem);
+  padding-left: 0;
+}
+
+/* Consistent paragraph spacing */
+.md-editor-preview p + p {
+  margin-top: var(--space-3, 0.75rem);
+}
+
+.md-editor-preview p + ul,
+.md-editor-preview p + ol {
+  margin-top: var(--space-2, 0.5rem);
+}
+
+/* ========================================
+   PAGE BREAK HANDLING
+   ======================================== */
+
+/* Visual page break for screen */
+@media screen {
+  .md-editor-preview .resume-page-break {
+    height: var(--space-8, 2rem);
+    margin: var(--space-6, 1.5rem) calc(var(--layout-paper-padding) * -1);
+    width: calc(100% + calc(var(--layout-paper-padding) * 2));
+    background: linear-gradient(
+      to bottom,
+      var(--color-background-white, white) 0%,
+      var(--color-background-white, white) 25%,
+      var(--layout-background) 25%,
+      var(--layout-background) 75%,
+      var(--color-background-white, white) 75%,
+      var(--color-background-white, white) 100%
+    );
+    border-top: 1px dashed var(--color-border-light, #d1d5db);
+    border-bottom: 1px dashed var(--color-border-light, #d1d5db);
+    position: relative;
+  }
+
+  .md-editor-preview .resume-page-break::after {
+    content: 'Page Break';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--font-size-xs, 0.75rem);
+    color: var(--color-text-muted, #9ca3af);
+    background: var(--layout-background);
+    padding: var(--space-1, 0.25rem) var(--space-2, 0.5rem);
+    border-radius: var(--space-1, 2px);
+    font-weight: var(--font-weight-medium, 500);
+  }
+}
+
+/* ========================================
+   PRINT LAYOUT OPTIMIZATION
+   ======================================== */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0.75in;
+  }
+
+  html,
+  body {
+    height: auto !important;
+    background: var(--color-background-white, white) !important;
+    color: var(--color-print-text, black) !important;
+  }
+
+  .md-editor-preview-wrapper,
+  .md-editor-previewOnly {
+    background: var(--color-background-white, white) !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .md-editor-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: var(--color-background-white, white) !important;
+    overflow: visible !important;
+    page-break-inside: auto;
+  }
+
+  /* Ensure content flows properly */
+  .md-editor-preview * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  /* Page break elements */
+  .md-editor-preview .resume-page-break {
+    display: block !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .md-editor-preview .resume-page-break::after {
+    display: none !important;
+  }
+
+  .md-editor-preview .resume-page-break + * {
+    margin-top: 0 !important;
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Prevent awkward breaks */
+  .md-editor-preview h2,
+  .md-editor-preview h3,
+  .md-editor-preview h4 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .md-editor-preview li,
+  .md-editor-preview p {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Job/experience sections should stay together when possible */
+  .md-editor-preview h3 + p + ul {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+}
+
+/* ========================================
+   HIGH DPI & RETINA DISPLAYS
+   ======================================== */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .md-editor-preview {
+    border-width: 0.5px;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY & FOCUS MANAGEMENT
+   ======================================== */
+
+/* Ensure proper focus flow */
+.md-editor-preview {
+  isolation: isolate;
+}
+
+/* Skip link for screen readers */
+.md-editor-preview::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ========================================
+   DARK MODE ADAPTATIONS
+   ======================================== */
+
+.resume-theme-dark .md-editor-preview-wrapper,
+.resume-theme-dark .md-editor-previewOnly {
+  background-color: var(--color-text-primary, #0f172a);
+}
+
+.resume-theme-dark .md-editor-preview {
+  background: var(--color-background-gray, #1e293b);
+  border-color: var(--color-border-light, #475569);
+  color: var(--color-text-primary, #e2e8f0);
+}
+
+/* Override dark mode for print */
+@media print {
+  .resume-theme-dark .md-editor-preview-wrapper,
+  .resume-theme-dark .md-editor-previewOnly,
+  .resume-theme-dark .md-editor-preview {
+    background: var(--color-background-white, white) !important;
+    color: var(--color-print-text, black) !important;
+  }
+}

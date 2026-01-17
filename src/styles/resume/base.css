@@ -1,0 +1,456 @@
+/* Resume Base Styles - ATS Optimized */
+
+/* ========================================
+   CUSTOM PROPERTIES & VARIABLES
+   ======================================== */
+
+:root {
+  /* Typography Scale - Professional and ATS-friendly */
+  --font-family-primary:
+    system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial,
+    sans-serif;
+  --font-family-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', 'Consolas',
+    monospace;
+
+  /* Font Sizes - Optimized for readability and ATS parsing */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.8125rem; /* 13px */
+  --font-size-base: 0.875rem; /* 14px */
+  --font-size-md: 0.9375rem; /* 15px */
+  --font-size-lg: 1rem; /* 16px */
+  --font-size-xl: 1.125rem; /* 18px */
+  --font-size-2xl: 1.25rem; /* 20px */
+  --font-size-3xl: 1.5rem; /* 24px */
+  --font-size-4xl: 1.75rem; /* 28px */
+
+  /* Line Heights - Optimized for readability */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.5;
+  --line-height-loose: 1.6;
+
+  /* Font Weights - Limited for ATS compatibility */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing Scale - Consistent and professional */
+  --space-0: 0;
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+
+  /* Colors - Simple, ATS-compatible palette */
+  --color-text-primary: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+  --color-accent-primary: #2563eb;
+  --color-border-light: #e2e8f0;
+  --color-background-white: #ffffff;
+  --color-background-gray: #f7fafc;
+
+  /* Print-specific colors */
+  --color-print-text: #000000;
+  --color-print-secondary: #333333;
+  --color-print-accent: #2563eb;
+  --color-print-border: #666666;
+
+  /* Layout dimensions */
+  --page-width-max: 8.5in;
+  --page-margin: 0.75in;
+  --content-width: 7in;
+
+  /* Typography details */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-wide: 0.075em;
+
+  /* Border and outline properties */
+  --border-width-thin: 1px;
+  --border-width-thick: 2px;
+  --border-radius-sm: 2px;
+  --outline-width: 2px;
+  --outline-offset: 2px;
+
+  /* Print typography scale */
+  --print-font-size-base: 11pt;
+  --print-font-size-body: 10pt;
+  --print-font-size-small: 9pt;
+  --print-font-size-h4: 10pt;
+  --print-font-size-h3: 12pt;
+  --print-font-size-h2: 11pt;
+  --print-font-size-h1-sub: 14pt;
+  --print-font-size-h1: 24pt;
+  --print-line-height: 1.4;
+
+  /* Print spacing scale */
+  --print-space-xs: 2pt;
+  --print-space-sm: 4pt;
+  --print-space-md: 6pt;
+  --print-space-lg: 8pt;
+  --print-space-xl: 12pt;
+  --print-space-2xl: 16pt;
+  --print-space-3xl: 20pt;
+}
+
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+/* Resume container reset */
+.md-editor-preview {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: var(--color-background-white);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Remove default margins and ensure consistent spacing */
+.md-editor-preview * {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+/* ========================================
+   TYPOGRAPHY HIERARCHY
+   ======================================== */
+
+/* Name (H1) - Most prominent element */
+.md-editor-preview h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Role/Title (H2 immediately after H1) */
+.md-editor-preview h1 + h2 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+  text-transform: none;
+  border: none;
+  padding: 0;
+}
+
+/* Contact info paragraph after title */
+.md-editor-preview h1 + h2 + p {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width-thick) solid var(--color-text-primary);
+}
+
+/* Section Headers (H2) */
+.md-editor-preview h2 {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-accent-primary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width-thin) solid var(--color-border-light);
+}
+
+/* Company/Project Names (H3) */
+.md-editor-preview h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+}
+
+/* Sub-headings (H4) */
+.md-editor-preview h4 {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+/* ========================================
+   TEXT ELEMENTS
+   ======================================== */
+
+/* Paragraphs */
+.md-editor-preview p {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+/* Strong/Bold text */
+.md-editor-preview strong {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+/* Emphasized text */
+.md-editor-preview em {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* Inline emphasized text (smaller) */
+.md-editor-preview p > em {
+  font-size: var(--font-size-sm);
+  display: inline;
+}
+
+/* Links */
+.md-editor-preview a {
+  color: var(--color-accent-primary);
+  text-decoration: none;
+}
+
+.md-editor-preview a:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   LISTS
+   ======================================== */
+
+/* Base list styles */
+.md-editor-preview ul,
+.md-editor-preview ol {
+  margin-left: var(--space-5);
+  margin-bottom: var(--space-4);
+  padding: 0;
+}
+
+.md-editor-preview li {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-1);
+}
+
+/* Unordered lists */
+.md-editor-preview ul {
+  list-style-type: disc;
+}
+
+.md-editor-preview ul li::marker {
+  color: var(--color-text-muted);
+}
+
+/* Skills lists (directly after section headings) */
+.md-editor-preview h2 + ul {
+  margin-left: var(--space-5);
+  list-style-type: disc;
+}
+
+.md-editor-preview h2 + ul li {
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-1);
+  background: none;
+  border-radius: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+/* ========================================
+   CODE ELEMENTS
+   ======================================== */
+
+/* Inline code */
+.md-editor-preview code {
+  font-family: var(--font-family-mono);
+  font-size: calc(var(--font-size-base) * 0.9);
+  color: var(--color-accent-primary);
+  background-color: var(--color-background-gray);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  border: var(--border-width-thin) solid var(--color-border-light);
+}
+
+/* ========================================
+   PAGE BREAKS & STRUCTURE
+   ======================================== */
+
+/* Page break element */
+.md-editor-preview .resume-page-break {
+  display: block;
+  width: 100%;
+  height: 0;
+  margin: var(--space-8) 0;
+  border: none;
+  page-break-before: always;
+  break-before: page;
+}
+
+/* Prevent breaks in critical sections */
+.md-editor-preview h1,
+.md-editor-preview h2,
+.md-editor-preview h3,
+.md-editor-preview h4 {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.md-editor-preview li {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Orphan and widow control */
+.md-editor-preview p {
+  orphans: 2;
+  widows: 2;
+}
+
+/* ========================================
+   PRINT OPTIMIZATIONS
+   ======================================== */
+
+@media print {
+  :root {
+    /* Override colors for print */
+    --color-text-primary: var(--color-print-text);
+    --color-text-secondary: var(--color-print-secondary);
+    --color-accent-primary: var(--color-print-accent);
+    --color-border-light: var(--color-print-border);
+  }
+
+  .md-editor-preview {
+    background: var(--color-background-white, white) !important;
+    color: var(--color-print-text, black) !important;
+    font-size: var(--print-font-size-base) !important;
+    line-height: var(--print-line-height) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Adjust typography for print */
+  .md-editor-preview h1 {
+    font-size: var(--print-font-size-h1) !important;
+    margin-bottom: var(--print-space-lg) !important;
+  }
+
+  .md-editor-preview h1 + h2 {
+    font-size: var(--print-font-size-h1-sub) !important;
+    margin-bottom: var(--print-space-2xl) !important;
+  }
+
+  .md-editor-preview h1 + h2 + p {
+    font-size: var(--print-font-size-body) !important;
+    margin-bottom: var(--print-space-3xl) !important;
+    padding-bottom: var(--print-space-xl) !important;
+  }
+
+  .md-editor-preview h2 {
+    font-size: var(--print-font-size-h2) !important;
+    margin-top: var(--print-space-3xl) !important;
+    margin-bottom: var(--print-space-xl) !important;
+    padding-bottom: var(--print-space-sm) !important;
+  }
+
+  .md-editor-preview h3 {
+    font-size: var(--print-font-size-h3) !important;
+    margin-top: var(--print-space-2xl) !important;
+    margin-bottom: var(--print-space-md) !important;
+  }
+
+  .md-editor-preview p {
+    font-size: var(--print-font-size-body) !important;
+    margin-bottom: var(--print-space-lg) !important;
+    line-height: var(--print-line-height) !important;
+  }
+
+  .md-editor-preview ul,
+  .md-editor-preview ol {
+    margin-bottom: var(--print-space-xl) !important;
+  }
+
+  .md-editor-preview li {
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    margin-bottom: 4pt !important;
+  }
+
+  /* Remove page break visual elements */
+  .md-editor-preview .resume-page-break {
+    display: block !important;
+    height: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+  }
+
+  /* Next element should start new page */
+  .md-editor-preview .resume-page-break + * {
+    page-break-before: always !important;
+    break-before: page !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY & SCREEN READERS
+   ======================================== */
+
+/* Ensure proper focus states */
+.md-editor-preview a:focus {
+  outline: var(--outline-width) solid var(--color-accent-primary);
+  outline-offset: var(--outline-offset);
+  border-radius: var(--border-radius-sm);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .md-editor-preview {
+    --color-text-primary: #000000;
+    --color-text-secondary: #000000;
+    --color-text-muted: #333333;
+    --color-accent-primary: #0000ff;
+    --color-border-light: #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .md-editor-preview *,
+  .md-editor-preview *::before,
+  .md-editor-preview *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

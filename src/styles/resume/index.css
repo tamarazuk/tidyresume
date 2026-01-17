@@ -1,0 +1,204 @@
+/* Resume Template Styles - Consolidated Entry Point */
+
+/*
+  TidyResume Optimized Template
+
+  This consolidated stylesheet provides ATS-compliant, print-optimized
+  resume styling with a professional appearance suitable for 2026 job markets.
+
+  Features:
+  - ATS-friendly structure and typography
+  - Professional print/PDF output
+  - Responsive design for all devices
+  - Clean, maintainable CSS architecture
+  - Accessibility-first approach
+
+  Organization:
+  1. Base Styles - Typography, colors, spacing fundamentals
+  2. Layout Styles - Containers, responsive design, page structure
+  3. Component Styles - Specific resume sections and elements
+*/
+
+/* ========================================
+   BASE STYLES
+   Typography, colors, spacing, and foundational elements
+   ======================================== */
+@import './base.css';
+
+/* ========================================
+   LAYOUT STYLES
+   Containers, responsive design, print layout
+   ======================================== */
+@import './layout.css';
+
+/* ========================================
+   COMPONENT STYLES
+   Resume sections, content blocks, and interactive elements
+   ======================================== */
+@import './components.css';
+
+/* ========================================
+   INTEGRATION OVERRIDES
+   Ensure compatibility with existing md-editor-rt styling
+   ======================================== */
+
+/* Remove any conflicting md-editor-rt styles */
+.md-editor-preview-wrapper .md-editor-preview {
+  /* Reset any inherited styles that might conflict */
+  font-family: var(--font-family-primary, system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif) !important;
+  color: var(--color-text-primary, #1a202c) !important;
+  background: var(--color-background-white, #ffffff) !important;
+}
+
+/* Ensure proper inheritance for nested elements */
+.md-editor-preview * {
+  font-family: inherit;
+}
+
+/* Override any theme-specific styling conflicts */
+.resume-theme .md-editor-preview,
+.resume-preview-theme .md-editor-preview {
+  /* Ensure our optimized styles take precedence */
+  font-size: var(--font-size-base) !important;
+  line-height: var(--line-height-normal) !important;
+}
+
+/* Dark theme compatibility */
+.resume-theme-dark .md-editor-preview {
+  --color-text-primary: #e2e8f0;
+  --color-text-secondary: #cbd5e0;
+  --color-text-muted: #a0aec0;
+  --color-accent-primary: #60a5fa;
+  --color-border-light: #4a5568;
+  --color-background-white: #1e293b;
+  --color-background-gray: #2d3748;
+}
+
+/* Print mode overrides for dark theme */
+@media print {
+  .resume-theme-dark .md-editor-preview {
+    --color-text-primary: var(--color-print-text) !important;
+    --color-text-secondary: var(--color-print-secondary) !important;
+    --color-text-muted: var(--color-print-secondary) !important;
+    --color-accent-primary: var(--color-print-accent) !important;
+    --color-border-light: var(--color-print-border) !important;
+    --color-background-white: #ffffff !important;
+    --color-background-gray: #ffffff !important;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   Helper classes for manual content styling
+   ======================================== */
+
+/* Text utilities */
+.text-primary { color: var(--color-text-primary, #1a202c); }
+.text-secondary { color: var(--color-text-secondary, #4a5568); }
+.text-muted { color: var(--color-text-muted, #718096); }
+.text-accent { color: var(--color-accent-primary, #2563eb); }
+
+/* Spacing utilities */
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: var(--space-1, 0.25rem) !important; }
+.mb-2 { margin-bottom: var(--space-2, 0.5rem) !important; }
+.mb-3 { margin-bottom: var(--space-3, 0.75rem) !important; }
+.mb-4 { margin-bottom: var(--space-4, 1rem) !important; }
+
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: var(--space-1, 0.25rem) !important; }
+.mt-2 { margin-top: var(--space-2, 0.5rem) !important; }
+.mt-3 { margin-top: var(--space-3, 0.75rem) !important; }
+.mt-4 { margin-top: var(--space-4, 1rem) !important; }
+
+/* Print utilities */
+.print-hidden { display: block; }
+.print-only { display: none; }
+
+@media print {
+  .print-hidden { display: none !important; }
+  .print-only { display: block !important; }
+}
+
+/* Page break utilities */
+.break-before {
+  page-break-before: always !important;
+  break-before: page !important;
+}
+
+.break-after {
+  page-break-after: always !important;
+  break-after: page !important;
+}
+
+.break-avoid {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* ========================================
+   DEBUG UTILITIES (Development Only)
+   Remove or comment out for production
+   ======================================== */
+
+/*
+.debug-spacing * {
+  outline: 1px solid rgba(255, 0, 0, 0.2) !important;
+}
+
+.debug-spacing h1 { outline-color: red !important; }
+.debug-spacing h2 { outline-color: blue !important; }
+.debug-spacing h3 { outline-color: green !important; }
+.debug-spacing p { outline-color: orange !important; }
+.debug-spacing li { outline-color: purple !important; }
+*/
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* Optimize rendering for large resumes */
+.md-editor-preview {
+  contain: layout style;
+  will-change: auto;
+}
+
+/* Optimize font loading */
+.md-editor-preview * {
+  font-display: swap;
+}
+
+/* GPU acceleration for smooth scrolling */
+.md-editor-preview-wrapper {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* ========================================
+   BROWSER-SPECIFIC FIXES
+   ======================================== */
+
+/* Safari print fixes */
+@media print and (-webkit-min-device-pixel-ratio: 0) {
+  .md-editor-preview {
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* Edge/IE compatibility */
+@supports not (display: grid) {
+  .md-editor-preview {
+    width: auto;
+    max-width: 8.5in;
+  }
+}
+
+/* Firefox print optimizations */
+@-moz-document url-prefix() {
+  @media print {
+    .md-editor-preview {
+      background: white !important;
+    }
+  }
+}
