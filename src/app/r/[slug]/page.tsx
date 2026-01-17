@@ -7,6 +7,9 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { getDb } from '@/db'
 import * as resumeService from '@/services/resume-service'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 async function getResume(id: string) {
   try {
     const { env } = await getCloudflareContext({ async: true })
@@ -66,4 +69,3 @@ export default async function PublicResumePage({
     </div>
   )
 }
-
