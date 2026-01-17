@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { MdPreview } from 'md-editor-rt'
 import { PrinterIcon } from '@phosphor-icons/react/dist/ssr'
 import AppIcon from '@/icons/app-icon'
+import { UnpublishButton } from '@/components/public-view/unpublish-button'
 import { EditableResumeTitle } from '@/components/public-view/editable-resume-title'
 import { Button } from '@/components/ui/button'
 import { Kbd } from '@/components/ui/kbd'
@@ -52,6 +53,7 @@ export function ResumeViewer({
           </span>
         </Link>
         <div className="order-2 flex items-center justify-end gap-2 sm:order-3 sm:justify-self-end">
+          <UnpublishButton id={id} />
           <Tooltip>
             <TooltipTrigger
               render={(props) => <ThemeToggle buttonProps={props} />}
