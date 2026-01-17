@@ -5,7 +5,8 @@
 ### Owner Experience
 - **Owner Privacy Assurance:** Visual indicators ("Owner View" badge) on public views to reassure owners that edit controls are private.
 - **Preview Mode:** An in-place toggle that allows owners to hide all editing UI and see the exact visitor experience instantly.
-- **Secure Ownership:** Magic link authentication allows owners to securely edit resumes across devices. Deletion is protected by a secure secret key system.
+- **Secure Ownership:** Magic link authentication allows owners to securely edit resumes across devices. Publishing and unpublishing are protected by a secure secret key system.
+- **Unpublish Feature:** Owners can take their resume offline ("Unpublish") without losing their work. The remote record is deleted to disable the public link, but the Markdown content remains in the local editor.
 - **Reliable Sync:** Automatic retry mechanisms ensure work is never lost, even with spotty internet connections.
 
 ### Viral Growth

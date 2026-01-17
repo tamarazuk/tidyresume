@@ -30,6 +30,6 @@ Implement the background logic to detect if a resume has been unpublished elsewh
 ## Phase 4: Error Handling & Edge Cases
 Ensure robustness during sync failures and edge cases.
 
-- [x] Task: Update `use-resume-sync.ts` to detect 404 errors during auto-save and transition to "Unpublished" state instead of showing a persistent sync error
-- [x] Task: Verify that re-publishing a previously unpublished resume works seamlessly (same ID, new deleteSecret)
-- [x] Task: Conductor - User Manual Verification 'Phase 4: Error Handling & Edge Cases' (Protocol in workflow.md)
+- [x] Task: Update `use-resume-sync.ts` to detect 404 errors during auto-save and transition to "Unpublished" state instead of showing a persistent sync error cca39c3
+- [x] Task: Verify that re-publishing a previously unpublished resume works seamlessly (same ID, new deleteSecret) cca39c3
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Error Handling & Edge Cases' (Protocol in workflow.md) cca39c3
