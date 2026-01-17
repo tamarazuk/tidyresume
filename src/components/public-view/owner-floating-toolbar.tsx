@@ -210,7 +210,6 @@ export function OwnerFloatingToolbar({
             Share
           </TooltipContent>
         </Tooltip>
-        <div className="bg-border mx-1 h-4 w-px sm:my-1 sm:h-px sm:w-6" />
         <Tooltip>
           <TooltipTrigger
             render={(props) => {
@@ -241,6 +240,7 @@ export function OwnerFloatingToolbar({
 
         <PreviewToggle />
 
+        <div className="bg-border mx-1 h-4 w-px sm:my-1 sm:h-px sm:w-6" />
         <OwnerViewInfo />
       </div>
     </>
