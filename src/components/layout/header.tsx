@@ -41,7 +41,7 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
 
   return (
     <header className="border-border bg-background no-print z-20 flex flex-none items-center justify-between border-b border-solid px-6 py-3 whitespace-nowrap">
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4">
         <Link
           href="/"
           className="flex size-12 items-center justify-center"
@@ -55,6 +55,8 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
           </h2>
           <ResumeTitleInput />
         </div>
+      </div>
+      <div className="flex items-center gap-3">
         <Tooltip>
           <TooltipTrigger
             render={(props) => (
@@ -68,8 +70,6 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
           />
           <TooltipContent>Toggle theme</TooltipContent>
         </Tooltip>
-      </div>
-      <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           {isPublished ? (
             <div className="flex items-center gap-2">

@@ -40,19 +40,19 @@ export function ResumeViewer({
   return (
     <div className="resume-view flex min-h-screen flex-col">
       <header className="border-border bg-background no-print grid flex-none grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2 border-b border-solid px-6 py-3 sm:grid-cols-[1fr_auto_1fr]">
-        <div className="order-1 flex items-center gap-3">
-          <Link
-            href="/"
-            className="text-foreground flex items-center gap-3"
-            aria-label="TidyResume home"
-          >
-            <div className="flex size-9 items-center justify-center">
-              <AppIcon className="h-full w-full" />
-            </div>
-            <span className="text-base font-semibold tracking-[-0.01em]">
-              TidyResume
-            </span>
-          </Link>
+        <Link
+          href="/"
+          className="text-foreground order-1 flex items-center gap-3 sm:order-1"
+          aria-label="TidyResume home"
+        >
+          <div className="flex size-9 items-center justify-center">
+            <AppIcon className="h-full w-full" />
+          </div>
+          <span className="text-base font-semibold tracking-[-0.01em]">
+            TidyResume
+          </span>
+        </Link>
+        <div className="order-2 flex items-center justify-end gap-2 sm:order-3 sm:justify-self-end">
           <Tooltip>
             <TooltipTrigger
               render={(props) => (
@@ -66,8 +66,6 @@ export function ResumeViewer({
             />
             <TooltipContent>Toggle theme</TooltipContent>
           </Tooltip>
-        </div>
-        <div className="order-2 flex items-center justify-end gap-2 sm:order-3 sm:justify-self-end">
           <UnpublishButton id={id} />
           <Tooltip>
             <TooltipTrigger
