@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
+import { useResumeTheme } from '@/hooks/use-resume-theme'
 import { cn } from '@/lib/utils'
 
 import 'md-editor-rt/lib/preview.css'
@@ -34,8 +35,8 @@ export function ResumeViewer({
   isFullWidth,
 }: ResumeViewerProps) {
   const { formatShortcutKeys } = usePlatformShortcuts()
+  const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
   const shortcutLabel = formatShortcutKeys(['Mod', 'P']).join('+')
-  const editorTheme = 'light'
 
   return (
     <div className="resume-view flex min-h-screen flex-col">
@@ -100,9 +101,10 @@ export function ResumeViewer({
         <MdPreview
           editorId="resume-preview"
           modelValue={content}
-          theme={editorTheme}
+          theme={resumeTheme}
           className={cn(
             'resume-preview-theme resume-view',
+            resumeThemeClassName,
             isFullWidth && 'resume-view-full'
           )}
         />

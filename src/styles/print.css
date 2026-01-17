@@ -8,12 +8,36 @@
   body {
     height: auto !important;
     font-size: 12pt !important;
+    color-scheme: light !important;
   }
 
   body {
     display: block !important;
     background-color: white !important;
     margin: 0 !important;
+  }
+
+  .resume-theme-dark,
+  .resume-theme-light {
+    color-scheme: light !important;
+  }
+
+  .resume-theme-dark {
+    --resume-preview-background: #f1f5f9 !important;
+    --resume-preview-foreground: #0f172a !important;
+    --resume-preview-muted: #f1f5f9 !important;
+    --resume-preview-muted-foreground: #64748b !important;
+    --resume-preview-border: #e2e8f0 !important;
+    --resume-preview-primary: #2b9dee !important;
+    --resume-preview-primary-foreground: #ffffff !important;
+    --resume-preview-card: #ffffff !important;
+    --resume-preview-card-foreground: #0f172a !important;
+    --resume-preview-accent: #e2e8f0 !important;
+    --resume-preview-accent-foreground: #0f172a !important;
+    --resume-preview-pill-bg: #f1f5f9 !important;
+    --resume-preview-pill-color: #334155 !important;
+    --resume-preview-code-block-bg: #0b1220 !important;
+    --resume-preview-code-block-color: #a9b7c6 !important;
   }
 
   h1,
@@ -45,6 +69,7 @@
   :is(.editor-page, .resume-view) {
     display: block !important;
     height: auto !important;
+    color-scheme: light !important;
   }
 
   .no-print {
@@ -75,6 +100,13 @@
     display: block !important;
     padding: 0 !important;
     background: white !important;
+    color-scheme: light !important;
+  }
+
+  :is(.editor-page, .resume-view) .md-editor-preview-wrapper *,
+  :is(.editor-page, .resume-view) .md-editor-previewOnly *,
+  :is(.editor-page, .resume-view) .md-editor-preview * {
+    color-scheme: light !important;
   }
 
   :is(.editor-page, .resume-view) .md-editor-previewOnly {
@@ -83,6 +115,7 @@
     padding: 0 !important;
     overflow: visible !important;
     background: white !important;
+    color-scheme: light !important;
   }
 
   :is(.editor-page, .resume-view) .md-editor-preview {
@@ -99,6 +132,7 @@
     outline: none !important;
     border-radius: 0 !important;
     background: white !important;
+    color-scheme: light !important;
   }
 
   :is(.editor-page, .resume-view) .md-editor {
@@ -138,8 +172,14 @@
     margin-bottom: 0 !important;
   }
 
-  :is(.editor-page, .resume-view) .md-editor-preview p:empty + .resume-page-break,
-  :is(.editor-page, .resume-view) .md-editor-preview .resume-page-break + p:empty {
+  :is(.editor-page, .resume-view)
+    .md-editor-preview
+    p:empty
+    + .resume-page-break,
+  :is(.editor-page, .resume-view)
+    .md-editor-preview
+    .resume-page-break
+    + p:empty {
     display: none !important;
   }
 

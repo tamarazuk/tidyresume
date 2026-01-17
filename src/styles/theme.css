@@ -244,3 +244,21 @@
   --resume-preview-code-block-bg: #0b1220;
   --resume-preview-code-block-color: #a9b7c6;
 }
+
+.resume-theme-dark {
+  --resume-preview-background: #0b1220;
+  --resume-preview-foreground: #e2e8f0;
+  --resume-preview-muted: #111827;
+  --resume-preview-muted-foreground: #94a3b8;
+  --resume-preview-border: #1f2937;
+  --resume-preview-primary: #2b9dee;
+  --resume-preview-primary-foreground: #ffffff;
+  --resume-preview-card: #0f172a;
+  --resume-preview-card-foreground: #e2e8f0;
+  --resume-preview-accent: #1e293b;
+  --resume-preview-accent-foreground: #e2e8f0;
+  --resume-preview-pill-bg: #111827;
+  --resume-preview-pill-color: #e2e8f0;
+  --resume-preview-code-block-bg: #0b1220;
+  --resume-preview-code-block-color: #a9b7c6;
+}

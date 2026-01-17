@@ -1,6 +1,7 @@
 'use client'
 
 import { MdEditor } from 'md-editor-rt'
+import { useResumeTheme } from '@/hooks/use-resume-theme'
 import { sanitizeHtml } from '@/lib/sanitize-html'
 import { cn } from '@/lib/utils'
 import { initMdEditorConfig } from './config/editor-config'
@@ -24,6 +25,7 @@ export default function Editor() {
     footers,
     defFooters,
   } = useEditorState()
+  const { className: resumeThemeClassName } = useResumeTheme()
 
   return (
     <div className="flex h-full flex-col">
@@ -33,6 +35,7 @@ export default function Editor() {
         ref={editorRef}
         className={cn(
           'resume-preview-theme grow rounded-none',
+          resumeThemeClassName,
           isFullWidth && 'resume-view-full'
         )}
         value={text}

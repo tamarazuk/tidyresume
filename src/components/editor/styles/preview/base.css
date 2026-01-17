@@ -89,11 +89,18 @@
   }
 }
 
-.md-editor-preview-wrapper,
-.md-editor-previewOnly,
-.md-editor-preview-wrapper *,
-.md-editor-previewOnly * {
+.resume-theme-light .md-editor-preview-wrapper,
+.resume-theme-light .md-editor-previewOnly,
+.resume-theme-light .md-editor-preview-wrapper *,
+.resume-theme-light .md-editor-previewOnly * {
   color-scheme: light !important;
+}
+
+.resume-theme-dark .md-editor-preview-wrapper,
+.resume-theme-dark .md-editor-previewOnly,
+.resume-theme-dark .md-editor-preview-wrapper *,
+.resume-theme-dark .md-editor-previewOnly * {
+  color-scheme: dark !important;
 }
 
 /* The preview container */

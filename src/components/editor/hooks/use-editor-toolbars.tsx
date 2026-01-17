@@ -550,7 +550,6 @@ function useEditorToolbars({
               icon={widthIcon}
               onClick={() => onToggleFullWidth?.()}
               disabled={!onToggleFullWidth}
-              className={isFullWidth ? 'md-editor-toolbar-active' : undefined}
             />
           )
         }

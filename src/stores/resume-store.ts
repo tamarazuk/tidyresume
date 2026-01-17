@@ -8,6 +8,11 @@ import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
 import type { ResumeId, ResumeSlug } from '@/lib/resume-types'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
+export type ResumeThemeMode = 'auto' | 'light' | 'dark'
+
+export interface ResumeDisplaySettings {
+  themeMode: ResumeThemeMode
+}
 
 const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
@@ -23,7 +28,9 @@ interface ResumeState {
   isPublished: boolean
   imageWarning: string | null
   contentWarning: string | null
+  resumeDisplay: ResumeDisplaySettings
   setResumeTitle: (resumeTitle: string) => void
+  setResumeThemeMode: (themeMode: ResumeThemeMode) => void
   setMarkdown: (markdown: string) => void
   setSaveStatus: (saveStatus: SaveStatus) => void
   setSyncStatus: (
@@ -66,6 +73,9 @@ export const useResumeStore = create<ResumeState>()(
         isPublished: false,
         imageWarning: null,
         contentWarning: null,
+        resumeDisplay: {
+          themeMode: 'auto',
+        },
         setResumeTitle: (resumeTitle) => {
           set({ resumeTitle, saveStatus: 'saving' })
           scheduleSaveStatus()
@@ -91,6 +101,8 @@ export const useResumeStore = create<ResumeState>()(
         setIsPublished: (isPublished) => set({ isPublished }),
         setImageWarning: (imageWarning) => set({ imageWarning }),
         setContentWarning: (contentWarning) => set({ contentWarning }),
+        setResumeThemeMode: (themeMode) =>
+          set({ resumeDisplay: { themeMode } }),
         unpublish: () =>
           set({
             syncStatus: 'unsaved',
@@ -110,12 +122,15 @@ export const useResumeStore = create<ResumeState>()(
             isPublished: false,
             imageWarning: null,
             contentWarning: null,
+            resumeDisplay: {
+              themeMode: 'auto',
+            },
           }),
       }
     },
     {
       name: 'tidyresume-editor',
-      version: 5, // Bump version
+      version: 6, // Bump version
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },
@@ -134,6 +149,9 @@ export const useResumeStore = create<ResumeState>()(
           syncStatus: 'unsaved', // Reset to unsaved on migration
           imageWarning: state.imageWarning ?? null,
           contentWarning: state.contentWarning ?? null,
+          resumeDisplay: {
+            themeMode: state.resumeDisplay?.themeMode ?? 'auto',
+          },
         }
       },
     }

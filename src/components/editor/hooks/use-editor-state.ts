@@ -23,7 +23,7 @@ export function useEditorState() {
   const imageWarning = useResumeStore((state) => state.imageWarning)
   const contentWarning = useResumeStore((state) => state.contentWarning)
   const setText = useResumeStore((state) => state.setMarkdown)
-  const [isFullWidth, setIsFullWidth] = useState(false)
+  const [isFullWidth, setIsFullWidth] = useState(true)
   const editorTheme = useTheme()
   const toggleFullWidth = useCallback(() => {
     setIsFullWidth((prev) => !prev)
