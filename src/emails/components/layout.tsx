@@ -24,7 +24,7 @@ interface LayoutProps {
 export const Layout = ({
   children,
   previewText,
-  iconUrl = `${getBaseUrl()}/logo?v=${APP_VERSION}`,
+  iconUrl = `${getBaseUrl()}/logo-icon.png?v=${APP_VERSION}`,
 }: LayoutProps) => {
   return (
     <Html>

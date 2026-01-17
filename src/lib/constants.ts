@@ -3,10 +3,10 @@ export const DEFAULT_RESUME_TITLE = 'Untitled Resume'
 export const FOCUS_TITLE_EVENT = 'tidyresume:focus-title'
 
 /**
- * App version used for cache busting assets like logos.
- * Update this whenever the brand assets change (e.g., changing colors or rounding).
- * This ensures that email clients and CDNs invalidate their cached versions of the PNG logo.
- * It is automatically appended to logo URLs in email templates (e.g., /logo?v=1).
+ * App version used for cache busting assets like the static logo icon.
+ * Update this whenever brand assets change (e.g., changing colors or rounding).
+ * This ensures email clients and CDNs invalidate cached versions of the logo icon.
+ * It is automatically appended to logo icon URLs in email templates (e.g., /logo-icon.svg?v=1).
  */
 export const APP_VERSION = '1'
 

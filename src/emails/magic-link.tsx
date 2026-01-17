@@ -73,5 +73,5 @@ const linkText = {
 
 MagicLinkEmail.PreviewProps = {
   link: `${getBaseUrl()}/edit?token=preview-token`,
-  iconUrl: `${getBaseUrl()}/logo`,
+  iconUrl: `${getBaseUrl()}/logo-icon.png`,
 } as MagicLinkEmailProps

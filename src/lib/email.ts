@@ -2,7 +2,7 @@ import { Resend } from 'resend'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { render } from '@react-email/render'
 import MagicLinkEmail from '@/emails/magic-link'
-import { getBaseUrl } from '@/lib/constants'
+import { APP_VERSION, getBaseUrl } from '@/lib/constants'
 
 const LOG_SEPARATOR = '----------------------------------------'
 
@@ -70,7 +70,7 @@ export async function sendMagicLinkEmail(email: string, link: string) {
   const resend = new Resend(apiKey)
 
   try {
-    const iconUrl = `${getBaseUrl()}/logo`
+    const iconUrl = `${getBaseUrl()}/logo-icon.png?v=${APP_VERSION}`
     const emailHtml = await render(MagicLinkEmail({ link, iconUrl }))
 
     const fromEmail =
