@@ -18,7 +18,26 @@ export function usePublish() {
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const setIsPublished = useResumeStore((state) => state.setIsPublished)
   const setDeleteSecret = useResumeStore((state) => state.setDeleteSecret)
-// ...
+
+  const publishResume = async () => {
+    setIsPublishing(true)
+    setSyncStatus('syncing')
+    try {
+      const data = await publishResumeRequest(
+        {
+          title: resumeTitle,
+          content: resumeContent,
+          slug: resumeSlug,
+          id: resumeId ?? undefined,
+        },
+        {
+          deleteSecret: deleteSecret ?? undefined,
+        }
+      )
+
+      if (data.id) {
+        setResumeId(data.id)
+      }
       if (data.deleteSecret) {
         setDeleteSecret(data.deleteSecret)
       }

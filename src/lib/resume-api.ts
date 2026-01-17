@@ -51,11 +51,16 @@ async function parseJsonResponse<T>(
 
 export async function publishResume(
   payload: PublishResumePayload,
-  options: { signal?: AbortSignal } = {}
+  options: { signal?: AbortSignal; deleteSecret?: string } = {}
 ): Promise<PublishResumeResponse> {
+  const headers: HeadersInit = { 'Content-Type': 'application/json' }
+  if (options.deleteSecret) {
+    headers['X-Delete-Secret'] = options.deleteSecret
+  }
+
   const response = await fetch('/api/resumes/publish', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(payload),
     signal: options.signal,
   })

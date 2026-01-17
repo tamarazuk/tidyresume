@@ -3,6 +3,7 @@ import { POST } from '../route'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 import * as resumeService from '@/services/resume-service'
 import { getDb } from '@/db'
+import { resumes } from '@/db/schema'
 
 vi.mock('@opennextjs/cloudflare', () => ({
   getCloudflareContext: vi.fn(),
@@ -24,8 +25,8 @@ describe('POST /api/resumes/publish', () => {
     vi.clearAllMocks()
     vi.mocked(getCloudflareContext).mockResolvedValue({
       env: { DB: {} },
-    } as any)
-    vi.mocked(getDb).mockReturnValue(mockDb as any)
+    } as unknown as Awaited<ReturnType<typeof getCloudflareContext>>)
+    vi.mocked(getDb).mockReturnValue(mockDb as unknown as ReturnType<typeof getDb>)
   })
 
   it('should allow publishing a new resume (no ID)', async () => {
@@ -50,7 +51,7 @@ describe('POST /api/resumes/publish', () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'existing-id',
       deleteSecret: 'correct-secret',
-    } as any)
+    } as unknown as typeof resumes.$inferSelect)
 
     const request = new Request('http://localhost/api/resumes/publish', {
       method: 'POST',
@@ -65,7 +66,7 @@ describe('POST /api/resumes/publish', () => {
     vi.mocked(resumeService.getResume).mockResolvedValue({
       id: 'existing-id',
       deleteSecret: 'correct-secret',
-    } as any)
+    } as unknown as typeof resumes.$inferSelect)
     vi.mocked(resumeService.publishResume).mockResolvedValue({
       id: 'existing-id',
       slug: null,
