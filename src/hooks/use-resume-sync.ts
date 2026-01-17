@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { publishResume, type PublishResumePayload, isResumeApiError } from '@/lib/resume-api'
+import {
+  publishResume,
+  type PublishResumePayload,
+  isResumeApiError,
+} from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
 const CLOUD_SYNC_DEBOUNCE_MS = 2500
@@ -10,6 +14,7 @@ export function useResumeSync() {
   const content = useResumeStore((state) => state.markdown)
   const slug = useResumeStore((state) => state.slug)
   const isPublished = useResumeStore((state) => state.isPublished)
+  const deleteSecret = useResumeStore((state) => state.deleteSecret)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const [retryTrigger, setRetryTrigger] = useState(0)
 
@@ -65,7 +70,7 @@ export function useResumeSync() {
       if (!pending) {
         return
       }
-      
+
       // If NOT a manual retry (retryTrigger > 0), check if we already synced this key
       if (retryTrigger === 0 && pending.key === lastSyncedKeyRef.current) {
         return
@@ -83,7 +88,10 @@ export function useResumeSync() {
         if (controller.signal.aborted) return
 
         try {
-          await publishResume(pending.payload, { signal: controller.signal })
+          await publishResume(pending.payload, {
+            signal: controller.signal,
+            deleteSecret: deleteSecret ?? undefined,
+          })
           success = true
         } catch (error) {
           if ((error as Error).name === 'AbortError') return
@@ -116,7 +124,16 @@ export function useResumeSync() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [id, title, content, slug, isPublished, setSyncStatus, retryTrigger])
+  }, [
+    id,
+    title,
+    content,
+    slug,
+    isPublished,
+    deleteSecret,
+    setSyncStatus,
+    retryTrigger,
+  ])
 
   return { retry: () => setRetryTrigger((prev) => prev + 1) }
 }
