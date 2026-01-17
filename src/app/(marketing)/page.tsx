@@ -1,6 +1,7 @@
 import CtaStrip from '@/components/marketing/cta-strip'
 import FeatureGrid from '@/components/marketing/feature-grid'
 import Hero from '@/components/marketing/hero'
+import SupportStrip from '@/components/marketing/support-strip'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function MarketingHome() {
       <Hero />
       <FeatureGrid />
       <CtaStrip />
+      <SupportStrip />
     </>
   )
 }
