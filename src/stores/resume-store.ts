@@ -91,7 +91,13 @@ export const useResumeStore = create<ResumeState>()(
         setIsPublished: (isPublished) => set({ isPublished }),
         setImageWarning: (imageWarning) => set({ imageWarning }),
         setContentWarning: (contentWarning) => set({ contentWarning }),
-        unpublish: () => set({ syncStatus: 'unsaved', isPublished: false }),
+        unpublish: () =>
+          set({
+            syncStatus: 'unsaved',
+            isPublished: false,
+            id: null,
+            deleteSecret: null,
+          }),
         resetResume: () =>
           set({
             id: null,

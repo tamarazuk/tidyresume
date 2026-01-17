@@ -43,41 +43,50 @@ export async function publishResume(
     slug?: string | null
   }
 ) {
-  let resumeId = data.id
+  const slugVal = data.slug ?? null
 
-  if (!resumeId) {
-    resumeId = crypto.randomUUID()
+  // CASE 1: Update existing resume
+  if (data.id) {
+    const results = await db
+      .update(resumes)
+      .set({
+        title: data.title,
+        content: data.content,
+        slug: slugVal,
+        updatedAt: new Date(),
+      })
+      .where(eq(resumes.id, data.id))
+      .returning({
+        id: resumes.id,
+        slug: resumes.slug,
+        deleteSecret: resumes.deleteSecret,
+      })
+
+    if (results.length === 0) {
+      // Client provided an ID, but it doesn't exist.
+      // We do NOT create it. We consider this an invalid update attempt.
+      throw new Error('Resume not found')
+    }
+
+    return results[0]
   }
 
-  // Always generate a candidate secret.
-  // If it's an INSERT (new or previously deleted), this will be used.
-  // If it's an UPDATE (existing), this will be ignored because it's not in the 'set' clause.
-  const candidateDeleteSecret = crypto.randomUUID()
-
-  const slugVal = data.slug ?? null
+  // CASE 2: Create new resume
+  const resumeId = crypto.randomUUID()
+  const deleteSecret = crypto.randomUUID()
 
   const values: typeof resumes.$inferInsert = {
     id: resumeId,
     title: data.title,
     content: data.content,
     slug: slugVal,
-    deleteSecret: candidateDeleteSecret,
+    deleteSecret: deleteSecret,
   }
 
   try {
-    // Drizzle SQLite upsert
     const results = await db
       .insert(resumes)
       .values(values)
-      .onConflictDoUpdate({
-        target: resumes.id,
-        set: {
-          title: data.title,
-          content: data.content,
-          slug: slugVal,
-          updatedAt: new Date(),
-        },
-      })
       .returning({
         id: resumes.id,
         slug: resumes.slug,
