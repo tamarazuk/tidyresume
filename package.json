@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3025",
-    "build": "next build",
+    "build": "opennextjs-cloudflare build",
     "start": "next start",
     "format": "prettier --write .",
     "lint": "eslint",
