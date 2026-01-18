@@ -22,6 +22,8 @@ function TokenHandler() {
   const setId = useResumeStore((state) => state.setId)
   const setSlug = useResumeStore((state) => state.setSlug)
   const setEditSecret = useResumeStore((state) => state.setEditSecret)
+  const setIsPublished = useResumeStore((state) => state.setIsPublished)
+  const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
 
   useEffect(() => {
     if (!token) return
@@ -61,6 +63,8 @@ function TokenHandler() {
         if (resume.editSecret) {
           setEditSecret(resume.editSecret)
         }
+        setIsPublished(true)
+        setSyncStatus('synced')
 
         toast.success('Resume loaded successfully', { id: toastId })
         router.replace('/edit')
@@ -83,6 +87,8 @@ function TokenHandler() {
     setResumeTitle,
     setMarkdown,
     setEditSecret,
+    setIsPublished,
+    setSyncStatus,
   ])
 
   return null

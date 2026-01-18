@@ -20,6 +20,7 @@ vi.mock('@/db/schema', async () => {
 describe('publishResume (Unpublish/Republish Scenario)', () => {
   const mockDb = {
     insert: vi.fn(),
+    update: vi.fn(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as unknown as any
 
@@ -27,19 +28,14 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
     vi.clearAllMocks()
   })
 
-  it('should ensure an editSecret is present in values even if ID is provided (handling republish)', async () => {
-    // Setup the chain: insert().values().onConflictDoUpdate().returning() -> resolves to array
-    const returningMock = vi
-      .fn()
-      .mockResolvedValue([{ editSecret: 'new-secret-from-db' }])
-    const onConflictDoUpdateMock = vi
-      .fn()
-      .mockReturnValue({ returning: returningMock })
-    const valuesMock = vi
-      .fn()
-      .mockReturnValue({ onConflictDoUpdate: onConflictDoUpdateMock })
+  it('should return the existing editSecret when updating with an ID', async () => {
+    const returningMock = vi.fn().mockResolvedValue([
+      { id: 'existing-id', editSecret: 'existing-secret', slug: null },
+    ])
+    const whereMock = vi.fn().mockReturnValue({ returning: returningMock })
+    const setMock = vi.fn().mockReturnValue({ where: whereMock })
 
-    mockDb.insert.mockReturnValue({ values: valuesMock })
+    mockDb.update.mockReturnValue({ set: setMock })
 
     const result = await publishResume(mockDb, {
       id: 'existing-id',
@@ -47,16 +43,8 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
       content: 'Content',
     })
 
-    // 1. Verify we called values()
-    expect(valuesMock).toHaveBeenCalled()
-    const valuesCall = valuesMock.mock.calls[0][0]
-
-    // CRITICAL: We expect editSecret to be generated and passed in values
-    // even though ID was provided.
-    expect(valuesCall.editSecret).toBeDefined()
-    expect(typeof valuesCall.editSecret).toBe('string')
-
-    // 2. Verify we return the secret from the DB
-    expect(result.editSecret).toBe('new-secret-from-db')
+    expect(mockDb.update).toHaveBeenCalled()
+    expect(mockDb.insert).not.toHaveBeenCalled()
+    expect(result.editSecret).toBe('existing-secret')
   })
 })
