@@ -15,7 +15,7 @@ export default function SiteHeader() {
           <div className="flex size-9 items-center justify-center">
             <AppIcon className="h-full w-full" />
           </div>
-          <h2 className="text-lg leading-tight font-bold tracking-[-0.015em]">
+          <h2 className="font-heading text-lg leading-tight font-bold tracking-[-0.015em]">
             TidyResume
           </h2>
         </Link>

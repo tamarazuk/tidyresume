@@ -51,7 +51,7 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
           <AppIcon className="h-full w-full" />
         </Link>
         <div>
-          <h2 className="text-foreground text-lg leading-tight font-bold tracking-[-0.015em]">
+          <h2 className="font-heading text-foreground text-lg leading-tight font-bold tracking-[-0.015em]">
             {title}
           </h2>
           <ResumeTitleInput />

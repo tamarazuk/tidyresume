@@ -20,8 +20,22 @@
   }
 
   body {
-    font-family: var(--font-display);
     @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .font-sans {
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-heading {
+    font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+      Consolas, "Liberation Mono", "Courier New", monospace;
   }
 }
 
