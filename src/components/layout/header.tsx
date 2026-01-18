@@ -10,7 +10,7 @@ import {
 } from '@phosphor-icons/react/dist/ssr'
 
 import AppIcon from '@/icons/app-icon'
-import AppearanceSettings from '@/components/layout/appearance-settings'
+import AppearanceSettings from '@/components/appearance-settings'
 import ResumeTitleInput from '@/components/layout/resume-title-input'
 import { Button, buttonVariants } from '@/components/ui/button'
 import ThemeToggle from '@/components/ui/theme-toggle'

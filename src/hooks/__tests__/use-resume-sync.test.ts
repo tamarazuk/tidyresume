@@ -18,6 +18,12 @@ let storeState = {
   resumeDisplay: {
     theme: {
       accent: 'indigo',
+      typography: {
+        heading: 'geologica',
+        body: 'noto-sans',
+        headingSize: 'md',
+        bodySize: '15',
+      },
     },
   },
   isPublished: true,
@@ -40,6 +46,12 @@ describe('useResumeSync', () => {
       resumeDisplay: {
         theme: {
           accent: 'indigo',
+          typography: {
+            heading: 'geologica',
+            body: 'noto-sans',
+            headingSize: 'md',
+            bodySize: '15',
+          },
         },
       },
       isPublished: true,
@@ -94,6 +106,12 @@ describe('useResumeSync', () => {
       resumeDisplay: {
         theme: {
           accent: 'teal',
+          typography: {
+            heading: 'ibm-plex-serif',
+            body: 'ibm-plex-sans',
+            headingSize: 'lg',
+            bodySize: '16',
+          },
         },
       },
     }
@@ -105,6 +123,12 @@ describe('useResumeSync', () => {
       expect.objectContaining({
         theme: {
           accent: 'teal',
+          typography: {
+            heading: 'ibm-plex-serif',
+            body: 'ibm-plex-sans',
+            headingSize: 'lg',
+            bodySize: '16',
+          },
         },
       }),
       expect.anything()
