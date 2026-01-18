@@ -44,7 +44,13 @@ cd tidyresume
 # Install dependencies
 pnpm install
 
-# Start the development server
+# Generate Cloudflare binding types (D1, R2, etc.)
+pnpm cf-typegen
+
+# Create/apply local D1 schema
+pnpm migrate:local
+
+# Start the dev server
 pnpm dev
 ```
 
