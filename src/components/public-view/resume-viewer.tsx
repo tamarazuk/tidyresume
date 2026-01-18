@@ -99,16 +99,18 @@ export function ResumeViewer({
                   ))}
                 </div>
               </DropdownMenuItem>
-              <AppearanceSettings
-                label="Appearance"
-                labelClassName="inline"
-                triggerVariant="ghost"
-                triggerSize="sm"
-                triggerClassName={cn(
-                  menuItemClassName,
-                  'focus:bg-transparent focus:text-foreground data-[highlighted]:bg-transparent data-[highlighted]:text-foreground'
-                )}
-              />
+              {isOwner ? (
+                <AppearanceSettings
+                  label="Appearance"
+                  labelClassName="inline"
+                  triggerVariant="ghost"
+                  triggerSize="sm"
+                  triggerClassName={cn(
+                    menuItemClassName,
+                    'focus:bg-transparent focus:text-foreground data-[highlighted]:bg-transparent data-[highlighted]:text-foreground'
+                  )}
+                />
+              ) : null}
               {isOwner ? (
                 <SlugSettings
                   label="Edit link"
