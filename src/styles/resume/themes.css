@@ -1,0 +1,47 @@
+.resume-theme {
+  --primary: #2b9dee;
+  --primary-foreground: #ffffff;
+  --ring: #2b9dee;
+  --chart-1: #2b9dee;
+  --sidebar-primary: #2b9dee;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-ring: #2b9dee;
+  --color-primary-50: #eff8ff;
+  --color-primary-100: #dbeffe;
+  --color-primary-200: #bfe4fe;
+  --color-primary-300: #93d4fd;
+  --color-primary-400: #5fbcfa;
+  --color-primary-500: #2b9dee;
+  --color-primary-600: #1a82d4;
+  --color-primary-700: #1769ab;
+  --color-primary-800: #18578d;
+  --color-primary-900: #194a74;
+  --color-primary-950: #132f49;
+  --color-primary: #2b9dee;
+}
+
+.resume-theme-light {
+  color-scheme: light;
+}
+
+.resume-theme-dark {
+  color-scheme: dark;
+}
+
+.resume-preview-theme.resume-theme-dark {
+  --resume-preview-background: #0b1220;
+  --resume-preview-foreground: #e2e8f0;
+  --resume-preview-muted: #111827;
+  --resume-preview-muted-foreground: #94a3b8;
+  --resume-preview-border: #1f2937;
+  --resume-preview-primary: #2b9dee;
+  --resume-preview-primary-foreground: #ffffff;
+  --resume-preview-card: #0f172a;
+  --resume-preview-card-foreground: #e2e8f0;
+  --resume-preview-accent: #1e293b;
+  --resume-preview-accent-foreground: #e2e8f0;
+  --resume-preview-pill-bg: #111827;
+  --resume-preview-pill-color: #e2e8f0;
+  --resume-preview-code-block-bg: #0b1220;
+  --resume-preview-code-block-color: #a9b7c6;
+}

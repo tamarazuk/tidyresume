@@ -1,0 +1,46 @@
+.resume-preview-theme {
+  --resume-preview-background: #f1f5f9;
+  --resume-preview-foreground: #0f172a;
+  --resume-preview-muted: #f1f5f9;
+  --resume-preview-muted-foreground: #64748b;
+  --resume-preview-border: #e2e8f0;
+  --resume-preview-primary: #2b9dee;
+  --resume-preview-primary-foreground: #ffffff;
+  --resume-preview-card: #ffffff;
+  --resume-preview-card-foreground: #0f172a;
+  --resume-preview-accent: #e2e8f0;
+  --resume-preview-accent-foreground: #0f172a;
+  --resume-preview-pill-bg: #f1f5f9;
+  --resume-preview-pill-color: #334155;
+  --resume-preview-code-block-bg: #0b1220;
+  --resume-preview-code-block-color: #a9b7c6;
+
+  --preview-paper-width: 210mm;
+  --preview-paper-height: 297mm;
+  --preview-paper-padding: 15mm;
+  --preview-paper-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.45);
+  --preview-page-gap: 28px;
+  --preview-page-margin: var(--preview-paper-padding);
+  --preview-page-outline: color-mix(in oklch, var(--resume-preview-border) 70%, transparent);
+
+  --preview-link-color: var(--resume-preview-primary);
+  --preview-link-hover-color: color-mix(
+    in oklch,
+    var(--preview-link-color) 70%,
+    #0f172a
+  );
+
+  --preview-code-inline-color: var(--resume-preview-primary);
+  --preview-code-inline-bg: color-mix(
+    in oklch,
+    var(--resume-preview-primary) 12%,
+    transparent
+  );
+  --preview-code-block-color: var(--resume-preview-code-block-color);
+  --preview-code-block-bg: var(--resume-preview-code-block-bg);
+
+  --preview-radius-sm: 2px;
+  --preview-radius-md: 6px;
+  --preview-pill-bg: var(--resume-preview-pill-bg);
+  --preview-pill-color: var(--resume-preview-pill-color);
+}

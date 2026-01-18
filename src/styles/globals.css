@@ -4,11 +4,13 @@
 
 @import './theme.css';
 
+@import './resume/themes.css';
+
 @import './components.css';
 
 @import './utilities.css';
 
-@import './print.css';
+@import './resume/print.css';
 
 @custom-variant dark (&:is(.dark *));
 
