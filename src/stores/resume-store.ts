@@ -5,17 +5,35 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
 import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
-import type { ResumeId, ResumeSlug } from '@/lib/resume-types'
+import { DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
+import type {
+  ResumeAccent,
+  ResumeId,
+  ResumeSlug,
+  ResumeThemeSettings,
+} from '@/lib/resume-types'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
 export type ResumeThemeMode = 'auto' | 'light' | 'dark'
 
 export interface ResumeDisplaySettings {
   themeMode: ResumeThemeMode
+  theme: ResumeThemeSettings
 }
 
 const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
+
+const resolveThemeDefaults = (
+  theme?: ResumeThemeSettings | null
+): ResumeThemeSettings => ({
+  ...DEFAULT_RESUME_THEME,
+  ...theme,
+  typography: {
+    ...DEFAULT_RESUME_THEME.typography,
+    ...(theme?.typography ?? {}),
+  },
+})
 
 interface ResumeState {
   id: ResumeId | null
@@ -31,6 +49,8 @@ interface ResumeState {
   resumeDisplay: ResumeDisplaySettings
   setResumeTitle: (resumeTitle: string) => void
   setResumeThemeMode: (themeMode: ResumeThemeMode) => void
+  setResumeAccent: (accent: ResumeAccent) => void
+  setResumeTheme: (theme: ResumeThemeSettings) => void
   setMarkdown: (markdown: string) => void
   setSaveStatus: (saveStatus: SaveStatus) => void
   setSyncStatus: (
@@ -75,6 +95,7 @@ export const useResumeStore = create<ResumeState>()(
         contentWarning: null,
         resumeDisplay: {
           themeMode: 'auto',
+          theme: resolveThemeDefaults(),
         },
         setResumeTitle: (resumeTitle) => {
           set({ resumeTitle, saveStatus: 'saving' })
@@ -102,7 +123,35 @@ export const useResumeStore = create<ResumeState>()(
         setImageWarning: (imageWarning) => set({ imageWarning }),
         setContentWarning: (contentWarning) => set({ contentWarning }),
         setResumeThemeMode: (themeMode) =>
-          set({ resumeDisplay: { themeMode } }),
+          set((state) => ({
+            resumeDisplay: {
+              ...state.resumeDisplay,
+              themeMode,
+            },
+          })),
+        setResumeTheme: (theme) => {
+          set((state) => ({
+            resumeDisplay: {
+              ...state.resumeDisplay,
+              theme: resolveThemeDefaults(theme),
+            },
+            saveStatus: 'saving',
+          }))
+          scheduleSaveStatus()
+        },
+        setResumeAccent: (accent) => {
+          set((state) => ({
+            resumeDisplay: {
+              ...state.resumeDisplay,
+              theme: {
+                ...state.resumeDisplay.theme,
+                accent,
+              },
+            },
+            saveStatus: 'saving',
+          }))
+          scheduleSaveStatus()
+        },
         unpublish: () =>
           set({
             syncStatus: 'unsaved',
@@ -124,18 +173,20 @@ export const useResumeStore = create<ResumeState>()(
             contentWarning: null,
             resumeDisplay: {
               themeMode: 'auto',
+              theme: resolveThemeDefaults(),
             },
           }),
       }
     },
     {
       name: 'tidyresume-editor',
-      version: 6, // Bump version
+      version: 7, // Bump version
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },
       migrate: (persistedState) => {
         const state = persistedState as ResumeState
+        const storedTheme = resolveThemeDefaults(state.resumeDisplay?.theme)
         return {
           ...state,
           resumeTitle: state.resumeTitle ?? 'Untitled Resume',
@@ -151,6 +202,7 @@ export const useResumeStore = create<ResumeState>()(
           contentWarning: state.contentWarning ?? null,
           resumeDisplay: {
             themeMode: state.resumeDisplay?.themeMode ?? 'auto',
+            theme: storedTheme,
           },
         }
       },

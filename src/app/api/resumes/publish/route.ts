@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { getDb } from '@/db'
 import * as resumeService from '@/services/resume-service'
+import type { ResumeThemeSettings } from '@/lib/resume-types'
 
 export async function POST(request: Request) {
   try {
@@ -10,6 +11,7 @@ export async function POST(request: Request) {
       title: string
       content: string
       slug?: string | null
+      theme?: ResumeThemeSettings | null
     }
     const { env } = await getCloudflareContext({ async: true })
     const db = getDb(env.DB)

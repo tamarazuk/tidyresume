@@ -13,6 +13,7 @@ export function useResumeSync() {
   const title = useResumeStore((state) => state.resumeTitle)
   const content = useResumeStore((state) => state.markdown)
   const slug = useResumeStore((state) => state.slug)
+  const theme = useResumeStore((state) => state.resumeDisplay.theme)
   const isPublished = useResumeStore((state) => state.isPublished)
   const editSecret = useResumeStore((state) => state.editSecret)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
@@ -46,6 +47,7 @@ export function useResumeSync() {
       id,
       title,
       content,
+      theme,
     }
 
     if (slug !== null) {
@@ -129,6 +131,7 @@ export function useResumeSync() {
     title,
     content,
     slug,
+    theme,
     isPublished,
     editSecret,
     setSyncStatus,

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { publishResume } from '../resume-service'
+import { getResume, publishResume } from '../resume-service'
 
 // Mock the schema to avoid actual DB calls if any
 vi.mock('@/db/schema', async () => {
@@ -72,5 +72,54 @@ describe('resume-service', () => {
         slug: 'taken-slug',
       })
     ).rejects.toThrow('Slug already taken')
+  })
+
+  it('should serialize theme when inserting', async () => {
+    const returningMock = vi.fn().mockResolvedValue([
+      { id: 'new-id', editSecret: 'secret', slug: null },
+    ])
+    const valuesMock = vi.fn().mockReturnValue({ returning: returningMock })
+    mockDb.insert.mockReturnValue({ values: valuesMock })
+
+    await publishResume(mockDb, {
+      title: 'Test Resume',
+      content: 'Markdown content',
+      theme: {
+        accent: 'indigo',
+        typography: { heading: 'geologica', body: 'noto-sans' },
+      },
+    })
+
+    expect(valuesMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        theme: JSON.stringify({
+          accent: 'indigo',
+          typography: { heading: 'geologica', body: 'noto-sans' },
+        }),
+      })
+    )
+  })
+
+  it('should parse theme on getResume', async () => {
+    const themeValue = JSON.stringify({
+      accent: 'rose',
+      typography: { heading: 'ibm-plex-serif', body: 'ibm-plex-sans' },
+    })
+    mockDb.query.resumes.findFirst.mockResolvedValue({
+      id: 'resume-id',
+      title: 'Resume',
+      content: 'Content',
+      slug: null,
+      theme: themeValue,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    })
+
+    const resume = await getResume(mockDb, 'resume-id')
+
+    expect(resume?.theme).toEqual({
+      accent: 'rose',
+      typography: { heading: 'ibm-plex-serif', body: 'ibm-plex-sans' },
+    })
   })
 })

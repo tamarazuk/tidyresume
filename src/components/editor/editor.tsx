@@ -2,8 +2,10 @@
 
 import { MdEditor } from 'md-editor-rt'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
+import { getResumeAccentClassName } from '@/lib/resume-theme'
 import { sanitizeHtml } from '@/lib/sanitize-html'
 import { cn } from '@/lib/utils'
+import { useResumeStore } from '@/stores/resume-store'
 import { initMdEditorConfig } from './config/editor-config'
 import { useEditorState } from './hooks'
 import 'md-editor-rt/lib/style.css'
@@ -26,6 +28,10 @@ export default function Editor() {
     defFooters,
   } = useEditorState()
   const { className: resumeThemeClassName } = useResumeTheme()
+  const resumeAccent = useResumeStore(
+    (state) => state.resumeDisplay.theme.accent
+  )
+  const resumeAccentClassName = getResumeAccentClassName(resumeAccent)
 
   return (
     <div className="flex h-full flex-col">
@@ -36,6 +42,7 @@ export default function Editor() {
         className={cn(
           'resume-preview-theme grow rounded-none',
           resumeThemeClassName,
+          resumeAccentClassName,
           isFullWidth && 'resume-view-full'
         )}
         value={text}

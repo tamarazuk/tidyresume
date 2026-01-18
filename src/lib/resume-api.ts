@@ -1,10 +1,16 @@
-import type { ResumeId, ResumeRecord, ResumeSlug } from '@/lib/resume-types'
+import type {
+  ResumeId,
+  ResumeRecord,
+  ResumeSlug,
+  ResumeThemeSettings,
+} from '@/lib/resume-types'
 
 export interface PublishResumePayload {
   id?: ResumeId
   title: string
   content: string
   slug?: ResumeSlug
+  theme?: ResumeThemeSettings | null
 }
 
 export interface PublishResumeResponse {

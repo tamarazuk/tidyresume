@@ -10,6 +10,7 @@ import {
 } from '@phosphor-icons/react/dist/ssr'
 
 import AppIcon from '@/icons/app-icon'
+import AppearanceSettings from '@/components/layout/appearance-settings'
 import ResumeTitleInput from '@/components/layout/resume-title-input'
 import { Button, buttonVariants } from '@/components/ui/button'
 import ThemeToggle from '@/components/ui/theme-toggle'
@@ -58,6 +59,7 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
         </div>
       </div>
       <div className="flex items-center gap-3">
+        <AppearanceSettings />
         <Tooltip>
           <TooltipTrigger
             render={(props) => (

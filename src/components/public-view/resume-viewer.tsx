@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/tooltip'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
+import { getResumeAccentClassName } from '@/lib/resume-theme'
+import type { ResumeThemeSettings } from '@/lib/resume-types'
 import { cn } from '@/lib/utils'
 
 import 'md-editor-rt/lib/preview.css'
@@ -26,6 +28,7 @@ interface ResumeViewerProps {
   title: string
   content: string
   isFullWidth: boolean
+  theme?: ResumeThemeSettings | null
 }
 
 export function ResumeViewer({
@@ -33,10 +36,12 @@ export function ResumeViewer({
   title,
   content,
   isFullWidth,
+  theme,
 }: ResumeViewerProps) {
   const { formatShortcutKeys } = usePlatformShortcuts()
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
   const shortcutLabel = formatShortcutKeys(['Mod', 'P']).join('+')
+  const resumeAccentClassName = getResumeAccentClassName(theme?.accent)
 
   return (
     <div className="resume-view flex min-h-screen flex-col font-sans">
@@ -105,6 +110,7 @@ export function ResumeViewer({
           className={cn(
             'resume-preview-theme resume-view font-sans',
             resumeThemeClassName,
+            resumeAccentClassName,
             isFullWidth && 'resume-view-full'
           )}
         />

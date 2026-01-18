@@ -150,7 +150,7 @@ import './styles.css'
 Apply `.resume-theme` or `.resume-preview-theme` to the container to switch to the resume accent colors:
 ```tsx
 <div className="resume-theme">
-  {/* Resume content uses blue accent colors */}
+  {/* Resume content uses the selected accent color */}
 </div>
 ```
 
@@ -171,6 +171,10 @@ The app uses dynamic SVG-to-PNG generation for the brand logo and favicons via `
 ## Testing
 
 Vitest is configured for unit tests with Testing Library and jsdom. Prefer Playwright for E2E tests if/when added.
+
+## Database Migrations
+
+- After adding a new migration in `drizzle/`, update `drizzle/meta/*_snapshot.json` and `drizzle/meta/_journal.json` (or run the appropriate drizzle-kit command) so schema snapshots stay in sync.
 
 ## Common Tasks
 

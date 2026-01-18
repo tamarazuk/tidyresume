@@ -1,4 +1,5 @@
 :root {
+  --brand-primary: #6366f1;
   --background: oklch(0.9842 0.0034 247.8575);
   --foreground: oklch(0.2795 0.0368 260.031);
   --card: oklch(1 0 0);
@@ -60,6 +61,7 @@
 }
 
 .dark {
+  --brand-primary: #6366f1;
   --background: oklch(0.2077 0.0398 265.7549);
   --foreground: oklch(0.9288 0.0126 255.5078);
   --card: oklch(0.2795 0.0368 260.031);
