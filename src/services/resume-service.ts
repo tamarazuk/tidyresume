@@ -40,6 +40,41 @@ export async function deleteResume(db: Db, id: string) {
   return db.delete(resumes).where(eq(resumes.id, id))
 }
 
+export async function updateResumeSlug(
+  db: Db,
+  data: {
+    id: string
+    slug?: string | null
+  }
+) {
+  const slugVal = data.slug ?? null
+
+  try {
+    const results = await db
+      .update(resumes)
+      .set({
+        slug: slugVal,
+        updatedAt: new Date(),
+      })
+      .where(eq(resumes.id, data.id))
+      .returning({
+        id: resumes.id,
+        slug: resumes.slug,
+      })
+
+    if (results.length === 0) {
+      throw new Error('Resume not found')
+    }
+
+    return results[0]
+  } catch (error) {
+    if (isUniqueConstraintViolation(error)) {
+      throw new Error('Slug already taken')
+    }
+    throw error
+  }
+}
+
 function isUniqueConstraintViolation(error: unknown): boolean {
   if (error instanceof Error) {
     if (

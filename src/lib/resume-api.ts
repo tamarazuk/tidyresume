@@ -20,6 +20,12 @@ export interface PublishResumeResponse {
   editSecret?: string
 }
 
+export interface UpdateResumeSlugResponse {
+  id: ResumeId
+  slug: ResumeSlug
+  url?: string
+}
+
 export class ResumeApiError extends Error {
   status: number
 
@@ -74,6 +80,29 @@ export async function publishResume(
   return parseJsonResponse<PublishResumeResponse>(
     response,
     'Failed to publish resume'
+  )
+}
+
+export async function updateResumeSlug(
+  id: ResumeId,
+  slug: ResumeSlug,
+  options: { signal?: AbortSignal; editSecret?: string } = {}
+): Promise<UpdateResumeSlugResponse> {
+  const headers: HeadersInit = { 'Content-Type': 'application/json' }
+  if (options.editSecret) {
+    headers['X-Edit-Secret'] = options.editSecret
+  }
+
+  const response = await fetch(`/api/resumes/${id}/slug`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ slug }),
+    signal: options.signal,
+  })
+
+  return parseJsonResponse<UpdateResumeSlugResponse>(
+    response,
+    'Failed to update slug'
   )
 }
 
