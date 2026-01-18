@@ -1,4 +1,4 @@
-import type { ResumeBodySize, ResumeFont, ResumeHeadingSize } from '@/lib/resume-types'
+import type { ResumeBodySize, ResumeFont, ResumeHeadingSize } from '@/types/resume'
 import {
   bodySizeLabelByValue,
   fontLabelByValue,

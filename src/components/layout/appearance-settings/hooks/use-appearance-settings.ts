@@ -12,7 +12,7 @@ import type {
   ResumeBodySize,
   ResumeFont,
   ResumeHeadingSize,
-} from '@/lib/resume-types'
+} from '@/types/resume'
 import {
   accentHelpText,
   bodySizeLabelByValue,

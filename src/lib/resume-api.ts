@@ -3,7 +3,7 @@ import type {
   ResumeRecord,
   ResumeSlug,
   ResumeThemeSettings,
-} from '@/lib/resume-types'
+} from '@/types/resume'
 
 export interface PublishResumePayload {
   id?: ResumeId

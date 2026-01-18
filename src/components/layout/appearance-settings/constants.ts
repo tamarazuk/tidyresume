@@ -2,7 +2,7 @@ import type {
   ResumeBodySize,
   ResumeFont,
   ResumeHeadingSize,
-} from '@/lib/resume-types'
+} from '@/types/resume'
 import {
   RESUME_BODY_SIZE_OPTIONS,
   RESUME_FONT_OPTIONS,

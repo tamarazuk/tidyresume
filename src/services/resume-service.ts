@@ -2,7 +2,8 @@ import { eq, or } from 'drizzle-orm'
 import { DrizzleD1Database } from 'drizzle-orm/d1'
 import { resumes } from '@/db/schema'
 import * as schema from '@/db/schema'
-import type { ResumeThemeSettings } from '@/lib/resume-types'
+import { safeJsonParse, safeJsonStringify } from '@/lib/json-utils'
+import type { ResumeThemeSettings } from '@/types/resume'
 
 type Db = DrizzleD1Database<typeof schema>
 
@@ -10,26 +11,16 @@ type ResumeRecordWithTheme = Omit<typeof resumes.$inferSelect, 'theme'> & {
   theme: ResumeThemeSettings | null
 }
 
+const isThemeValue = (value: unknown): value is ResumeThemeSettings => {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
 const parseTheme = (theme: string | null): ResumeThemeSettings | null => {
-  if (!theme) return null
-  try {
-    const parsed = JSON.parse(theme) as ResumeThemeSettings
-    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-      return null
-    }
-    return parsed
-  } catch {
-    return null
-  }
+  return safeJsonParse(theme, isThemeValue)
 }
 
 const serializeTheme = (theme?: ResumeThemeSettings | null): string | null => {
-  if (!theme) return null
-  try {
-    return JSON.stringify(theme)
-  } catch {
-    return null
-  }
+  return safeJsonStringify(theme)
 }
 
 export async function getResume(db: Db, idOrSlug: string) {

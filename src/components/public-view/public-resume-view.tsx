@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { OwnerFloatingToolbar } from '@/components/public-view/owner-floating-toolbar'
 import { ResumeViewer } from '@/components/public-view/resume-viewer'
 import { useRemoteStatus } from '@/hooks/use-remote-status'
-import type { ResumeThemeSettings } from '@/lib/resume-types'
+import type { ResumeThemeSettings } from '@/types/resume'
 
 interface PublicResumeViewProps {
   id: string

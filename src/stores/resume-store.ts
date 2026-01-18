@@ -13,7 +13,7 @@ import type {
   ResumeId,
   ResumeSlug,
   ResumeThemeSettings,
-} from '@/lib/resume-types'
+} from '@/types/resume'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
 export type ResumeThemeMode = 'auto' | 'light' | 'dark'
@@ -26,6 +26,7 @@ export interface ResumeDisplaySettings {
 const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
 
+// Normalize legacy size values from persisted themes.
 const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
   if (value === 'sm' || value === 'md' || value === 'lg') return value
   if (value === '14') return 'sm'
@@ -34,6 +35,7 @@ const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
   return DEFAULT_RESUME_THEME.typography?.headingSize ?? 'md'
 }
 
+// Normalize legacy size values from persisted themes.
 const normalizeResumeBodySize = (value: unknown): ResumeBodySize => {
   if (value === '14' || value === '15' || value === '16') return value
   if (value === 'sm') return '14'

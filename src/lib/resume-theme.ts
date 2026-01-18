@@ -4,7 +4,7 @@ import type {
   ResumeFont,
   ResumeHeadingSize,
   ResumeThemeSettings,
-} from '@/lib/resume-types'
+} from '@/types/resume'
 
 export const DEFAULT_RESUME_THEME: ResumeThemeSettings = {
   accent: 'indigo',

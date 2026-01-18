@@ -20,7 +20,7 @@ import {
   getResumeAccentClassName,
   getResumeTypographyClassNames,
 } from '@/lib/resume-theme'
-import type { ResumeThemeSettings } from '@/lib/resume-types'
+import type { ResumeThemeSettings } from '@/types/resume'
 import { cn } from '@/lib/utils'
 
 import 'md-editor-rt/lib/preview.css'
