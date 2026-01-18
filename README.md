@@ -44,16 +44,6 @@ cd tidyresume
 # Install dependencies
 pnpm install
 
-# Start the development server
-pnpm dev
-```
-
-### Worktree setup (repeat for each new worktree)
-
-```bash
-# Install dependencies
-pnpm install
-
 # Generate Cloudflare binding types (D1, R2, etc.)
 pnpm cf-typegen
 
