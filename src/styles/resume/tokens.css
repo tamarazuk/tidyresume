@@ -46,4 +46,6 @@
 
   --resume-body-size: 0.9375rem;
   --resume-heading-scale: 1;
+  --resume-body-leading: 1.6;
+  --resume-body-tracking: 0;
 }

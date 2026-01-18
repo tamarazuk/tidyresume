@@ -182,3 +182,53 @@
 .resume-theme.resume-size-body-16 {
   --resume-body-size: 1rem;
 }
+
+.resume-preview-theme.resume-leading-body-12,
+.resume-theme.resume-leading-body-12 {
+  --resume-body-leading: 1.2;
+}
+
+.resume-preview-theme.resume-leading-body-13,
+.resume-theme.resume-leading-body-13 {
+  --resume-body-leading: 1.3;
+}
+
+.resume-preview-theme.resume-leading-body-14,
+.resume-theme.resume-leading-body-14 {
+  --resume-body-leading: 1.4;
+}
+
+.resume-preview-theme.resume-leading-body-15,
+.resume-theme.resume-leading-body-15 {
+  --resume-body-leading: 1.5;
+}
+
+.resume-preview-theme.resume-leading-body-16,
+.resume-theme.resume-leading-body-16 {
+  --resume-body-leading: 1.6;
+}
+
+.resume-preview-theme.resume-leading-body-18,
+.resume-theme.resume-leading-body-18 {
+  --resume-body-leading: 1.8;
+}
+
+.resume-preview-theme.resume-tracking-body-tight,
+.resume-theme.resume-tracking-body-tight {
+  --resume-body-tracking: -0.025em;
+}
+
+.resume-preview-theme.resume-tracking-body-normal,
+.resume-theme.resume-tracking-body-normal {
+  --resume-body-tracking: 0;
+}
+
+.resume-preview-theme.resume-tracking-body-relaxed,
+.resume-theme.resume-tracking-body-relaxed {
+  --resume-body-tracking: 0.025em;
+}
+
+.resume-preview-theme.resume-tracking-body-wide,
+.resume-theme.resume-tracking-body-wide {
+  --resume-body-tracking: 0.05em;
+}

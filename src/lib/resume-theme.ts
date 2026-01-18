@@ -1,6 +1,12 @@
+import {
+  RESUME_BODY_LETTER_SPACING_VALUES,
+  RESUME_BODY_LINE_HEIGHT_VALUES,
+} from '@/types/resume'
 import type {
   ResumeAccent,
   ResumeBodySize,
+  ResumeBodyLineHeight,
+  ResumeBodyLetterSpacing,
   ResumeFont,
   ResumeHeadingSize,
   ResumeThemeSettings,
@@ -13,6 +19,8 @@ export const DEFAULT_RESUME_THEME: ResumeThemeSettings = {
     body: 'noto-sans',
     headingSize: 'md',
     bodySize: '15',
+    bodyLineHeight: '1.6',
+    bodyLetterSpacing: '0',
   },
 }
 
@@ -63,6 +71,32 @@ export const RESUME_BODY_SIZE_OPTIONS: Array<{
   { value: '16', label: '16 px' },
 ]
 
+export const RESUME_BODY_LINE_HEIGHT_OPTIONS: Array<{
+  value: ResumeBodyLineHeight
+  label: string
+}> = RESUME_BODY_LINE_HEIGHT_VALUES.map((value) => ({
+  value,
+  label: value,
+}))
+
+const RESUME_BODY_LETTER_SPACING_LABELS: Record<
+  ResumeBodyLetterSpacing,
+  string
+> = {
+  '-0.025em': 'Tight',
+  '0': 'Normal',
+  '0.025em': 'Relaxed',
+  '0.05em': 'Wide',
+}
+
+export const RESUME_BODY_LETTER_SPACING_OPTIONS: Array<{
+  value: ResumeBodyLetterSpacing
+  label: string
+}> = RESUME_BODY_LETTER_SPACING_VALUES.map((value) => ({
+  value,
+  label: RESUME_BODY_LETTER_SPACING_LABELS[value],
+}))
+
 export const RESUME_ACCENT_CLASS_NAMES: Record<ResumeAccent, string> = {
   indigo: 'resume-accent-indigo',
   blue: 'resume-accent-blue',
@@ -106,6 +140,26 @@ const RESUME_BODY_SIZE_CLASS_NAMES: Record<ResumeBodySize, string> = {
   16: 'resume-size-body-16',
 }
 
+const RESUME_BODY_LINE_HEIGHT_CLASS_NAMES: Record<ResumeBodyLineHeight, string> =
+  {
+    '1.2': 'resume-leading-body-12',
+    '1.3': 'resume-leading-body-13',
+    '1.4': 'resume-leading-body-14',
+    '1.5': 'resume-leading-body-15',
+    '1.6': 'resume-leading-body-16',
+    '1.8': 'resume-leading-body-18',
+  }
+
+const RESUME_BODY_LETTER_SPACING_CLASS_NAMES: Record<
+  ResumeBodyLetterSpacing,
+  string
+> = {
+  '-0.025em': 'resume-tracking-body-tight',
+  '0': 'resume-tracking-body-normal',
+  '0.025em': 'resume-tracking-body-relaxed',
+  '0.05em': 'resume-tracking-body-wide',
+}
+
 type ResumeHeadingSizeInput =
   | ResumeHeadingSize
   | ResumeBodySize
@@ -125,6 +179,25 @@ type ResumeBodySizeInput =
   | 'lg'
   | null
   | undefined
+
+type ResumeBodyLineHeightInput =
+  | ResumeBodyLineHeight
+  | number
+  | string
+  | null
+  | undefined
+
+type ResumeBodyLetterSpacingInput =
+  | ResumeBodyLetterSpacing
+  | number
+  | string
+  | null
+  | undefined
+
+const RESUME_BODY_LINE_HEIGHT_VALUE_SET = new Set(RESUME_BODY_LINE_HEIGHT_VALUES)
+const RESUME_BODY_LETTER_SPACING_VALUE_SET = new Set(
+  RESUME_BODY_LETTER_SPACING_VALUES
+)
 
 const normalizeResumeHeadingSize = (
   size: ResumeHeadingSizeInput
@@ -151,6 +224,44 @@ const normalizeResumeBodySize = (size: ResumeBodySizeInput): ResumeBodySize => {
   if (size === 'md') return '15'
   if (size === 'lg') return '16'
   return DEFAULT_RESUME_THEME.typography?.bodySize ?? '15'
+}
+
+const normalizeResumeBodyLineHeight = (
+  value: ResumeBodyLineHeightInput
+): ResumeBodyLineHeight => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const candidate = value.toFixed(1) as ResumeBodyLineHeight
+    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(candidate)) {
+      return candidate
+    }
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim() as ResumeBodyLineHeight
+    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(trimmed)) {
+      return trimmed
+    }
+  }
+  return DEFAULT_RESUME_THEME.typography?.bodyLineHeight ?? '1.6'
+}
+
+const normalizeResumeBodyLetterSpacing = (
+  value: ResumeBodyLetterSpacingInput
+): ResumeBodyLetterSpacing => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const candidate = `${value}em` as ResumeBodyLetterSpacing
+    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(candidate)) {
+      return candidate
+    }
+    if (value === 0) return '0'
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim() as ResumeBodyLetterSpacing
+    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(trimmed)) {
+      return trimmed
+    }
+    if (trimmed === '0') return '0'
+  }
+  return DEFAULT_RESUME_THEME.typography?.bodyLetterSpacing ?? '0'
 }
 
 export const resolveResumeAccent = (
@@ -198,6 +309,20 @@ export const getResumeBodySizeClassName = (
   return RESUME_BODY_SIZE_CLASS_NAMES[resolvedSize]
 }
 
+export const getResumeBodyLineHeightClassName = (
+  value?: ResumeBodyLineHeightInput
+): string => {
+  const resolvedValue = normalizeResumeBodyLineHeight(value ?? null)
+  return RESUME_BODY_LINE_HEIGHT_CLASS_NAMES[resolvedValue]
+}
+
+export const getResumeBodyLetterSpacingClassName = (
+  value?: ResumeBodyLetterSpacingInput
+): string => {
+  const resolvedValue = normalizeResumeBodyLetterSpacing(value ?? null)
+  return RESUME_BODY_LETTER_SPACING_CLASS_NAMES[resolvedValue]
+}
+
 export const getResumeTypographyClassNames = (
   theme?: ResumeThemeSettings | null
 ): string[] => {
@@ -207,5 +332,7 @@ export const getResumeTypographyClassNames = (
     getResumeBodyFontClassName(typography?.body ?? null),
     getResumeHeadingSizeClassName(typography?.headingSize ?? null),
     getResumeBodySizeClassName(typography?.bodySize ?? null),
+    getResumeBodyLineHeightClassName(typography?.bodyLineHeight ?? null),
+    getResumeBodyLetterSpacingClassName(typography?.bodyLetterSpacing ?? null),
   ]
 }

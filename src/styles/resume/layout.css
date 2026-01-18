@@ -89,7 +89,7 @@
   border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
   border-radius: var(--preview-radius-md);
   word-break: normal;
-  line-height: 1.6;
+  line-height: var(--resume-body-leading, 1.6);
   font-size: var(--resume-body-size, 0.95rem);
 }
 

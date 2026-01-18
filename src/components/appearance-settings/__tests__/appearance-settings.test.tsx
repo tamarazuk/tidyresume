@@ -73,8 +73,12 @@ describe('AppearanceSettings', () => {
     )
 
     expect(screen.getByText('Typography')).toBeInTheDocument()
-    expect(screen.getByText('Heading')).toBeInTheDocument()
-    expect(screen.getByText('Body')).toBeInTheDocument()
+    expect(screen.getByText('Heading font')).toBeInTheDocument()
+    expect(screen.getByText('Heading size')).toBeInTheDocument()
+    expect(screen.getByText('Body font')).toBeInTheDocument()
+    expect(screen.getByText('Body size')).toBeInTheDocument()
+    expect(screen.getByText('Body line height')).toBeInTheDocument()
+    expect(screen.getByText('Body letter spacing')).toBeInTheDocument()
   })
 
   it('shows heading and body size options', () => {
@@ -87,7 +91,7 @@ describe('AppearanceSettings', () => {
     const triggers = Array.from(
       document.querySelectorAll('[data-slot="select-trigger"]')
     )
-    expect(triggers).toHaveLength(4)
+    expect(triggers).toHaveLength(6)
 
     fireEvent.click(triggers[1])
     expect(screen.getAllByText('Extra small').length).toBeGreaterThan(0)
@@ -100,5 +104,15 @@ describe('AppearanceSettings', () => {
     expect(screen.getAllByText('10 px').length).toBeGreaterThan(0)
     expect(screen.getAllByText('12 px').length).toBeGreaterThan(0)
     expect(screen.getAllByText('16 px').length).toBeGreaterThan(0)
+
+    fireEvent.click(triggers[4])
+    expect(screen.getAllByText('1.2').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('1.4').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('1.8').length).toBeGreaterThan(0)
+
+    fireEvent.click(triggers[5])
+    expect(screen.getAllByText('Tight').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Normal').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Wide').length).toBeGreaterThan(0)
   })
 })

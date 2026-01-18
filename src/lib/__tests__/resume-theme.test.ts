@@ -4,6 +4,8 @@ import {
   getResumeAccentClassName,
   getResumeAccentSwatch,
   getResumeBodyFontClassName,
+  getResumeBodyLineHeightClassName,
+  getResumeBodyLetterSpacingClassName,
   getResumeBodySizeClassName,
   getResumeHeadingFontClassName,
   getResumeHeadingSizeClassName,
@@ -35,5 +37,11 @@ describe('resume-theme helpers', () => {
     expect(getResumeHeadingSizeClassName('lg')).toBe('resume-size-heading-lg')
     expect(getResumeHeadingSizeClassName('16')).toBe('resume-size-heading-lg')
     expect(getResumeBodySizeClassName('10')).toBe('resume-size-body-10')
+    expect(getResumeBodyLineHeightClassName('1.4')).toBe(
+      'resume-leading-body-14'
+    )
+    expect(getResumeBodyLetterSpacingClassName('-0.025em')).toBe(
+      'resume-tracking-body-tight'
+    )
   })
 })

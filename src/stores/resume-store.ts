@@ -6,9 +6,15 @@ import { persist } from 'zustand/middleware'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
 import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
 import { DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
+import {
+  RESUME_BODY_LETTER_SPACING_VALUES,
+  RESUME_BODY_LINE_HEIGHT_VALUES,
+} from '@/types/resume'
 import type {
   ResumeAccent,
   ResumeBodySize,
+  ResumeBodyLineHeight,
+  ResumeBodyLetterSpacing,
   ResumeHeadingSize,
   ResumeId,
   ResumeSlug,
@@ -25,6 +31,10 @@ export interface ResumeDisplaySettings {
 
 const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
+const RESUME_BODY_LINE_HEIGHT_VALUE_SET: ReadonlySet<ResumeBodyLineHeight> =
+  new Set(RESUME_BODY_LINE_HEIGHT_VALUES)
+const RESUME_BODY_LETTER_SPACING_VALUE_SET: ReadonlySet<ResumeBodyLetterSpacing> =
+  new Set(RESUME_BODY_LETTER_SPACING_VALUES)
 
 // Normalize legacy size values from persisted themes.
 const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
@@ -53,6 +63,43 @@ const normalizeResumeBodySize = (value: unknown): ResumeBodySize => {
   return DEFAULT_RESUME_THEME.typography?.bodySize ?? '15'
 }
 
+const normalizeResumeBodyLineHeight = (
+  value: unknown
+): ResumeBodyLineHeight => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const candidate = value.toFixed(1)
+    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(candidate as ResumeBodyLineHeight)) {
+      return candidate as ResumeBodyLineHeight
+    }
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(trimmed as ResumeBodyLineHeight)) {
+      return trimmed as ResumeBodyLineHeight
+    }
+  }
+  return DEFAULT_RESUME_THEME.typography?.bodyLineHeight ?? '1.6'
+}
+
+const normalizeResumeBodyLetterSpacing = (
+  value: unknown
+): ResumeBodyLetterSpacing => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const candidate = `${value}em`
+    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(candidate as ResumeBodyLetterSpacing)) {
+      return candidate as ResumeBodyLetterSpacing
+    }
+    if (value === 0) return '0'
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(trimmed as ResumeBodyLetterSpacing)) {
+      return trimmed as ResumeBodyLetterSpacing
+    }
+  }
+  return DEFAULT_RESUME_THEME.typography?.bodyLetterSpacing ?? '0'
+}
+
 const resolveThemeDefaults = (
   theme?: ResumeThemeSettings | null
 ): ResumeThemeSettings => {
@@ -67,6 +114,10 @@ const resolveThemeDefaults = (
       ...typography,
       headingSize: normalizeResumeHeadingSize(typography.headingSize),
       bodySize: normalizeResumeBodySize(typography.bodySize),
+      bodyLineHeight: normalizeResumeBodyLineHeight(typography.bodyLineHeight),
+      bodyLetterSpacing: normalizeResumeBodyLetterSpacing(
+        typography.bodyLetterSpacing
+      ),
     },
   }
 }

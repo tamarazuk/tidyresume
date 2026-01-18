@@ -13,6 +13,26 @@ export type ResumeFont =
 export type ResumeHeadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type ResumeBodySize = '10' | '11' | '12' | '13' | '14' | '15' | '16'
 
+export const RESUME_BODY_LINE_HEIGHT_VALUES = [
+  '1.2',
+  '1.3',
+  '1.4',
+  '1.5',
+  '1.6',
+  '1.8',
+] as const
+export type ResumeBodyLineHeight =
+  (typeof RESUME_BODY_LINE_HEIGHT_VALUES)[number]
+
+export const RESUME_BODY_LETTER_SPACING_VALUES = [
+  '-0.025em',
+  '0',
+  '0.025em',
+  '0.05em',
+] as const
+export type ResumeBodyLetterSpacing =
+  (typeof RESUME_BODY_LETTER_SPACING_VALUES)[number]
+
 export interface ResumeThemeSettings {
   accent?: ResumeAccent
   typography?: {
@@ -20,6 +40,8 @@ export interface ResumeThemeSettings {
     body?: ResumeFont
     headingSize?: ResumeHeadingSize
     bodySize?: ResumeBodySize
+    bodyLineHeight?: ResumeBodyLineHeight
+    bodyLetterSpacing?: ResumeBodyLetterSpacing
   }
   fontScale?: string
 }

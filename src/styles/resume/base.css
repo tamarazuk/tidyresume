@@ -119,9 +119,14 @@
   font-weight: 600;
 }
 
-.md-editor-preview p {
+.resume-preview-theme.md-editor-preview p,
+.resume-preview-theme .md-editor-preview p,
+.resume-preview-theme.md-editor-preview .default-theme p,
+.resume-preview-theme .md-editor-preview .default-theme p {
   margin-block: 0 12px;
   color: var(--muted-foreground);
+  line-height: var(--resume-body-leading, 1.6);
+  letter-spacing: var(--resume-body-tracking, 0);
 }
 
 .md-editor-preview strong {
@@ -148,8 +153,13 @@
   list-style-position: outside;
 }
 
-.md-editor-preview li {
+.resume-preview-theme.md-editor-preview li,
+.resume-preview-theme .md-editor-preview li,
+.resume-preview-theme.md-editor-preview .default-theme li,
+.resume-preview-theme .md-editor-preview .default-theme li {
   margin-block: 4px;
+  line-height: var(--resume-body-leading, 1.6);
+  letter-spacing: var(--resume-body-tracking, 0);
 }
 
 .md-editor-preview li::marker {

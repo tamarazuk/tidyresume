@@ -3,19 +3,27 @@ import { useResumeStore } from '@/stores/resume-store'
 import {
   DEFAULT_RESUME_THEME,
   RESUME_ACCENT_OPTIONS,
+  RESUME_BODY_LINE_HEIGHT_OPTIONS,
+  RESUME_BODY_LETTER_SPACING_OPTIONS,
   RESUME_BODY_SIZE_OPTIONS,
   RESUME_FONT_OPTIONS,
   RESUME_HEADING_SIZE_OPTIONS,
   resolveResumeAccent,
 } from '@/lib/resume-theme'
 import type {
+  ResumeBodyLineHeight,
+  ResumeBodyLetterSpacing,
   ResumeBodySize,
   ResumeFont,
   ResumeHeadingSize,
 } from '@/types/resume'
 import { accentHelpText } from '../constants'
 import {
+  bodyLineHeightLabelByValue,
+  bodyLetterSpacingLabelByValue,
   resolveBodySizeLabel,
+  resolveBodyLineHeightLabel,
+  resolveBodyLetterSpacingLabel,
   resolveFontLabel,
   resolveHeadingSizeLabel,
   bodySizeLabelByValue,
@@ -27,6 +35,10 @@ interface AppearanceSettingsState {
   accentHelpText: string
   accentOptions: typeof RESUME_ACCENT_OPTIONS
   bodyFont: ResumeFont
+  bodyLineHeight: ResumeBodyLineHeight
+  bodyLineHeightOptions: typeof RESUME_BODY_LINE_HEIGHT_OPTIONS
+  bodyLetterSpacing: ResumeBodyLetterSpacing
+  bodyLetterSpacingOptions: typeof RESUME_BODY_LETTER_SPACING_OPTIONS
   bodySize: ResumeBodySize
   bodySizeOptions: typeof RESUME_BODY_SIZE_OPTIONS
   fontOptions: typeof RESUME_FONT_OPTIONS
@@ -38,9 +50,13 @@ interface AppearanceSettingsState {
     resolveFontLabel: (value: string | null) => string
     resolveHeadingSizeLabel: (value: string | null) => string
     resolveBodySizeLabel: (value: string | null) => string
+    resolveBodyLineHeightLabel: (value: string | null) => string
+    resolveBodyLetterSpacingLabel: (value: string | null) => string
     fontLabelByValue: typeof fontLabelByValue
     headingSizeLabelByValue: typeof headingSizeLabelByValue
     bodySizeLabelByValue: typeof bodySizeLabelByValue
+    bodyLineHeightLabelByValue: typeof bodyLineHeightLabelByValue
+    bodyLetterSpacingLabelByValue: typeof bodyLetterSpacingLabelByValue
   }
   actions: {
     setResumeAccent: (accent: (typeof RESUME_ACCENT_OPTIONS)[number]['value']) => void
@@ -48,6 +64,8 @@ interface AppearanceSettingsState {
     setBodyFont: (value: ResumeFont | null) => void
     setHeadingSize: (value: ResumeHeadingSize | null) => void
     setBodySize: (value: ResumeBodySize | null) => void
+    setBodyLineHeight: (value: ResumeBodyLineHeight | null) => void
+    setBodyLetterSpacing: (value: ResumeBodyLetterSpacing | null) => void
     handleAccentKeyDown: (
       event: KeyboardEvent<HTMLButtonElement>,
       index: number
@@ -76,6 +94,14 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     typography.headingSize ?? DEFAULT_RESUME_THEME.typography?.headingSize ?? 'md'
   const bodySize =
     typography.bodySize ?? DEFAULT_RESUME_THEME.typography?.bodySize ?? '15'
+  const bodyLineHeight =
+    typography.bodyLineHeight ??
+    DEFAULT_RESUME_THEME.typography?.bodyLineHeight ??
+    '1.6'
+  const bodyLetterSpacing =
+    typography.bodyLetterSpacing ??
+    DEFAULT_RESUME_THEME.typography?.bodyLetterSpacing ??
+    '0'
 
   const setHeadingFont = useCallback(
     (value: ResumeFont | null) => {
@@ -133,6 +159,34 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     [resumeTheme, setResumeTheme, typography]
   )
 
+  const setBodyLineHeight = useCallback(
+    (value: ResumeBodyLineHeight | null) => {
+      if (!value) return
+      setResumeTheme({
+        ...resumeTheme,
+        typography: {
+          ...typography,
+          bodyLineHeight: value,
+        },
+      })
+    },
+    [resumeTheme, setResumeTheme, typography]
+  )
+
+  const setBodyLetterSpacing = useCallback(
+    (value: ResumeBodyLetterSpacing | null) => {
+      if (!value) return
+      setResumeTheme({
+        ...resumeTheme,
+        typography: {
+          ...typography,
+          bodyLetterSpacing: value,
+        },
+      })
+    },
+    [resumeTheme, setResumeTheme, typography]
+  )
+
   const handleAccentKeyDown = useCallback(
     (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
       if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
@@ -165,11 +219,15 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       setBodyFont,
       setHeadingSize,
       setBodySize,
+      setBodyLineHeight,
+      setBodyLetterSpacing,
       handleAccentKeyDown,
     }),
     [
       handleAccentKeyDown,
       setBodyFont,
+      setBodyLineHeight,
+      setBodyLetterSpacing,
       setBodySize,
       setHeadingFont,
       setHeadingSize,
@@ -181,6 +239,10 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     accentHelpText,
     accentOptions,
     bodyFont,
+    bodyLineHeight,
+    bodyLineHeightOptions: RESUME_BODY_LINE_HEIGHT_OPTIONS,
+    bodyLetterSpacing,
+    bodyLetterSpacingOptions: RESUME_BODY_LETTER_SPACING_OPTIONS,
     bodySize,
     bodySizeOptions: RESUME_BODY_SIZE_OPTIONS,
     fontOptions: RESUME_FONT_OPTIONS,
@@ -192,9 +254,13 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       resolveFontLabel,
       resolveHeadingSizeLabel,
       resolveBodySizeLabel,
+      resolveBodyLineHeightLabel,
+      resolveBodyLetterSpacingLabel,
       fontLabelByValue,
       headingSizeLabelByValue,
       bodySizeLabelByValue,
+      bodyLineHeightLabelByValue,
+      bodyLetterSpacingLabelByValue,
     },
     actions,
   }

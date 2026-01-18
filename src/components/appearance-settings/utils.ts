@@ -1,5 +1,13 @@
-import type { ResumeBodySize, ResumeFont, ResumeHeadingSize } from '@/types/resume'
+import type {
+  ResumeBodyLineHeight,
+  ResumeBodyLetterSpacing,
+  ResumeBodySize,
+  ResumeFont,
+  ResumeHeadingSize,
+} from '@/types/resume'
 import {
+  RESUME_BODY_LINE_HEIGHT_OPTIONS,
+  RESUME_BODY_LETTER_SPACING_OPTIONS,
   RESUME_BODY_SIZE_OPTIONS,
   RESUME_FONT_OPTIONS,
   RESUME_HEADING_SIZE_OPTIONS,
@@ -32,6 +40,11 @@ export const headingSizeLabelByValue = createLabelMap<ResumeHeadingSize>(
 export const bodySizeLabelByValue = createLabelMap<ResumeBodySize>(
   RESUME_BODY_SIZE_OPTIONS
 )
+export const bodyLineHeightLabelByValue = createLabelMap<ResumeBodyLineHeight>(
+  RESUME_BODY_LINE_HEIGHT_OPTIONS
+)
+export const bodyLetterSpacingLabelByValue =
+  createLabelMap<ResumeBodyLetterSpacing>(RESUME_BODY_LETTER_SPACING_OPTIONS)
 
 export const resolveFontLabel = (value: string | null): string => {
   if (!value) return 'Select font'
@@ -53,5 +66,20 @@ export const resolveBodySizeLabel = (value: string | null): string => {
     bodySizeLabelByValue[value as ResumeBodySize] ??
     legacyBodySizeLabelByValue[value] ??
     'Size'
+  )
+}
+
+export const resolveBodyLineHeightLabel = (value: string | null): string => {
+  if (!value) return 'Line height'
+  return (
+    bodyLineHeightLabelByValue[value as ResumeBodyLineHeight] ?? 'Line height'
+  )
+}
+
+export const resolveBodyLetterSpacingLabel = (value: string | null): string => {
+  if (!value) return 'Letter spacing'
+  return (
+    bodyLetterSpacingLabelByValue[value as ResumeBodyLetterSpacing] ??
+    'Letter spacing'
   )
 }

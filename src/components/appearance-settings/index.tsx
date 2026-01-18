@@ -49,6 +49,10 @@ export default function AppearanceSettings({
     accentHelpText,
     accentOptions,
     bodyFont,
+    bodyLineHeight,
+    bodyLineHeightOptions,
+    bodyLetterSpacing,
+    bodyLetterSpacingOptions,
     bodySize,
     bodySizeOptions,
     fontOptions,
@@ -127,13 +131,16 @@ export default function AppearanceSettings({
         <Separator />
         <div className="grid gap-4">
           <div className="text-sm font-medium">Typography</div>
-          <div className="grid gap-2">
-            <Label className="text-muted-foreground text-xs uppercase">
-              Heading
-            </Label>
-            <div className="flex flex-wrap gap-2">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-2">
+              <Label
+                className="text-muted-foreground text-xs uppercase"
+                htmlFor="appearance-heading-font"
+              >
+                Heading font
+              </Label>
               <Select value={headingFont} onValueChange={actions.setHeadingFont}>
-                <SelectTrigger className="min-w-[160px] flex-1">
+                <SelectTrigger id="appearance-heading-font" className="w-full">
                   <SelectValue placeholder="Select font">
                     {(value) => labels.resolveFontLabel(value as string | null)}
                   </SelectValue>
@@ -151,8 +158,16 @@ export default function AppearanceSettings({
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label
+                className="text-muted-foreground text-xs uppercase"
+                htmlFor="appearance-heading-size"
+              >
+                Heading size
+              </Label>
               <Select value={headingSize} onValueChange={actions.setHeadingSize}>
-                <SelectTrigger className="w-28">
+                <SelectTrigger id="appearance-heading-size" className="w-full">
                   <SelectValue placeholder="Size">
                     {(value) =>
                       labels.resolveHeadingSizeLabel(value as string | null)
@@ -173,14 +188,15 @@ export default function AppearanceSettings({
                 </SelectContent>
               </Select>
             </div>
-          </div>
-          <div className="grid gap-2">
-            <Label className="text-muted-foreground text-xs uppercase">
-              Body
-            </Label>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid gap-2">
+              <Label
+                className="text-muted-foreground text-xs uppercase"
+                htmlFor="appearance-body-font"
+              >
+                Body font
+              </Label>
               <Select value={bodyFont} onValueChange={actions.setBodyFont}>
-                <SelectTrigger className="min-w-[160px] flex-1">
+                <SelectTrigger id="appearance-body-font" className="w-full">
                   <SelectValue placeholder="Select font">
                     {(value) => labels.resolveFontLabel(value as string | null)}
                   </SelectValue>
@@ -198,8 +214,16 @@ export default function AppearanceSettings({
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label
+                className="text-muted-foreground text-xs uppercase"
+                htmlFor="appearance-body-size"
+              >
+                Body size
+              </Label>
               <Select value={bodySize} onValueChange={actions.setBodySize}>
-                <SelectTrigger className="w-28">
+                <SelectTrigger id="appearance-body-size" className="w-full">
                   <SelectValue placeholder="Size">
                     {(value) =>
                       labels.resolveBodySizeLabel(value as string | null)
@@ -211,6 +235,78 @@ export default function AppearanceSettings({
                     {bodySizeOptions.map((option) => (
                       <SelectItem
                         key={`appearance-body-size-${option.value}`}
+                        value={option.value}
+                      >
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label
+                className="text-muted-foreground text-xs uppercase"
+                htmlFor="appearance-body-line-height"
+              >
+                Body line height
+              </Label>
+              <Select
+                value={bodyLineHeight}
+                onValueChange={actions.setBodyLineHeight}
+              >
+                <SelectTrigger
+                  id="appearance-body-line-height"
+                  className="w-full"
+                >
+                  <SelectValue placeholder="Line height">
+                    {(value) =>
+                      labels.resolveBodyLineHeightLabel(value as string | null)
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent align="start">
+                  <SelectGroup>
+                    {bodyLineHeightOptions.map((option) => (
+                      <SelectItem
+                        key={`appearance-body-line-height-${option.value}`}
+                        value={option.value}
+                      >
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label
+                className="text-muted-foreground text-xs uppercase"
+                htmlFor="appearance-body-letter-spacing"
+              >
+                Body letter spacing
+              </Label>
+              <Select
+                value={bodyLetterSpacing}
+                onValueChange={actions.setBodyLetterSpacing}
+              >
+                <SelectTrigger
+                  id="appearance-body-letter-spacing"
+                  className="w-full"
+                >
+                  <SelectValue placeholder="Letter spacing">
+                    {(value) =>
+                      labels.resolveBodyLetterSpacingLabel(
+                        value as string | null
+                      )
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent align="start">
+                  <SelectGroup>
+                    {bodyLetterSpacingOptions.map((option) => (
+                      <SelectItem
+                        key={`appearance-body-letter-spacing-${option.value}`}
                         value={option.value}
                       >
                         {option.label}
