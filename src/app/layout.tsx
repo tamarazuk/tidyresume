@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geologica, Noto_Sans, Noto_Sans_Mono } from 'next/font/google'
 import ThemeProvider from '@/providers/theme-provider'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/sonner'
@@ -8,15 +8,21 @@ import '@/styles/globals.css'
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tidyresume.tzuk.app'
 
-const geistSans = Geist({
+const notoSans = Noto_Sans({
   variable: '--font-geist-sans',
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500'],
   subsets: ['latin'],
 })
 
-const geistMono = Geist_Mono({
+const geologica = Geologica({
+  variable: '--font-heading',
+  weight: ['600'],
+  subsets: ['latin'],
+})
+
+const notoSansMono = Noto_Sans_Mono({
   variable: '--font-geist-mono',
-  weight: ['400', '500', '600', '700'],
+  weight: ['400'],
   subsets: ['latin'],
 })
 
@@ -38,10 +44,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full`}
+      className={`${notoSans.variable} ${notoSansMono.variable} ${geologica.variable} h-full`}
       suppressHydrationWarning
     >
-      <body className="flex h-full flex-col antialiased">
+      <body className="flex h-full flex-col font-sans antialiased">
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}

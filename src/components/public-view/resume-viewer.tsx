@@ -39,7 +39,7 @@ export function ResumeViewer({
   const shortcutLabel = formatShortcutKeys(['Mod', 'P']).join('+')
 
   return (
-    <div className="resume-view flex min-h-screen flex-col">
+    <div className="resume-view flex min-h-screen flex-col font-sans">
       <header className="border-border bg-background no-print grid flex-none grid-cols-[1fr_auto] items-center gap-x-4 gap-y-2 border-b border-solid px-6 py-3 sm:grid-cols-[1fr_auto_1fr]">
         <Link
           href="/"
@@ -49,7 +49,7 @@ export function ResumeViewer({
           <div className="flex size-9 items-center justify-center">
             <AppIcon className="h-full w-full" />
           </div>
-          <span className="text-base font-semibold tracking-[-0.01em]">
+          <span className="font-heading text-base font-semibold tracking-[-0.01em]">
             TidyResume
           </span>
         </Link>
@@ -103,7 +103,7 @@ export function ResumeViewer({
           modelValue={content}
           theme={resumeTheme}
           className={cn(
-            'resume-preview-theme resume-view',
+            'resume-preview-theme resume-view font-sans',
             resumeThemeClassName,
             isFullWidth && 'resume-view-full'
           )}

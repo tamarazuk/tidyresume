@@ -55,6 +55,7 @@
 .md-editor-preview h4,
 .md-editor-preview h5,
 .md-editor-preview h6 {
+  font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
   margin-block-start: 24px;
   margin-block-end: 16px;
   line-height: 1.25;
@@ -234,6 +235,8 @@
 
 /* Inline code */
 .md-editor-preview code {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
   color: var(--preview-code-inline-color);
   background-color: var(--preview-code-inline-bg);
   border-radius: var(--preview-radius-sm);
@@ -251,9 +254,8 @@
 
 .md-editor-preview pre code {
   display: block;
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    monospace;
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 14px;
   color: var(--preview-code-block-color);
   background: transparent;

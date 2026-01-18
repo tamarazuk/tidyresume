@@ -24,6 +24,20 @@
   border: 1px solid var(--border);
 }
 
+.md-editor .cm-editor .cm-scroller,
+.md-editor .cm-editor .cm-content {
+  font-family: var(--font-mono);
+}
+
+.md-editor .md-editor-toolbar-wrapper,
+.md-editor .md-editor-toolbar,
+.md-editor .md-editor-toolbar * ,
+.md-editor .md-editor-footer,
+.md-editor .md-editor-footer * {
+  font-family: var(--font-sans);
+}
+
+
 /* Dark mode overrides */
 .dark .md-editor {
   --md-color: var(--foreground);
