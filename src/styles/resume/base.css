@@ -1,0 +1,263 @@
+/* Common elements */
+.md-editor-preview p:empty {
+  display: none;
+}
+
+.md-editor-preview .resume-page-break {
+  display: block;
+  width: 100%;
+  break-after: page;
+  page-break-after: always;
+}
+
+@media screen {
+  .md-editor-preview .resume-page-break {
+    height: calc(var(--preview-page-gap) + (var(--preview-page-margin) * 2));
+    margin: 24px calc(var(--preview-paper-padding) * -1);
+    width: calc(100% + (var(--preview-paper-padding) * 2));
+    background: linear-gradient(
+      to bottom,
+      var(--card) 0,
+      var(--card) var(--preview-page-margin),
+      var(--background) var(--preview-page-margin),
+      var(--background) calc(100% - var(--preview-page-margin)),
+      var(--card) calc(100% - var(--preview-page-margin)),
+      var(--card) 100%
+    );
+  }
+}
+
+@media print {
+  .md-editor-preview .resume-page-break {
+    height: 0;
+    margin: 0;
+    border: 0;
+  }
+}
+
+.md-editor-preview a {
+  color: var(--preview-link-color);
+  text-decoration: none;
+}
+.md-editor-preview a:hover {
+  color: var(--preview-link-hover-color);
+  text-decoration: none;
+}
+.md-editor-preview a[target='_blank']::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Headings */
+.md-editor-preview h1,
+.md-editor-preview h2,
+.md-editor-preview h3,
+.md-editor-preview h4,
+.md-editor-preview h5,
+.md-editor-preview h6 {
+  margin-block-start: 24px;
+  margin-block-end: 16px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+/* Resume header */
+.md-editor-preview h1 {
+  margin-block-start: 0;
+  margin-block-end: 6px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.md-editor-preview h1 + h2 {
+  margin-block-start: 0;
+  margin-block-end: 12px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  text-transform: none;
+  border: none;
+  padding: 0;
+}
+
+.md-editor-preview h1 + h2 + p {
+  margin-block-start: 0;
+  margin-block-end: 24px;
+  padding-block-end: 16px;
+  border-block-end: 2px solid var(--foreground);
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+
+.md-editor-preview h2 {
+  margin-block-start: 28px;
+  margin-block-end: 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  border-block-end: 1px solid var(--border);
+  padding-block-end: 6px;
+}
+
+.md-editor-preview h3 {
+  margin-block-start: 18px;
+  margin-block-end: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.md-editor-preview h4 {
+  margin-block-start: 12px;
+  margin-block-end: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.md-editor-preview p {
+  margin-block: 0 12px;
+  color: var(--muted-foreground);
+}
+
+.md-editor-preview strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.md-editor-preview em {
+  color: var(--muted-foreground);
+}
+
+.md-editor-preview p > em {
+  display: inline-block;
+  font-size: 0.85rem;
+}
+
+/* Lists */
+.md-editor-preview ul,
+.md-editor-preview ol {
+  list-style: revert;
+  padding-inline-start: 1.25em;
+  margin-block: 0 16px;
+  color: var(--muted-foreground);
+  list-style-position: outside;
+}
+
+.md-editor-preview li {
+  margin-block: 4px;
+}
+
+.md-editor-preview li::marker {
+  color: var(--muted-foreground);
+}
+
+/* Skill/tag style for lists directly after section headings */
+.md-editor-preview h2 + ul {
+  list-style: disc;
+  padding-inline-start: 1.25em;
+  margin-block: 0 16px;
+  display: block;
+}
+
+.md-editor-preview h2 + ul > li {
+  margin-block: 4px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.md-editor-preview h2 + ul > li strong {
+  color: inherit;
+}
+
+/* Tables */
+.md-editor-preview table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.md-editor-preview th,
+.md-editor-preview td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+}
+
+/* Keep preview styling light even when the editor is in dark mode */
+.md-editor-dark .md-editor-preview {
+  --md-theme-color: var(--foreground);
+  --md-theme-color-reverse: var(--background);
+  --md-theme-color-hover: color-mix(
+    in oklch,
+    var(--foreground) 8%,
+    transparent
+  );
+  --md-theme-color-hover-inset: var(--muted);
+  --md-theme-link-color: var(--preview-link-color);
+  --md-theme-link-hover-color: var(--preview-link-hover-color);
+  --md-theme-border-color: var(--border);
+  --md-theme-border-color-reverse: var(--border);
+  --md-theme-border-color-inset: color-mix(
+    in oklch,
+    var(--border) 70%,
+    transparent
+  );
+  --md-theme-bg-color: var(--card);
+  --md-theme-bg-color-inset: var(--muted);
+  --md-theme-code-inline-color: var(--preview-code-inline-color);
+  --md-theme-code-inline-bg-color: var(--preview-code-inline-bg);
+  --md-theme-code-block-color: var(--preview-code-block-color);
+  --md-theme-code-block-bg-color: var(--preview-code-block-bg);
+  --md-theme-code-before-bg-color: var(--preview-code-block-bg);
+  --md-theme-code-copy-tips-color: var(--foreground);
+  --md-theme-code-copy-tips-bg-color: var(--card);
+  --md-theme-code-active-color: var(--primary);
+  --md-theme-quote-color: var(--foreground);
+  --md-theme-quote-border: 4px solid var(--border);
+  --md-theme-quote-bg-color: var(--muted);
+  --md-theme-table-stripe-color: var(--muted);
+  --md-theme-table-tr-bg-color: var(--card);
+  --md-theme-table-td-border-color: var(--border);
+}
+
+/* Quotes */
+.md-editor-preview blockquote {
+  margin: 16px 0;
+  padding: 8px 16px;
+  border-inline-start: 4px solid var(--border);
+  background-color: var(--muted);
+}
+
+/* Inline code */
+.md-editor-preview code {
+  color: var(--preview-code-inline-color);
+  background-color: var(--preview-code-inline-bg);
+  border-radius: var(--preview-radius-sm);
+  padding: 2px 4px;
+  line-height: 1.4;
+}
+
+/* Block code */
+.md-editor-preview pre {
+  margin: 20px 0;
+  background-color: var(--preview-code-block-bg);
+  border-radius: var(--preview-radius-md);
+  overflow: auto;
+}
+
+.md-editor-preview pre code {
+  display: block;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    monospace;
+  font-size: 14px;
+  color: var(--preview-code-block-color);
+  background: transparent;
+  padding: 1em;
+  line-height: 1.6;
+  border-radius: 0;
+}

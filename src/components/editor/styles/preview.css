@@ -1,3 +1,4 @@
-@import './preview/base.css';
-@import './preview/code-blocks.css';
-@import './preview/theme-default.css';
+@import '../../../styles/resume/tokens.css';
+@import '../../../styles/resume/layout.css';
+@import '../../../styles/resume/base.css';
+@import '../../../styles/resume/templates/default.css';

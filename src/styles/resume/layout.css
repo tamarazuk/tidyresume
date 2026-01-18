@@ -1,0 +1,197 @@
+.md-editor-preview-wrapper,
+.md-editor-previewOnly {
+  --background: var(--resume-preview-background);
+  --foreground: var(--resume-preview-foreground);
+  --muted: var(--resume-preview-muted);
+  --muted-foreground: var(--resume-preview-muted-foreground);
+  --border: var(--resume-preview-border);
+  --primary: var(--resume-preview-primary);
+  --primary-foreground: var(--resume-preview-primary-foreground);
+  --card: var(--resume-preview-card);
+  --card-foreground: var(--resume-preview-card-foreground);
+  --accent: var(--resume-preview-accent);
+  --accent-foreground: var(--resume-preview-accent-foreground);
+
+  background-color: var(--background);
+  padding: clamp(16px, 3vw, 32px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.md-editor-previewOnly {
+  display: block;
+  overflow-y: visible;
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar,
+.md-editor-previewOnly::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+  display: block;
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar-track,
+.md-editor-previewOnly::-webkit-scrollbar-track {
+  background-color: var(--border);
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar-thumb,
+.md-editor-previewOnly::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+  border-radius: 999px;
+}
+
+.md-editor-preview-wrapper::-webkit-scrollbar-thumb:horizontal:hover,
+.md-editor-previewOnly::-webkit-scrollbar-thumb:horizontal:hover {
+  background-color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+@media screen {
+  .md-editor-preview {
+    background: transparent;
+    box-shadow: none;
+    border-color: transparent;
+  }
+}
+
+.resume-theme-light .md-editor-preview-wrapper,
+.resume-theme-light .md-editor-previewOnly,
+.resume-theme-light .md-editor-preview-wrapper *,
+.resume-theme-light .md-editor-previewOnly * {
+  color-scheme: light !important;
+}
+
+.resume-theme-dark .md-editor-preview-wrapper,
+.resume-theme-dark .md-editor-previewOnly,
+.resume-theme-dark .md-editor-preview-wrapper *,
+.resume-theme-dark .md-editor-previewOnly * {
+  color-scheme: dark !important;
+}
+
+/* The preview container */
+.md-editor-preview {
+  color: var(--foreground);
+  background: var(--card);
+  font-family: var(--font-sans);
+  width: var(--preview-paper-width);
+  min-width: var(--preview-paper-width);
+  max-width: var(--preview-paper-width);
+  flex: 0 0 var(--preview-paper-width);
+  margin-inline: auto;
+  min-height: var(--preview-paper-height);
+  padding: var(--preview-paper-padding);
+  box-shadow: var(--preview-paper-shadow);
+  border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+  border-radius: var(--preview-radius-md);
+  word-break: normal;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.resume-view .md-editor-preview {
+  width: 100%;
+  min-width: 0;
+  max-width: var(--preview-paper-width);
+  flex: 0 1 auto;
+}
+
+.resume-view-full {
+  --resume-preview-background: var(--resume-preview-card);
+  --preview-paper-shadow: none;
+}
+
+.resume-view-full .md-editor-preview {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1 1 auto;
+  margin-inline: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .resume-view {
+    --preview-paper-padding: clamp(1.1rem, 4vw, 1.5rem);
+    --resume-preview-background: var(--resume-preview-card);
+    --preview-paper-shadow: none;
+  }
+
+  .resume-view .md-editor-preview {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  :is(
+    .resume-view .md-editor-previewOnly,
+    .resume-view.md-editor-previewOnly,
+    .resume-view .md-editor-preview-wrapper,
+    .resume-view.md-editor-preview-wrapper
+  ) {
+    padding-inline: clamp(0.35rem, 2vw, 0.65rem);
+    padding-block: clamp(0.85rem, 3.4vw, 1.15rem);
+  }
+}
+
+.resume-view-full.md-editor-previewOnly,
+.resume-view-full.md-editor-preview-wrapper,
+.resume-view-full .md-editor-previewOnly,
+.resume-view-full .md-editor-preview-wrapper {
+  padding: 0;
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+@media (min-width: 640px) {
+  .resume-view.resume-view-full.md-editor-previewOnly,
+  .resume-view.resume-view-full.md-editor-preview-wrapper,
+  .resume-view.resume-view-full .md-editor-previewOnly,
+  .resume-view.resume-view-full .md-editor-preview-wrapper {
+    padding-inline-start: clamp(1.5rem, 3vw, 2.5rem);
+    padding-inline-end: calc(
+      clamp(1.5rem, 3vw, 2.5rem) + clamp(3.75rem, 7vw, 5.25rem)
+    );
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+
+.md-editor-previewOnly .md-editor-preview {
+  padding: var(--preview-paper-padding);
+}
+
+.md-editor-preview * {
+  box-sizing: border-box;
+}
+
+/* Scrollbar */
+.md-editor-preview ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.md-editor-preview ::-webkit-scrollbar-button:vertical {
+  display: none;
+}
+.md-editor-preview ::-webkit-scrollbar-track,
+.md-editor-preview ::-webkit-scrollbar-thumb,
+.md-editor-preview ::-webkit-scrollbar-corner {
+  border-radius: 2px;
+}
+.md-editor-preview ::-webkit-scrollbar-track {
+  background-color: var(--border);
+}
+.md-editor-preview ::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+}
+.md-editor-preview ::-webkit-scrollbar-thumb:vertical:hover {
+  background-color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+.md-editor-preview ::-webkit-scrollbar-thumb:vertical:active {
+  background-color: color-mix(in srgb, var(--foreground) 50%, transparent);
+}
