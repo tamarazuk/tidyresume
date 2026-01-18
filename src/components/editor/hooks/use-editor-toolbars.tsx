@@ -26,12 +26,10 @@ import {
   ImageIcon,
   KeyboardIcon,
   MinusIcon,
-  PrinterIcon,
   TextHIcon,
 } from '@phosphor-icons/react'
 import { PageBreakIcon } from '@/icons/page-break'
 import { Kbd } from '@/components/ui/kbd'
-import { SlugSettings } from '@/components/layout/slug-settings'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useEditorViewStore } from '@/stores/editor-view-store'
 import { useResumeStore } from '@/stores/resume-store'
@@ -80,7 +78,6 @@ function useEditorToolbars({
   const setEditorViewState = useEditorViewStore(
     (state) => state.setEditorViewState
   )
-  const resumeId = useResumeStore((state) => state.id)
   const setImageWarning = useResumeStore((state) => state.setImageWarning)
 
   const viewMode =
@@ -513,29 +510,6 @@ function useEditorToolbars({
               </DropdownToolbar>
             </ToolbarTooltip>
           )
-        case 'editLink':
-          if (!resumeId) return null
-          return (
-            <ToolbarTooltip key="custom-edit-link" label="Edit link">
-              <SlugSettings
-                ariaLabel="Edit link"
-                className="md-editor-toolbar-item"
-              />
-            </ToolbarTooltip>
-          )
-        case 'print': {
-          const printShortcutKeys = formatShortcutKeys(['Mod', 'P'])
-          const printLabel = `Print (${printShortcutKeys.join('+')})`
-          return (
-            <ToolbarTooltipButton
-              key="custom-print"
-              label={printLabel}
-              icon={<PrinterIcon size={16} aria-hidden />}
-              tooltip={renderShortcutTooltip('Print', printShortcutKeys)}
-              onClick={() => window.print()}
-            />
-          )
-        }
         case 'fullWidth': {
           const widthLabel = isFullWidth ? 'Page width' : 'Full width'
           const widthIcon = isFullWidth ? (
@@ -662,7 +636,6 @@ function useEditorToolbars({
       isFullWidth,
       onToggleFullWidth,
       viewMode,
-      resumeId,
     ]
   )
 

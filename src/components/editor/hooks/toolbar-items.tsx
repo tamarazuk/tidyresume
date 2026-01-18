@@ -39,8 +39,6 @@ export type CustomToolbarItemId =
   | 'redo'
   | 'heading'
   | 'shortcuts'
-  | 'editLink'
-  | 'print'
   | 'fullWidth'
   | 'divider'
   | 'pageBreak'
@@ -183,11 +181,9 @@ export const TOOLBAR_LAYOUT: ToolbarLayoutItem[] = [
   { type: 'custom', id: 'pageBreak' },
   { type: 'custom', id: 'comment' },
   { type: 'align' },
-  { type: 'custom', id: 'editLink' },
-  { type: 'custom', id: 'print' },
-  { type: 'separator' },
   { type: 'custom', id: 'previewToggle' },
   { type: 'custom', id: 'fullWidth' },
+  { type: 'separator' },
   { type: 'custom', id: 'viewEditor' },
   { type: 'custom', id: 'viewSplit' },
   { type: 'custom', id: 'viewPreview' },

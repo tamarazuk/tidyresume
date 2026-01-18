@@ -1,6 +1,7 @@
 'use client'
 
 import { PaletteIcon } from '@phosphor-icons/react/dist/ssr'
+import type { VariantProps } from 'class-variance-authority'
 import { buttonVariants } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -25,7 +26,25 @@ import { getResumeAccentSwatch } from '@/lib/resume-theme'
 import { cn } from '@/lib/utils'
 import { useAppearanceSettings } from './hooks/use-appearance-settings'
 
-export default function AppearanceSettings() {
+interface AppearanceSettingsProps {
+  label?: string
+  showLabel?: boolean
+  labelClassName?: string
+  ariaLabel?: string
+  triggerClassName?: string
+  triggerVariant?: VariantProps<typeof buttonVariants>['variant']
+  triggerSize?: VariantProps<typeof buttonVariants>['size']
+}
+
+export default function AppearanceSettings({
+  label = 'Appearance',
+  showLabel = true,
+  labelClassName = 'hidden sm:inline',
+  ariaLabel = 'Customize appearance',
+  triggerClassName,
+  triggerVariant = 'ghost',
+  triggerSize = 'sm',
+}: AppearanceSettingsProps) {
   const {
     accentHelpText,
     accentOptions,
@@ -45,13 +64,14 @@ export default function AppearanceSettings() {
     <Popover>
       <PopoverTrigger
         className={cn(
-          buttonVariants({ variant: 'ghost', size: 'sm' }),
-          'gap-2'
+          buttonVariants({ variant: triggerVariant, size: triggerSize }),
+          'gap-2',
+          triggerClassName
         )}
-        aria-label="Customize appearance"
+        aria-label={ariaLabel}
       >
         <PaletteIcon size={16} />
-        <span className="hidden sm:inline">Appearance</span>
+        {showLabel ? <span className={labelClassName}>{label}</span> : null}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80">
         <PopoverHeader>

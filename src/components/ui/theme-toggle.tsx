@@ -9,9 +9,21 @@ import { cn } from '@/lib/utils'
 
 interface ThemeToggleProps {
   buttonProps?: ComponentProps<typeof Button>
+  label?: string
+  showLabel?: boolean
+  labelClassName?: string
+  lightLabel?: string
+  darkLabel?: string
 }
 
-export default function ThemeToggle({ buttonProps }: ThemeToggleProps) {
+export default function ThemeToggle({
+  buttonProps,
+  label,
+  showLabel = true,
+  labelClassName = 'hidden sm:inline',
+  lightLabel,
+  darkLabel,
+}: ThemeToggleProps) {
   const { resolvedTheme, setTheme } = useTheme()
   const mounted = useMounted()
   const isDark = resolvedTheme === 'dark'
@@ -22,6 +34,9 @@ export default function ThemeToggle({ buttonProps }: ThemeToggleProps) {
     size,
     ...restButtonProps
   } = buttonProps ?? {}
+
+  const resolvedLabel =
+    label ?? (isDark ? darkLabel : lightLabel) ?? undefined
 
   if (!mounted) {
     return (
@@ -34,6 +49,9 @@ export default function ThemeToggle({ buttonProps }: ThemeToggleProps) {
         className={cn(buttonClassName)}
       >
         <MoonIcon className="size-5" />
+        {resolvedLabel && showLabel ? (
+          <span className={labelClassName}>{resolvedLabel}</span>
+        ) : null}
       </Button>
     )
   }
@@ -56,6 +74,9 @@ export default function ThemeToggle({ buttonProps }: ThemeToggleProps) {
       ) : (
         <MoonIcon className="size-5" />
       )}
+      {resolvedLabel && showLabel ? (
+        <span className={labelClassName}>{resolvedLabel}</span>
+      ) : null}
     </Button>
   )
 }

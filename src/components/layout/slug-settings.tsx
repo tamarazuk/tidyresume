@@ -108,6 +108,12 @@ export function SlugSettings({
                 ref={inputRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                onKeyDownCapture={(event) => {
+                  event.stopPropagation()
+                }}
+                onKeyDown={(event) => {
+                  event.stopPropagation()
+                }}
                 placeholder={id.slice(0, 8)} // Show ID preview as placeholder
                 className="h-8"
               />
