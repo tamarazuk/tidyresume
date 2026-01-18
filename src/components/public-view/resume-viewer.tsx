@@ -33,6 +33,7 @@ import {
 } from '@/lib/resume-theme'
 import type { ResumeThemeSettings } from '@/types/resume'
 import { cn } from '@/lib/utils'
+import { useResumeStore } from '@/stores/resume-store'
 
 import 'md-editor-rt/lib/preview.css'
 import '@/components/editor/styles/preview.css'
@@ -55,9 +56,11 @@ export function ResumeViewer({
   const { formatShortcutKeys } = usePlatformShortcuts()
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
   const isOwner = useOwnerCheck(id)
+  const resumeDisplayTheme = useResumeStore((state) => state.resumeDisplay.theme)
   const shortcutKeys = formatShortcutKeys(['Mod', 'P'])
-  const resumeAccentClassName = getResumeAccentClassName(theme?.accent)
-  const resumeTypographyClassNames = getResumeTypographyClassNames(theme)
+  const resolvedTheme = isOwner ? resumeDisplayTheme : theme
+  const resumeAccentClassName = getResumeAccentClassName(resolvedTheme?.accent)
+  const resumeTypographyClassNames = getResumeTypographyClassNames(resolvedTheme)
   const menuItemClassName = cn(dropdownMenuItemClassName, 'w-full justify-start')
 
   return (
