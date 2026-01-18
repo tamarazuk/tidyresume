@@ -3,6 +3,10 @@ import {
   DEFAULT_RESUME_THEME,
   getResumeAccentClassName,
   getResumeAccentSwatch,
+  getResumeBodyFontClassName,
+  getResumeBodySizeClassName,
+  getResumeHeadingFontClassName,
+  getResumeHeadingSizeClassName,
   resolveResumeAccent,
 } from '@/lib/resume-theme'
 
@@ -18,5 +22,17 @@ describe('resume-theme helpers', () => {
 
   it('returns the expected accent swatch token', () => {
     expect(getResumeAccentSwatch('rose')).toBe('var(--resume-accent-rose)')
+  })
+
+  it('returns typography class names', () => {
+    expect(getResumeHeadingFontClassName('geologica')).toBe(
+      'resume-font-heading-geologica'
+    )
+    expect(getResumeBodyFontClassName('noto-sans')).toBe(
+      'resume-font-body-noto-sans'
+    )
+    expect(getResumeHeadingSizeClassName('lg')).toBe('resume-size-heading-lg')
+    expect(getResumeHeadingSizeClassName('16')).toBe('resume-size-heading-lg')
+    expect(getResumeBodySizeClassName('14')).toBe('resume-size-body-14')
   })
 })

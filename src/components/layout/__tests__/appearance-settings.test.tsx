@@ -64,4 +64,39 @@ describe('AppearanceSettings', () => {
 
     expect(screen.getByText('Teal')).toBeInTheDocument()
   })
+
+  it('renders typography controls', () => {
+    render(<AppearanceSettings />)
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /customize appearance/i })
+    )
+
+    expect(screen.getByText('Typography')).toBeInTheDocument()
+    expect(screen.getByText('Heading')).toBeInTheDocument()
+    expect(screen.getByText('Body')).toBeInTheDocument()
+  })
+
+  it('shows heading and body size options', () => {
+    render(<AppearanceSettings />)
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /customize appearance/i })
+    )
+
+    const triggers = Array.from(
+      document.querySelectorAll('[data-slot="select-trigger"]')
+    )
+    expect(triggers).toHaveLength(4)
+
+    fireEvent.click(triggers[1])
+    expect(screen.getAllByText('Small').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Medium').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Large').length).toBeGreaterThan(0)
+
+    fireEvent.click(triggers[3])
+    expect(screen.getAllByText('14 px').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('15 px').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('16 px').length).toBeGreaterThan(0)
+  })
 })

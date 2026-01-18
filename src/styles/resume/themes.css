@@ -82,3 +82,73 @@
   --resume-preview-primary: var(--resume-accent-rose);
   --resume-preview-primary-foreground: #ffffff;
 }
+
+.resume-font-heading-geologica {
+  --resume-heading-font: var(--font-heading);
+}
+
+.resume-font-heading-noto-sans {
+  --resume-heading-font: var(--font-geist-sans);
+}
+
+.resume-font-heading-ibm-plex-sans {
+  --resume-heading-font: var(--font-ibm-plex-sans);
+}
+
+.resume-font-heading-ibm-plex-serif {
+  --resume-heading-font: var(--font-ibm-plex-serif);
+}
+
+.resume-font-heading-source-serif-4 {
+  --resume-heading-font: var(--font-source-serif-4);
+}
+
+.resume-font-body-geologica {
+  --resume-body-font: var(--font-heading);
+}
+
+.resume-font-body-noto-sans {
+  --resume-body-font: var(--font-geist-sans);
+}
+
+.resume-font-body-ibm-plex-sans {
+  --resume-body-font: var(--font-ibm-plex-sans);
+}
+
+.resume-font-body-ibm-plex-serif {
+  --resume-body-font: var(--font-ibm-plex-serif);
+}
+
+.resume-font-body-source-serif-4 {
+  --resume-body-font: var(--font-source-serif-4);
+}
+
+.resume-preview-theme.resume-size-heading-sm,
+.resume-theme.resume-size-heading-sm {
+  --resume-heading-scale: 0.95;
+}
+
+.resume-preview-theme.resume-size-heading-md,
+.resume-theme.resume-size-heading-md {
+  --resume-heading-scale: 1;
+}
+
+.resume-preview-theme.resume-size-heading-lg,
+.resume-theme.resume-size-heading-lg {
+  --resume-heading-scale: 1.08;
+}
+
+.resume-preview-theme.resume-size-body-14,
+.resume-theme.resume-size-body-14 {
+  --resume-body-size: 0.875rem;
+}
+
+.resume-preview-theme.resume-size-body-15,
+.resume-theme.resume-size-body-15 {
+  --resume-body-size: 0.9375rem;
+}
+
+.resume-preview-theme.resume-size-body-16,
+.resume-theme.resume-size-body-16 {
+  --resume-body-size: 1rem;
+}

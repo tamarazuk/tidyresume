@@ -43,4 +43,7 @@
   --preview-radius-md: 6px;
   --preview-pill-bg: var(--resume-preview-pill-bg);
   --preview-pill-color: var(--resume-preview-pill-color);
+
+  --resume-body-size: 0.9375rem;
+  --resume-heading-scale: 1;
 }

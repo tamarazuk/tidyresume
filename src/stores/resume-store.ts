@@ -8,6 +8,8 @@ import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
 import { DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
 import type {
   ResumeAccent,
+  ResumeBodySize,
+  ResumeHeadingSize,
   ResumeId,
   ResumeSlug,
   ResumeThemeSettings,
@@ -24,16 +26,39 @@ export interface ResumeDisplaySettings {
 const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
 
+const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
+  if (value === 'sm' || value === 'md' || value === 'lg') return value
+  if (value === '14') return 'sm'
+  if (value === '15') return 'md'
+  if (value === '16') return 'lg'
+  return DEFAULT_RESUME_THEME.typography?.headingSize ?? 'md'
+}
+
+const normalizeResumeBodySize = (value: unknown): ResumeBodySize => {
+  if (value === '14' || value === '15' || value === '16') return value
+  if (value === 'sm') return '14'
+  if (value === 'md') return '15'
+  if (value === 'lg') return '16'
+  return DEFAULT_RESUME_THEME.typography?.bodySize ?? '15'
+}
+
 const resolveThemeDefaults = (
   theme?: ResumeThemeSettings | null
-): ResumeThemeSettings => ({
-  ...DEFAULT_RESUME_THEME,
-  ...theme,
-  typography: {
+): ResumeThemeSettings => {
+  const typography = {
     ...DEFAULT_RESUME_THEME.typography,
     ...(theme?.typography ?? {}),
-  },
-})
+  }
+  return {
+    ...DEFAULT_RESUME_THEME,
+    ...theme,
+    typography: {
+      ...typography,
+      headingSize: normalizeResumeHeadingSize(typography.headingSize),
+      bodySize: normalizeResumeBodySize(typography.bodySize),
+    },
+  }
+}
 
 interface ResumeState {
   id: ResumeId | null
@@ -133,7 +158,14 @@ export const useResumeStore = create<ResumeState>()(
           set((state) => ({
             resumeDisplay: {
               ...state.resumeDisplay,
-              theme: resolveThemeDefaults(theme),
+              theme: resolveThemeDefaults({
+                ...state.resumeDisplay.theme,
+                ...theme,
+                typography: {
+                  ...state.resumeDisplay.theme.typography,
+                  ...theme.typography,
+                },
+              }),
             },
             saveStatus: 'saving',
           }))

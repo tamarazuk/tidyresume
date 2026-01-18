@@ -10,11 +10,16 @@ export type ResumeFont =
   | 'ibm-plex-sans'
   | 'ibm-plex-serif'
 
+export type ResumeHeadingSize = 'sm' | 'md' | 'lg'
+export type ResumeBodySize = '14' | '15' | '16'
+
 export interface ResumeThemeSettings {
   accent?: ResumeAccent
   typography?: {
     heading?: ResumeFont
     body?: ResumeFont
+    headingSize?: ResumeHeadingSize
+    bodySize?: ResumeBodySize
   }
   fontScale?: string
 }

@@ -16,7 +16,10 @@ import {
 } from '@/components/ui/tooltip'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
-import { getResumeAccentClassName } from '@/lib/resume-theme'
+import {
+  getResumeAccentClassName,
+  getResumeTypographyClassNames,
+} from '@/lib/resume-theme'
 import type { ResumeThemeSettings } from '@/lib/resume-types'
 import { cn } from '@/lib/utils'
 
@@ -42,6 +45,7 @@ export function ResumeViewer({
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
   const shortcutLabel = formatShortcutKeys(['Mod', 'P']).join('+')
   const resumeAccentClassName = getResumeAccentClassName(theme?.accent)
+  const resumeTypographyClassNames = getResumeTypographyClassNames(theme)
 
   return (
     <div className="resume-view flex min-h-screen flex-col font-sans">
@@ -111,6 +115,7 @@ export function ResumeViewer({
             'resume-preview-theme resume-view font-sans',
             resumeThemeClassName,
             resumeAccentClassName,
+            resumeTypographyClassNames,
             isFullWidth && 'resume-view-full'
           )}
         />
