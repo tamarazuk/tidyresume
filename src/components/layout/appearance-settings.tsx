@@ -119,7 +119,7 @@ export default function AppearanceSettings() {
         <PopoverHeader>
           <PopoverTitle>Appearance</PopoverTitle>
           <PopoverDescription>
-            Customize your resume's visual style.
+            Customize your resume&apos;s visual style.
           </PopoverDescription>
         </PopoverHeader>
         <Separator />
