@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, type KeyboardEvent } from 'react'
 import { useResumeStore } from '@/stores/resume-store'
 import {
   DEFAULT_RESUME_THEME,
@@ -13,16 +13,14 @@ import type {
   ResumeFont,
   ResumeHeadingSize,
 } from '@/types/resume'
-import {
-  accentHelpText,
-  bodySizeLabelByValue,
-  fontLabelByValue,
-  headingSizeLabelByValue,
-} from '../constants'
+import { accentHelpText } from '../constants'
 import {
   resolveBodySizeLabel,
   resolveFontLabel,
   resolveHeadingSizeLabel,
+  bodySizeLabelByValue,
+  fontLabelByValue,
+  headingSizeLabelByValue,
 } from '../utils'
 
 interface AppearanceSettingsState {
@@ -50,6 +48,10 @@ interface AppearanceSettingsState {
     setBodyFont: (value: ResumeFont | null) => void
     setHeadingSize: (value: ResumeHeadingSize | null) => void
     setBodySize: (value: ResumeBodySize | null) => void
+    handleAccentKeyDown: (
+      event: KeyboardEvent<HTMLButtonElement>,
+      index: number
+    ) => void
   }
 }
 
@@ -60,6 +62,7 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
   const setResumeAccent = useResumeStore((state) => state.setResumeAccent)
 
   const resolvedAccent = resolveResumeAccent({ accent })
+  const accentOptions = RESUME_ACCENT_OPTIONS
   const typography = useMemo(
     () => resumeTheme.typography ?? {},
     [resumeTheme.typography]
@@ -130,6 +133,31 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     [resumeTheme, setResumeTheme, typography]
   )
 
+  const handleAccentKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault()
+        const nextIndex = (index + 1) % accentOptions.length
+        setResumeAccent(accentOptions[nextIndex].value)
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault()
+        const prevIndex =
+          (index - 1 + accentOptions.length) % accentOptions.length
+        setResumeAccent(accentOptions[prevIndex].value)
+      }
+      if (event.key === 'Home') {
+        event.preventDefault()
+        setResumeAccent(accentOptions[0].value)
+      }
+      if (event.key === 'End') {
+        event.preventDefault()
+        setResumeAccent(accentOptions[accentOptions.length - 1].value)
+      }
+    },
+    [accentOptions, setResumeAccent]
+  )
+
   const actions = useMemo(
     () => ({
       setResumeAccent,
@@ -137,13 +165,21 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       setBodyFont,
       setHeadingSize,
       setBodySize,
+      handleAccentKeyDown,
     }),
-    [setBodyFont, setBodySize, setHeadingFont, setHeadingSize, setResumeAccent]
+    [
+      handleAccentKeyDown,
+      setBodyFont,
+      setBodySize,
+      setHeadingFont,
+      setHeadingSize,
+      setResumeAccent,
+    ]
   )
 
   return {
     accentHelpText,
-    accentOptions: RESUME_ACCENT_OPTIONS,
+    accentOptions,
     bodyFont,
     bodySize,
     bodySizeOptions: RESUME_BODY_SIZE_OPTIONS,

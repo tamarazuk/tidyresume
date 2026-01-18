@@ -72,7 +72,7 @@ export default function AppearanceSettings() {
             {accentOptions.map((option, index) => {
               const isSelected = option.value === resolvedAccent
               return (
-                <Tooltip key={option.value}>
+                <Tooltip key={`appearance-accent-color-${option.value}`}>
                   <TooltipTrigger
                     render={(triggerProps) => (
                       <button
@@ -91,36 +91,9 @@ export default function AppearanceSettings() {
                           backgroundColor: getResumeAccentSwatch(option.value),
                         }}
                         onClick={() => actions.setResumeAccent(option.value)}
-                        onKeyDown={(event) => {
-                          if (
-                            event.key === 'ArrowRight' ||
-                            event.key === 'ArrowDown'
-                          ) {
-                            event.preventDefault()
-                            const nextIndex = (index + 1) % accentOptions.length
-                            actions.setResumeAccent(accentOptions[nextIndex].value)
-                          }
-                          if (
-                            event.key === 'ArrowLeft' ||
-                            event.key === 'ArrowUp'
-                          ) {
-                            event.preventDefault()
-                            const prevIndex =
-                              (index - 1 + accentOptions.length) %
-                              accentOptions.length
-                            actions.setResumeAccent(accentOptions[prevIndex].value)
-                          }
-                          if (event.key === 'Home') {
-                            event.preventDefault()
-                            actions.setResumeAccent(accentOptions[0].value)
-                          }
-                          if (event.key === 'End') {
-                            event.preventDefault()
-                            actions.setResumeAccent(
-                              accentOptions[accentOptions.length - 1].value
-                            )
-                          }
-                        }}
+                        onKeyDown={(event) =>
+                          actions.handleAccentKeyDown(event, index)
+                        }
                       />
                     )}
                   />
@@ -148,7 +121,10 @@ export default function AppearanceSettings() {
                 <SelectContent align="start">
                   <SelectGroup>
                     {fontOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem
+                        key={`appearance-heading-font-${option.value}`}
+                        value={option.value}
+                      >
                         {option.label}
                       </SelectItem>
                     ))}
@@ -166,7 +142,10 @@ export default function AppearanceSettings() {
                 <SelectContent align="start">
                   <SelectGroup>
                     {headingSizeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem
+                        key={`appearance-heading-size-${option.value}`}
+                        value={option.value}
+                      >
                         {option.label}
                       </SelectItem>
                     ))}
@@ -189,7 +168,10 @@ export default function AppearanceSettings() {
                 <SelectContent align="start">
                   <SelectGroup>
                     {fontOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem
+                        key={`appearance-body-font-${option.value}`}
+                        value={option.value}
+                      >
                         {option.label}
                       </SelectItem>
                     ))}
@@ -207,7 +189,10 @@ export default function AppearanceSettings() {
                 <SelectContent align="start">
                   <SelectGroup>
                     {bodySizeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem
+                        key={`appearance-body-size-${option.value}`}
+                        value={option.value}
+                      >
                         {option.label}
                       </SelectItem>
                     ))}

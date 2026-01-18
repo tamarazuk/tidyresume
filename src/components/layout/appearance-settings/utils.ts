@@ -1,11 +1,37 @@
 import type { ResumeBodySize, ResumeFont, ResumeHeadingSize } from '@/types/resume'
 import {
-  bodySizeLabelByValue,
-  fontLabelByValue,
-  headingSizeLabelByValue,
+  RESUME_BODY_SIZE_OPTIONS,
+  RESUME_FONT_OPTIONS,
+  RESUME_HEADING_SIZE_OPTIONS,
+} from '@/lib/resume-theme'
+import {
   legacyBodySizeLabelByValue,
   legacyHeadingSizeLabelByValue,
 } from './constants'
+
+export type ResumeSelectOption<T extends string> = {
+  value: T
+  label: string
+}
+
+const createLabelMap = <T extends string>(
+  options: ResumeSelectOption<T>[]
+): Record<T, string> => {
+  return options.reduce<Record<T, string>>((acc, option) => {
+    acc[option.value] = option.label
+    return acc
+  }, {} as Record<T, string>)
+}
+
+export const fontLabelByValue = createLabelMap<ResumeFont>(
+  RESUME_FONT_OPTIONS
+)
+export const headingSizeLabelByValue = createLabelMap<ResumeHeadingSize>(
+  RESUME_HEADING_SIZE_OPTIONS
+)
+export const bodySizeLabelByValue = createLabelMap<ResumeBodySize>(
+  RESUME_BODY_SIZE_OPTIONS
+)
 
 export const resolveFontLabel = (value: string | null): string => {
   if (!value) return 'Select font'
