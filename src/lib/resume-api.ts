@@ -26,6 +26,11 @@ export interface UpdateResumeSlugResponse {
   url?: string
 }
 
+export interface UpdateResumeThemeResponse {
+  id: ResumeId
+  theme?: ResumeThemeSettings | null
+}
+
 export class ResumeApiError extends Error {
   status: number
 
@@ -103,6 +108,29 @@ export async function updateResumeSlug(
   return parseJsonResponse<UpdateResumeSlugResponse>(
     response,
     'Failed to update slug'
+  )
+}
+
+export async function updateResumeTheme(
+  id: ResumeId,
+  theme: ResumeThemeSettings | null,
+  options: { signal?: AbortSignal; editSecret?: string } = {}
+): Promise<UpdateResumeThemeResponse> {
+  const headers: HeadersInit = { 'Content-Type': 'application/json' }
+  if (options.editSecret) {
+    headers['X-Edit-Secret'] = options.editSecret
+  }
+
+  const response = await fetch(`/api/resumes/${id}/theme`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ theme }),
+    signal: options.signal,
+  })
+
+  return parseJsonResponse<UpdateResumeThemeResponse>(
+    response,
+    'Failed to update theme'
   )
 }
 

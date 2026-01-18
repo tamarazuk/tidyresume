@@ -25,6 +25,7 @@ import {
   dropdownMenuItemClassName,
 } from '@/components/ui/dropdown-menu'
 import { useOwnerCheck } from '@/hooks/use-owner-check'
+import { usePublicResumeThemeSync } from '@/hooks/use-public-resume-theme-sync'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
 import {
@@ -62,6 +63,12 @@ export function ResumeViewer({
   const resumeAccentClassName = getResumeAccentClassName(resolvedTheme?.accent)
   const resumeTypographyClassNames = getResumeTypographyClassNames(resolvedTheme)
   const menuItemClassName = cn(dropdownMenuItemClassName, 'w-full justify-start')
+
+  usePublicResumeThemeSync({
+    id,
+    isOwner,
+    serverTheme: theme,
+  })
 
   return (
     <div className="resume-view flex min-h-screen flex-col font-sans">

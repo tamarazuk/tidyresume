@@ -2,6 +2,7 @@ import type React from 'react'
 import { render, screen, act, waitFor, cleanup } from '@testing-library/react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ResumeViewer } from '@/components/public-view/resume-viewer'
+import { updateResumeTheme } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
 vi.mock('next/link', () => ({
@@ -92,12 +93,18 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   dropdownMenuItemClassName: 'dropdown-item',
 }))
 
+vi.mock('@/lib/resume-api', () => ({
+  updateResumeTheme: vi.fn(),
+  isResumeApiError: () => false,
+}))
+
 describe('ResumeViewer', () => {
   beforeEach(() => {
     useResumeStore.persist?.clearStorage?.()
     useResumeStore.setState((state) => ({
       ...state,
       id: 'resume-123',
+      editSecret: 'secret-123',
       resumeDisplay: {
         ...state.resumeDisplay,
         theme: {
@@ -109,6 +116,8 @@ describe('ResumeViewer', () => {
   })
 
   afterEach(() => {
+    vi.useRealTimers()
+    vi.clearAllMocks()
     cleanup()
   })
 
@@ -160,5 +169,52 @@ describe('ResumeViewer', () => {
 
     const preview = screen.getByTestId('preview')
     expect(preview.className).toContain('resume-accent-rose')
+  })
+
+  it('publishes theme changes made in the owner view', async () => {
+    vi.useFakeTimers()
+    render(
+      <ResumeViewer
+        id="resume-123"
+        title="Resume"
+        content="Content"
+        isFullWidth={false}
+        theme={{ accent: 'indigo' }}
+      />
+    )
+
+    act(() => {
+      useResumeStore.getState().setResumeAccent('teal')
+    })
+
+    await act(async () => {
+      vi.advanceTimersByTime(2600)
+    })
+
+    expect(updateResumeTheme).toHaveBeenCalledWith(
+      'resume-123',
+      expect.objectContaining({ accent: 'teal' }),
+      { editSecret: 'secret-123' }
+    )
+  })
+
+  it('does not publish on mount when the theme matches the server', async () => {
+    vi.useFakeTimers()
+    const matchingTheme = useResumeStore.getState().resumeDisplay.theme
+    render(
+      <ResumeViewer
+        id="resume-123"
+        title="Resume"
+        content="Content"
+        isFullWidth={false}
+        theme={matchingTheme}
+      />
+    )
+
+    await act(async () => {
+      vi.advanceTimersByTime(2600)
+    })
+
+    expect(updateResumeTheme).not.toHaveBeenCalled()
   })
 })

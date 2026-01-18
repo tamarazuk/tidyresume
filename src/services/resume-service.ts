@@ -75,6 +75,37 @@ export async function updateResumeSlug(
   }
 }
 
+export async function updateResumeTheme(
+  db: Db,
+  data: {
+    id: string
+    theme?: ResumeThemeSettings | null
+  }
+) {
+  const themeValue = serializeTheme(data.theme ?? null)
+
+  const results = await db
+    .update(resumes)
+    .set({
+      theme: themeValue,
+      updatedAt: new Date(),
+    })
+    .where(eq(resumes.id, data.id))
+    .returning({
+      id: resumes.id,
+      theme: resumes.theme,
+    })
+
+  if (results.length === 0) {
+    throw new Error('Resume not found')
+  }
+
+  return {
+    id: results[0].id,
+    theme: parseTheme(results[0].theme ?? null),
+  }
+}
+
 function isUniqueConstraintViolation(error: unknown): boolean {
   if (error instanceof Error) {
     if (
