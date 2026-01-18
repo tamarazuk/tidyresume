@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ComponentProps } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { CloudSlashIcon, SpinnerGapIcon } from '@phosphor-icons/react/dist/ssr'
@@ -17,9 +17,21 @@ import { cn } from '@/lib/utils'
 
 interface UnpublishButtonProps {
   id: string
+  buttonProps?: ComponentProps<typeof Button>
+  label?: string
+  showLabel?: boolean
+  labelClassName?: string
+  showTooltip?: boolean
 }
 
-export function UnpublishButton({ id }: UnpublishButtonProps) {
+export function UnpublishButton({
+  id,
+  buttonProps,
+  label = 'Unpublish',
+  showLabel = false,
+  labelClassName = 'hidden sm:inline',
+  showTooltip = true,
+}: UnpublishButtonProps) {
   const isOwner = useOwnerCheck(id)
   const router = useRouter()
   const unpublish = useResumeStore((state) => state.unpublish)
@@ -57,30 +69,65 @@ export function UnpublishButton({ id }: UnpublishButtonProps) {
           </div>
         </div>
       )}
-      <Tooltip>
-        <TooltipTrigger
-          render={(props) => (
-            <Button
-              {...props}
-              variant="ghost"
-              size="icon"
-              className={cn(
-                'text-muted-foreground hover:bg-destructive/10 hover:text-destructive',
-                props.className
-              )}
-              onClick={(event) => {
-                props.onClick?.(event)
-                handleUnpublish()
-              }}
-              disabled={isUnpublishing}
-              aria-label="Unpublish resume"
-            >
-              <CloudSlashIcon size={16} />
-            </Button>
+      {showTooltip ? (
+        <Tooltip>
+          <TooltipTrigger
+            render={(props) => (
+              <Button
+                {...props}
+                {...buttonProps}
+                variant={buttonProps?.variant ?? 'ghost'}
+                size={buttonProps?.size ?? 'icon'}
+                className={cn(
+                  'text-muted-foreground hover:bg-destructive/10 hover:text-destructive',
+                  props.className,
+                  buttonProps?.className
+                )}
+                onClick={(event) => {
+                  props.onClick?.(event)
+                  buttonProps?.onClick?.(event)
+                  handleUnpublish()
+                }}
+                disabled={isUnpublishing}
+                aria-label={buttonProps?.['aria-label'] ?? `${label} resume`}
+              >
+                {isUnpublishing ? (
+                  <SpinnerGapIcon size={16} className="animate-spin" />
+                ) : (
+                  <CloudSlashIcon size={16} />
+                )}
+                {showLabel ? (
+                  <span className={labelClassName}>{label}</span>
+                ) : null}
+              </Button>
+            )}
+          />
+          <TooltipContent>{label}</TooltipContent>
+        </Tooltip>
+      ) : (
+        <Button
+          {...buttonProps}
+          variant={buttonProps?.variant ?? 'ghost'}
+          size={buttonProps?.size ?? 'icon'}
+          className={cn(
+            'text-muted-foreground hover:bg-destructive/10 hover:text-destructive',
+            buttonProps?.className
           )}
-        />
-        <TooltipContent>Unpublish</TooltipContent>
-      </Tooltip>
+          onClick={(event) => {
+            buttonProps?.onClick?.(event)
+            handleUnpublish()
+          }}
+          disabled={isUnpublishing}
+          aria-label={buttonProps?.['aria-label'] ?? `${label} resume`}
+        >
+          {isUnpublishing ? (
+            <SpinnerGapIcon size={16} className="animate-spin" />
+          ) : (
+            <CloudSlashIcon size={16} />
+          )}
+          {showLabel ? <span className={labelClassName}>{label}</span> : null}
+        </Button>
+      )}
     </>
   )
 }

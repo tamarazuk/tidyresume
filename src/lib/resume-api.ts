@@ -1,10 +1,16 @@
-import type { ResumeId, ResumeRecord, ResumeSlug } from '@/lib/resume-types'
+import type {
+  ResumeId,
+  ResumeRecord,
+  ResumeSlug,
+  ResumeThemeSettings,
+} from '@/types/resume'
 
 export interface PublishResumePayload {
   id?: ResumeId
   title: string
   content: string
   slug?: ResumeSlug
+  theme?: ResumeThemeSettings | null
 }
 
 export interface PublishResumeResponse {
@@ -12,6 +18,17 @@ export interface PublishResumeResponse {
   slug: ResumeSlug
   url?: string
   editSecret?: string
+}
+
+export interface UpdateResumeSlugResponse {
+  id: ResumeId
+  slug: ResumeSlug
+  url?: string
+}
+
+export interface UpdateResumeThemeResponse {
+  id: ResumeId
+  theme?: ResumeThemeSettings | null
 }
 
 export class ResumeApiError extends Error {
@@ -68,6 +85,52 @@ export async function publishResume(
   return parseJsonResponse<PublishResumeResponse>(
     response,
     'Failed to publish resume'
+  )
+}
+
+export async function updateResumeSlug(
+  id: ResumeId,
+  slug: ResumeSlug,
+  options: { signal?: AbortSignal; editSecret?: string } = {}
+): Promise<UpdateResumeSlugResponse> {
+  const headers: HeadersInit = { 'Content-Type': 'application/json' }
+  if (options.editSecret) {
+    headers['X-Edit-Secret'] = options.editSecret
+  }
+
+  const response = await fetch(`/api/resumes/${id}/slug`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ slug }),
+    signal: options.signal,
+  })
+
+  return parseJsonResponse<UpdateResumeSlugResponse>(
+    response,
+    'Failed to update slug'
+  )
+}
+
+export async function updateResumeTheme(
+  id: ResumeId,
+  theme: ResumeThemeSettings | null,
+  options: { signal?: AbortSignal; editSecret?: string } = {}
+): Promise<UpdateResumeThemeResponse> {
+  const headers: HeadersInit = { 'Content-Type': 'application/json' }
+  if (options.editSecret) {
+    headers['X-Edit-Secret'] = options.editSecret
+  }
+
+  const response = await fetch(`/api/resumes/${id}/theme`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify({ theme }),
+    signal: options.signal,
+  })
+
+  return parseJsonResponse<UpdateResumeThemeResponse>(
+    response,
+    'Failed to update theme'
   )
 }
 

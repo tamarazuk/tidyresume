@@ -77,7 +77,7 @@
 .md-editor-preview {
   color: var(--foreground);
   background: var(--card);
-  font-family: var(--font-sans);
+  font-family: var(--resume-body-font, var(--font-sans));
   width: var(--preview-paper-width);
   min-width: var(--preview-paper-width);
   max-width: var(--preview-paper-width);
@@ -89,8 +89,8 @@
   border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
   border-radius: var(--preview-radius-md);
   word-break: normal;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  line-height: var(--resume-body-leading, 1.6);
+  font-size: var(--resume-body-size, 0.95rem);
 }
 
 .resume-view .md-editor-preview {

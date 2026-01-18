@@ -15,6 +15,17 @@ let storeState = {
   resumeTitle: 'Title',
   markdown: 'Content',
   slug: 'slug',
+  resumeDisplay: {
+    theme: {
+      accent: 'indigo',
+      typography: {
+        heading: 'geologica',
+        body: 'noto-sans',
+        headingSize: 'md',
+        bodySize: '15',
+      },
+    },
+  },
   isPublished: true,
   setSyncStatus,
 }
@@ -32,6 +43,17 @@ describe('useResumeSync', () => {
       resumeTitle: 'Title',
       markdown: 'Content',
       slug: 'slug',
+      resumeDisplay: {
+        theme: {
+          accent: 'indigo',
+          typography: {
+            heading: 'geologica',
+            body: 'noto-sans',
+            headingSize: 'md',
+            bodySize: '15',
+          },
+        },
+      },
       isPublished: true,
       setSyncStatus,
     }
@@ -71,5 +93,45 @@ describe('useResumeSync', () => {
 
     // Should be synced now
     expect(setSyncStatus).toHaveBeenLastCalledWith('synced')
+  })
+
+  it('should include theme settings in payload', async () => {
+    vi.mocked(publishResume).mockResolvedValue({ id: 'test-id', slug: 'slug' })
+
+    const { rerender } = renderHook(() => useResumeSync())
+
+    storeState = {
+      ...storeState,
+      markdown: 'Updated Content',
+      resumeDisplay: {
+        theme: {
+          accent: 'teal',
+          typography: {
+            heading: 'ibm-plex-serif',
+            body: 'ibm-plex-sans',
+            headingSize: 'lg',
+            bodySize: '16',
+          },
+        },
+      },
+    }
+    rerender()
+
+    await vi.advanceTimersByTimeAsync(2500)
+
+    expect(publishResume).toHaveBeenCalledWith(
+      expect.objectContaining({
+        theme: {
+          accent: 'teal',
+          typography: {
+            heading: 'ibm-plex-serif',
+            body: 'ibm-plex-sans',
+            headingSize: 'lg',
+            bodySize: '16',
+          },
+        },
+      }),
+      expect.anything()
+    )
   })
 })

@@ -95,12 +95,16 @@ pnpm lint       # Run ESLint
 pnpm format     # Format code with Prettier
 ```
 
+## Database Migrations
+
+When adding a new migration in `drizzle/`, make sure to update the schema snapshots in `drizzle/meta` (the `*_snapshot.json` files and `_journal.json`) so migrations stay in sync.
+
 ## Design System
 
 The app uses a dual-color scheme:
 
 - **App UI (Indigo `#6366f1`)** — Used for buttons, links, and interactive elements
-- **Resume Output (Blue `#2b9dee`)** — Used in the resume preview/templates via `.resume-theme` class
+- **Resume Output (Indigo by default)** — The resume preview uses the brand indigo by default, with user-selectable accent colors
 
 This separation ensures the app has personality while resumes remain universally professional.
 

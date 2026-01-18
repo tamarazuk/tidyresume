@@ -1,5 +1,12 @@
 import type { Metadata } from 'next'
-import { Geologica, Noto_Sans, Noto_Sans_Mono } from 'next/font/google'
+import {
+  Geologica,
+  IBM_Plex_Sans,
+  IBM_Plex_Serif,
+  Noto_Sans,
+  Noto_Sans_Mono,
+  Source_Serif_4,
+} from 'next/font/google'
 import ThemeProvider from '@/providers/theme-provider'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/sonner'
@@ -26,6 +33,24 @@ const notoSansMono = Noto_Sans_Mono({
   subsets: ['latin'],
 })
 
+const sourceSerif = Source_Serif_4({
+  variable: '--font-source-serif-4',
+  weight: ['400', '600'],
+  subsets: ['latin'],
+})
+
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: '--font-ibm-plex-sans',
+  weight: ['400', '500', '600'],
+  subsets: ['latin'],
+})
+
+const ibmPlexSerif = IBM_Plex_Serif({
+  variable: '--font-ibm-plex-serif',
+  weight: ['400', '600'],
+  subsets: ['latin'],
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -44,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${notoSans.variable} ${notoSansMono.variable} ${geologica.variable} h-full`}
+      className={`${notoSans.variable} ${notoSansMono.variable} ${geologica.variable} ${sourceSerif.variable} ${ibmPlexSans.variable} ${ibmPlexSerif.variable} h-full`}
       suppressHydrationWarning
     >
       <body className="flex h-full flex-col font-sans antialiased">

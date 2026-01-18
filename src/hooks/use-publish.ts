@@ -19,6 +19,7 @@ export function usePublish() {
   const resumeTitle = useResumeStore((state) => state.resumeTitle)
   const resumeContent = useResumeStore((state) => state.markdown)
   const resumeSlug = useResumeStore((state) => state.slug)
+  const resumeTheme = useResumeStore((state) => state.resumeDisplay.theme)
   const setResumeId = useResumeStore((state) => state.setId)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const setIsPublished = useResumeStore((state) => state.setIsPublished)
@@ -34,6 +35,7 @@ export function usePublish() {
           content: resumeContent,
           slug: resumeSlug,
           id: resumeId ?? undefined,
+          theme: resumeTheme,
         },
         {
           editSecret: editSecret ?? undefined,

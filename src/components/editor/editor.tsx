@@ -2,6 +2,7 @@
 
 import { MdEditor } from 'md-editor-rt'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
+import { useResumeAppearanceClasses } from '@/hooks/use-resume-appearance-classes'
 import { sanitizeHtml } from '@/lib/sanitize-html'
 import { cn } from '@/lib/utils'
 import { initMdEditorConfig } from './config/editor-config'
@@ -26,6 +27,8 @@ export default function Editor() {
     defFooters,
   } = useEditorState()
   const { className: resumeThemeClassName } = useResumeTheme()
+  const { accentClassName, typographyClassNames } =
+    useResumeAppearanceClasses()
 
   return (
     <div className="flex h-full flex-col">
@@ -36,6 +39,8 @@ export default function Editor() {
         className={cn(
           'resume-preview-theme grow rounded-none',
           resumeThemeClassName,
+          accentClassName,
+          typographyClassNames,
           isFullWidth && 'resume-view-full'
         )}
         value={text}

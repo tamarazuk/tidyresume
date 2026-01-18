@@ -15,6 +15,20 @@
       "when": 1768596528624,
       "tag": "0001_concerned_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1768757601863,
+      "tag": "0002_rename_delete_secret_to_edit_secret",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1768757601864,
+      "tag": "0003_add_resume_theme",
+      "breakpoints": true
     }
   ]
 }

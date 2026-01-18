@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { isResumeApiError, publishResume } from '@/lib/resume-api'
+import { isResumeApiError, updateResumeSlug } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
 interface UseSlugSettingsOptions {
@@ -8,8 +8,6 @@ interface UseSlugSettingsOptions {
 
 export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
   const id = useResumeStore((state) => state.id)
-  const title = useResumeStore((state) => state.resumeTitle)
-  const content = useResumeStore((state) => state.markdown)
   const slug = useResumeStore((state) => state.slug)
   const setSlug = useResumeStore((state) => state.setSlug)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
@@ -47,14 +45,16 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
     setErrorMessage(null)
 
     try {
-      const payload = {
-        title,
-        content,
-        slug: cleanedSlug === '' ? null : cleanedSlug,
+      if (!id) {
+        throw new Error('Missing resume id')
       }
-      const data = await publishResume(id ? { ...payload, id } : payload, {
-        editSecret: editSecret ?? undefined,
-      })
+      const data = await updateResumeSlug(
+        id,
+        cleanedSlug === '' ? null : cleanedSlug,
+        {
+          editSecret: editSecret ?? undefined,
+        }
+      )
       setSlug(data.slug)
       setSyncStatus('synced')
       setStatus('success')

@@ -64,6 +64,7 @@ export default async function PublicResumePage({
         id={resume.id}
         title={resume.title}
         content={resume.content}
+        theme={resume.theme ?? null}
       />
       <ViralLoopCTA resumeId={resume.id} />
     </div>

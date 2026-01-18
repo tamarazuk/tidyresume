@@ -1,23 +1,32 @@
+:root {
+  --resume-accent-indigo: var(--brand-primary);
+  --resume-accent-blue: #2563eb;
+  --resume-accent-teal: #0d9488;
+  --resume-accent-slate: #475569;
+  --resume-accent-emerald: #059669;
+  --resume-accent-rose: #e11d48;
+}
+
 .resume-theme {
-  --primary: #2b9dee;
+  --primary: var(--resume-accent-indigo);
   --primary-foreground: #ffffff;
-  --ring: #2b9dee;
-  --chart-1: #2b9dee;
-  --sidebar-primary: #2b9dee;
+  --ring: var(--resume-accent-indigo);
+  --chart-1: var(--resume-accent-indigo);
+  --sidebar-primary: var(--resume-accent-indigo);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-ring: #2b9dee;
-  --color-primary-50: #eff8ff;
-  --color-primary-100: #dbeffe;
-  --color-primary-200: #bfe4fe;
-  --color-primary-300: #93d4fd;
-  --color-primary-400: #5fbcfa;
-  --color-primary-500: #2b9dee;
-  --color-primary-600: #1a82d4;
-  --color-primary-700: #1769ab;
-  --color-primary-800: #18578d;
-  --color-primary-900: #194a74;
-  --color-primary-950: #132f49;
-  --color-primary: #2b9dee;
+  --sidebar-ring: var(--resume-accent-indigo);
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: var(--resume-accent-indigo);
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+  --color-primary-950: #1e1b4b;
+  --color-primary: var(--resume-accent-indigo);
 }
 
 .resume-theme-light {
@@ -34,8 +43,6 @@
   --resume-preview-muted: #111827;
   --resume-preview-muted-foreground: #94a3b8;
   --resume-preview-border: #1f2937;
-  --resume-preview-primary: #2b9dee;
-  --resume-preview-primary-foreground: #ffffff;
   --resume-preview-card: #0f172a;
   --resume-preview-card-foreground: #e2e8f0;
   --resume-preview-accent: #1e293b;
@@ -44,4 +51,184 @@
   --resume-preview-pill-color: #e2e8f0;
   --resume-preview-code-block-bg: #0b1220;
   --resume-preview-code-block-color: #a9b7c6;
+}
+
+.resume-preview-theme.resume-accent-indigo {
+  --resume-preview-primary: var(--resume-accent-indigo);
+  --resume-preview-primary-foreground: #ffffff;
+}
+
+.resume-preview-theme.resume-accent-blue {
+  --resume-preview-primary: var(--resume-accent-blue);
+  --resume-preview-primary-foreground: #ffffff;
+}
+
+.resume-preview-theme.resume-accent-teal {
+  --resume-preview-primary: var(--resume-accent-teal);
+  --resume-preview-primary-foreground: #ffffff;
+}
+
+.resume-preview-theme.resume-accent-slate {
+  --resume-preview-primary: var(--resume-accent-slate);
+  --resume-preview-primary-foreground: #ffffff;
+}
+
+.resume-preview-theme.resume-accent-emerald {
+  --resume-preview-primary: var(--resume-accent-emerald);
+  --resume-preview-primary-foreground: #ffffff;
+}
+
+.resume-preview-theme.resume-accent-rose {
+  --resume-preview-primary: var(--resume-accent-rose);
+  --resume-preview-primary-foreground: #ffffff;
+}
+
+.resume-font-heading-geologica {
+  --resume-heading-font: var(--font-heading);
+}
+
+.resume-font-heading-noto-sans {
+  --resume-heading-font: var(--font-geist-sans);
+}
+
+.resume-font-heading-ibm-plex-sans {
+  --resume-heading-font: var(--font-ibm-plex-sans);
+}
+
+.resume-font-heading-ibm-plex-serif {
+  --resume-heading-font: var(--font-ibm-plex-serif);
+}
+
+.resume-font-heading-source-serif-4 {
+  --resume-heading-font: var(--font-source-serif-4);
+}
+
+.resume-font-body-geologica {
+  --resume-body-font: var(--font-heading);
+}
+
+.resume-font-body-noto-sans {
+  --resume-body-font: var(--font-geist-sans);
+}
+
+.resume-font-body-ibm-plex-sans {
+  --resume-body-font: var(--font-ibm-plex-sans);
+}
+
+.resume-font-body-ibm-plex-serif {
+  --resume-body-font: var(--font-ibm-plex-serif);
+}
+
+.resume-font-body-source-serif-4 {
+  --resume-body-font: var(--font-source-serif-4);
+}
+
+.resume-preview-theme.resume-size-heading-sm,
+.resume-theme.resume-size-heading-sm {
+  --resume-heading-scale: 0.95;
+}
+
+.resume-preview-theme.resume-size-heading-xs,
+.resume-theme.resume-size-heading-xs {
+  --resume-heading-scale: 0.9;
+}
+
+.resume-preview-theme.resume-size-heading-md,
+.resume-theme.resume-size-heading-md {
+  --resume-heading-scale: 1;
+}
+
+.resume-preview-theme.resume-size-heading-lg,
+.resume-theme.resume-size-heading-lg {
+  --resume-heading-scale: 1.08;
+}
+
+.resume-preview-theme.resume-size-heading-xl,
+.resume-theme.resume-size-heading-xl {
+  --resume-heading-scale: 1.16;
+}
+
+.resume-preview-theme.resume-size-body-10,
+.resume-theme.resume-size-body-10 {
+  --resume-body-size: 0.625rem;
+}
+
+.resume-preview-theme.resume-size-body-11,
+.resume-theme.resume-size-body-11 {
+  --resume-body-size: 0.6875rem;
+}
+
+.resume-preview-theme.resume-size-body-12,
+.resume-theme.resume-size-body-12 {
+  --resume-body-size: 0.75rem;
+}
+
+.resume-preview-theme.resume-size-body-13,
+.resume-theme.resume-size-body-13 {
+  --resume-body-size: 0.8125rem;
+}
+
+.resume-preview-theme.resume-size-body-14,
+.resume-theme.resume-size-body-14 {
+  --resume-body-size: 0.875rem;
+}
+
+.resume-preview-theme.resume-size-body-15,
+.resume-theme.resume-size-body-15 {
+  --resume-body-size: 0.9375rem;
+}
+
+.resume-preview-theme.resume-size-body-16,
+.resume-theme.resume-size-body-16 {
+  --resume-body-size: 1rem;
+}
+
+.resume-preview-theme.resume-leading-body-12,
+.resume-theme.resume-leading-body-12 {
+  --resume-body-leading: 1.2;
+}
+
+.resume-preview-theme.resume-leading-body-13,
+.resume-theme.resume-leading-body-13 {
+  --resume-body-leading: 1.3;
+}
+
+.resume-preview-theme.resume-leading-body-14,
+.resume-theme.resume-leading-body-14 {
+  --resume-body-leading: 1.4;
+}
+
+.resume-preview-theme.resume-leading-body-15,
+.resume-theme.resume-leading-body-15 {
+  --resume-body-leading: 1.5;
+}
+
+.resume-preview-theme.resume-leading-body-16,
+.resume-theme.resume-leading-body-16 {
+  --resume-body-leading: 1.6;
+}
+
+.resume-preview-theme.resume-leading-body-18,
+.resume-theme.resume-leading-body-18 {
+  --resume-body-leading: 1.8;
+}
+
+.resume-preview-theme.resume-tracking-body-tight,
+.resume-theme.resume-tracking-body-tight {
+  --resume-body-tracking: -0.025em;
+}
+
+.resume-preview-theme.resume-tracking-body-normal,
+.resume-theme.resume-tracking-body-normal {
+  --resume-body-tracking: 0;
+}
+
+.resume-preview-theme.resume-tracking-body-relaxed,
+.resume-theme.resume-tracking-body-relaxed {
+  --resume-body-tracking: 0.025em;
+}
+
+.resume-preview-theme.resume-tracking-body-wide,
+.resume-theme.resume-tracking-body-wide {
+  --resume-body-tracking: 0.05em;
 }

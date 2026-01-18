@@ -6,6 +6,7 @@ export const resumes = sqliteTable('resumes', {
   slug: text('slug').unique(),
   title: text('title').notNull(),
   content: text('content').notNull(), // Markdown content
+  theme: text('theme'), // JSON theme settings
   userEmail: text('user_email'),
   editSecret: text('edit_secret'),
   createdAt: integer('created_at', { mode: 'timestamp' })

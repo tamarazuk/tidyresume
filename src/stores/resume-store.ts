@@ -5,17 +5,122 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
 import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
-import type { ResumeId, ResumeSlug } from '@/lib/resume-types'
+import { DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
+import {
+  RESUME_BODY_LETTER_SPACING_VALUES,
+  RESUME_BODY_LINE_HEIGHT_VALUES,
+} from '@/types/resume'
+import type {
+  ResumeAccent,
+  ResumeBodySize,
+  ResumeBodyLineHeight,
+  ResumeBodyLetterSpacing,
+  ResumeHeadingSize,
+  ResumeId,
+  ResumeSlug,
+  ResumeThemeSettings,
+} from '@/types/resume'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
 export type ResumeThemeMode = 'auto' | 'light' | 'dark'
 
 export interface ResumeDisplaySettings {
   themeMode: ResumeThemeMode
+  theme: ResumeThemeSettings
 }
 
 const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
+const RESUME_BODY_LINE_HEIGHT_VALUE_SET: ReadonlySet<ResumeBodyLineHeight> =
+  new Set(RESUME_BODY_LINE_HEIGHT_VALUES)
+const RESUME_BODY_LETTER_SPACING_VALUE_SET: ReadonlySet<ResumeBodyLetterSpacing> =
+  new Set(RESUME_BODY_LETTER_SPACING_VALUES)
+
+// Normalize legacy size values from persisted themes.
+const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
+  if (value === 'xs' || value === 'xl') return value
+  if (value === 'sm' || value === 'md' || value === 'lg') return value
+  if (value === '14') return 'sm'
+  if (value === '15') return 'md'
+  if (value === '16') return 'lg'
+  return DEFAULT_RESUME_THEME.typography?.headingSize ?? 'md'
+}
+
+// Normalize legacy size values from persisted themes.
+const normalizeResumeBodySize = (value: unknown): ResumeBodySize => {
+  if (
+    value === '10' ||
+    value === '11' ||
+    value === '12' ||
+    value === '13'
+  ) {
+    return value
+  }
+  if (value === '14' || value === '15' || value === '16') return value
+  if (value === 'sm') return '14'
+  if (value === 'md') return '15'
+  if (value === 'lg') return '16'
+  return DEFAULT_RESUME_THEME.typography?.bodySize ?? '15'
+}
+
+const normalizeResumeBodyLineHeight = (
+  value: unknown
+): ResumeBodyLineHeight => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const candidate = value.toFixed(1)
+    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(candidate as ResumeBodyLineHeight)) {
+      return candidate as ResumeBodyLineHeight
+    }
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(trimmed as ResumeBodyLineHeight)) {
+      return trimmed as ResumeBodyLineHeight
+    }
+  }
+  return DEFAULT_RESUME_THEME.typography?.bodyLineHeight ?? '1.6'
+}
+
+const normalizeResumeBodyLetterSpacing = (
+  value: unknown
+): ResumeBodyLetterSpacing => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const candidate = `${value}em`
+    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(candidate as ResumeBodyLetterSpacing)) {
+      return candidate as ResumeBodyLetterSpacing
+    }
+    if (value === 0) return '0'
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(trimmed as ResumeBodyLetterSpacing)) {
+      return trimmed as ResumeBodyLetterSpacing
+    }
+  }
+  return DEFAULT_RESUME_THEME.typography?.bodyLetterSpacing ?? '0'
+}
+
+const resolveThemeDefaults = (
+  theme?: ResumeThemeSettings | null
+): ResumeThemeSettings => {
+  const typography = {
+    ...DEFAULT_RESUME_THEME.typography,
+    ...(theme?.typography ?? {}),
+  }
+  return {
+    ...DEFAULT_RESUME_THEME,
+    ...theme,
+    typography: {
+      ...typography,
+      headingSize: normalizeResumeHeadingSize(typography.headingSize),
+      bodySize: normalizeResumeBodySize(typography.bodySize),
+      bodyLineHeight: normalizeResumeBodyLineHeight(typography.bodyLineHeight),
+      bodyLetterSpacing: normalizeResumeBodyLetterSpacing(
+        typography.bodyLetterSpacing
+      ),
+    },
+  }
+}
 
 interface ResumeState {
   id: ResumeId | null
@@ -31,6 +136,8 @@ interface ResumeState {
   resumeDisplay: ResumeDisplaySettings
   setResumeTitle: (resumeTitle: string) => void
   setResumeThemeMode: (themeMode: ResumeThemeMode) => void
+  setResumeAccent: (accent: ResumeAccent) => void
+  setResumeTheme: (theme: ResumeThemeSettings) => void
   setMarkdown: (markdown: string) => void
   setSaveStatus: (saveStatus: SaveStatus) => void
   setSyncStatus: (
@@ -75,6 +182,7 @@ export const useResumeStore = create<ResumeState>()(
         contentWarning: null,
         resumeDisplay: {
           themeMode: 'auto',
+          theme: resolveThemeDefaults(),
         },
         setResumeTitle: (resumeTitle) => {
           set({ resumeTitle, saveStatus: 'saving' })
@@ -102,7 +210,42 @@ export const useResumeStore = create<ResumeState>()(
         setImageWarning: (imageWarning) => set({ imageWarning }),
         setContentWarning: (contentWarning) => set({ contentWarning }),
         setResumeThemeMode: (themeMode) =>
-          set({ resumeDisplay: { themeMode } }),
+          set((state) => ({
+            resumeDisplay: {
+              ...state.resumeDisplay,
+              themeMode,
+            },
+          })),
+        setResumeTheme: (theme) => {
+          set((state) => ({
+            resumeDisplay: {
+              ...state.resumeDisplay,
+              theme: resolveThemeDefaults({
+                ...state.resumeDisplay.theme,
+                ...theme,
+                typography: {
+                  ...state.resumeDisplay.theme.typography,
+                  ...theme.typography,
+                },
+              }),
+            },
+            saveStatus: 'saving',
+          }))
+          scheduleSaveStatus()
+        },
+        setResumeAccent: (accent) => {
+          set((state) => ({
+            resumeDisplay: {
+              ...state.resumeDisplay,
+              theme: {
+                ...state.resumeDisplay.theme,
+                accent,
+              },
+            },
+            saveStatus: 'saving',
+          }))
+          scheduleSaveStatus()
+        },
         unpublish: () =>
           set({
             syncStatus: 'unsaved',
@@ -124,18 +267,20 @@ export const useResumeStore = create<ResumeState>()(
             contentWarning: null,
             resumeDisplay: {
               themeMode: 'auto',
+              theme: resolveThemeDefaults(),
             },
           }),
       }
     },
     {
       name: 'tidyresume-editor',
-      version: 6, // Bump version
+      version: 7, // Bump version
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },
       migrate: (persistedState) => {
         const state = persistedState as ResumeState
+        const storedTheme = resolveThemeDefaults(state.resumeDisplay?.theme)
         return {
           ...state,
           resumeTitle: state.resumeTitle ?? 'Untitled Resume',
@@ -151,6 +296,7 @@ export const useResumeStore = create<ResumeState>()(
           contentWarning: state.contentWarning ?? null,
           resumeDisplay: {
             themeMode: state.resumeDisplay?.themeMode ?? 'auto',
+            theme: storedTheme,
           },
         }
       },

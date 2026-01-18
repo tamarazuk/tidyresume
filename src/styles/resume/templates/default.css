@@ -4,7 +4,7 @@
   --resume-preview-muted: #f8fafc;
   --resume-preview-muted-foreground: #64748b;
   --resume-preview-border: #e2e8f0;
-  --resume-preview-primary: #2b9dee;
+  --resume-preview-primary: var(--resume-accent-indigo);
   --resume-preview-primary-foreground: #ffffff;
   --resume-preview-card: #ffffff;
   --resume-preview-card-foreground: #0f172a;

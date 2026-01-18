@@ -118,4 +118,46 @@ describe('POST /api/resumes/publish', () => {
     expect(response.status).toBe(200)
     expect(resumeService.publishResume).toHaveBeenCalled()
   })
+
+  it('should pass theme settings to publishResume', async () => {
+    vi.mocked(resumeService.publishResume).mockResolvedValue({
+      id: 'new-uuid',
+      slug: null,
+      editSecret: 'new-secret',
+    })
+
+    const request = new Request('http://localhost/api/resumes/publish', {
+      method: 'POST',
+      body: JSON.stringify({
+        title: 'New',
+        content: 'Content',
+        theme: {
+          accent: 'teal',
+          typography: {
+            heading: 'geologica',
+            body: 'noto-sans',
+            headingSize: 'md',
+            bodySize: '15',
+          },
+        },
+      }),
+    })
+
+    const response = await POST(request)
+    expect(response.status).toBe(200)
+    expect(resumeService.publishResume).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        theme: {
+          accent: 'teal',
+          typography: {
+            heading: 'geologica',
+            body: 'noto-sans',
+            headingSize: 'md',
+            bodySize: '15',
+          },
+        },
+      })
+    )
+  })
 })

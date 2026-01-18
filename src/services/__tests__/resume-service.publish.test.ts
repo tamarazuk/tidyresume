@@ -11,6 +11,7 @@ vi.mock('@/db/schema', async () => {
       title: 'title',
       content: 'content',
       slug: 'slug',
+      theme: 'theme',
       editSecret: 'editSecret',
       updatedAt: 'updatedAt',
     },
@@ -46,5 +47,34 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
     expect(mockDb.update).toHaveBeenCalled()
     expect(mockDb.insert).not.toHaveBeenCalled()
     expect(result.editSecret).toBe('existing-secret')
+  })
+
+  it('should serialize theme when updating with an ID', async () => {
+    const returningMock = vi.fn().mockResolvedValue([
+      { id: 'existing-id', editSecret: 'existing-secret', slug: null },
+    ])
+    const whereMock = vi.fn().mockReturnValue({ returning: returningMock })
+    const setMock = vi.fn().mockReturnValue({ where: whereMock })
+
+    mockDb.update.mockReturnValue({ set: setMock })
+
+    await publishResume(mockDb, {
+      id: 'existing-id',
+      title: 'Title',
+      content: 'Content',
+      theme: {
+        accent: 'teal',
+        typography: { heading: 'geologica', body: 'noto-sans' },
+      },
+    })
+
+    expect(setMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        theme: JSON.stringify({
+          accent: 'teal',
+          typography: { heading: 'geologica', body: 'noto-sans' },
+        }),
+      })
+    )
   })
 })

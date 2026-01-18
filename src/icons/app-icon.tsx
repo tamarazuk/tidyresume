@@ -12,7 +12,7 @@ interface AppIconProps extends ComponentProps<'svg'> {
 
 export default function AppIcon({
   className,
-  fill = '#6366F1',
+  fill = 'var(--brand-primary)',
   title = 'Tidy Resume',
   variant = 'default',
   ...props

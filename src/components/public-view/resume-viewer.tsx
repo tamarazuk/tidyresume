@@ -2,8 +2,10 @@
 
 import Link from 'next/link'
 import { MdPreview } from 'md-editor-rt'
-import { PrinterIcon } from '@phosphor-icons/react/dist/ssr'
+import { DotsNineIcon, PrinterIcon } from '@phosphor-icons/react/dist/ssr'
 import AppIcon from '@/icons/app-icon'
+import AppearanceSettings from '@/components/appearance-settings'
+import { SlugSettings } from '@/components/layout/slug-settings'
 import { UnpublishButton } from '@/components/public-view/unpublish-button'
 import { EditableResumeTitle } from '@/components/public-view/editable-resume-title'
 import { Button } from '@/components/ui/button'
@@ -14,9 +16,25 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  dropdownMenuItemClassName,
+} from '@/components/ui/dropdown-menu'
+import { useOwnerCheck } from '@/hooks/use-owner-check'
+import { usePublicResumeThemeSync } from '@/hooks/use-public-resume-theme-sync'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
+import {
+  getResumeAccentClassName,
+  getResumeTypographyClassNames,
+} from '@/lib/resume-theme'
+import type { ResumeThemeSettings } from '@/types/resume'
 import { cn } from '@/lib/utils'
+import { useResumeStore } from '@/stores/resume-store'
 
 import 'md-editor-rt/lib/preview.css'
 import '@/components/editor/styles/preview.css'
@@ -26,6 +44,7 @@ interface ResumeViewerProps {
   title: string
   content: string
   isFullWidth: boolean
+  theme?: ResumeThemeSettings | null
 }
 
 export function ResumeViewer({
@@ -33,10 +52,23 @@ export function ResumeViewer({
   title,
   content,
   isFullWidth,
+  theme,
 }: ResumeViewerProps) {
   const { formatShortcutKeys } = usePlatformShortcuts()
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
-  const shortcutLabel = formatShortcutKeys(['Mod', 'P']).join('+')
+  const isOwner = useOwnerCheck(id)
+  const resumeDisplayTheme = useResumeStore((state) => state.resumeDisplay.theme)
+  const shortcutKeys = formatShortcutKeys(['Mod', 'P'])
+  const resolvedTheme = isOwner ? resumeDisplayTheme : theme
+  const resumeAccentClassName = getResumeAccentClassName(resolvedTheme?.accent)
+  const resumeTypographyClassNames = getResumeTypographyClassNames(resolvedTheme)
+  const menuItemClassName = cn(dropdownMenuItemClassName, 'w-full justify-start')
+
+  usePublicResumeThemeSync({
+    id,
+    isOwner,
+    serverTheme: theme,
+  })
 
   return (
     <div className="resume-view flex min-h-screen flex-col font-sans">
@@ -54,20 +86,76 @@ export function ResumeViewer({
           </span>
         </Link>
         <div className="order-2 flex items-center justify-end gap-2 sm:order-3 sm:justify-self-end">
-          <Tooltip>
-            <TooltipTrigger
-              render={(props) => (
-                <ThemeToggle
+          <DropdownMenu>
+          <DropdownMenuTrigger
+            render={(props) => (
+              <Button
+                {...props}
+                variant="ghost"
+                size="icon"
+                aria-label="Open actions menu"
+              >
+                <DotsNineIcon size={18} weight="bold" />
+              </Button>
+            )}
+          />
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuItem onClick={() => window.print()}>
+                <PrinterIcon size={16} />
+                <span>Print</span>
+                <div className="ml-auto flex items-center gap-1">
+                  {shortcutKeys.map((key) => (
+                    <Kbd key={`print-${key}`}>{key}</Kbd>
+                  ))}
+                </div>
+              </DropdownMenuItem>
+              {isOwner ? (
+                <AppearanceSettings
+                  label="Appearance"
+                  labelClassName="inline"
+                  triggerVariant="ghost"
+                  triggerSize="sm"
+                  triggerClassName={cn(
+                    menuItemClassName,
+                    'focus:bg-transparent focus:text-foreground data-[highlighted]:bg-transparent data-[highlighted]:text-foreground'
+                  )}
+                />
+              ) : null}
+              {isOwner ? (
+                <SlugSettings
+                  label="Edit link"
+                  labelClassName="inline"
+                  variant="ghost"
+                  size="sm"
+                  className={menuItemClassName}
+                />
+              ) : null}
+              {isOwner ? (
+                <UnpublishButton
+                  id={id}
+                  showTooltip={false}
+                  showLabel
+                  labelClassName="inline"
                   buttonProps={{
-                    ...props,
-                    className: cn('text-muted-foreground', props.className),
+                    variant: 'ghost',
+                    size: 'sm',
+                    className: menuItemClassName,
                   }}
                 />
-              )}
-            />
-            <TooltipContent>Toggle theme</TooltipContent>
-          </Tooltip>
-          <UnpublishButton id={id} />
+              ) : null}
+              <DropdownMenuSeparator />
+              <ThemeToggle
+                lightLabel="Switch to dark mode"
+                darkLabel="Switch to light mode"
+                labelClassName="inline"
+                buttonProps={{
+                  variant: 'ghost',
+                  size: 'sm',
+                  className: menuItemClassName,
+                }}
+              />
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Tooltip>
             <TooltipTrigger
               render={(props) => (
@@ -85,7 +173,7 @@ export function ResumeViewer({
               )}
             />
             <TooltipContent>
-              Print <Kbd>{shortcutLabel}</Kbd>
+              Print <Kbd>{shortcutKeys.join('+')}</Kbd>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -105,6 +193,8 @@ export function ResumeViewer({
           className={cn(
             'resume-preview-theme resume-view font-sans',
             resumeThemeClassName,
+            resumeAccentClassName,
+            resumeTypographyClassNames,
             isFullWidth && 'resume-view-full'
           )}
         />
