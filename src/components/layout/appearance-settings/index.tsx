@@ -21,87 +21,25 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import {
-  DEFAULT_RESUME_THEME,
-  RESUME_ACCENT_OPTIONS,
-  RESUME_FONT_OPTIONS,
-  RESUME_BODY_SIZE_OPTIONS,
-  RESUME_HEADING_SIZE_OPTIONS,
-  getResumeAccentSwatch,
-  resolveResumeAccent,
-} from '@/lib/resume-theme'
-import type {
-  ResumeBodySize,
-  ResumeFont,
-  ResumeHeadingSize,
-} from '@/lib/resume-types'
+import { getResumeAccentSwatch } from '@/lib/resume-theme'
 import { cn } from '@/lib/utils'
-import { useResumeStore } from '@/stores/resume-store'
+import { useAppearanceSettings } from './hooks/use-appearance-settings'
 
-const accentHelpText = 'Applied to section headings and links.'
-const fontLabelByValue = RESUME_FONT_OPTIONS.reduce<
-  Record<ResumeFont, string>
->((acc, option) => {
-  acc[option.value] = option.label
-  return acc
-}, {} as Record<ResumeFont, string>)
-const headingSizeLabelByValue = RESUME_HEADING_SIZE_OPTIONS.reduce<
-  Record<ResumeHeadingSize, string>
->((acc, option) => {
-  acc[option.value] = option.label
-  return acc
-}, {} as Record<ResumeHeadingSize, string>)
-const bodySizeLabelByValue = RESUME_BODY_SIZE_OPTIONS.reduce<
-  Record<ResumeBodySize, string>
->((acc, option) => {
-  acc[option.value] = option.label
-  return acc
-}, {} as Record<ResumeBodySize, string>)
-const legacyHeadingSizeLabelByValue: Record<string, string> = {
-  14: 'Small',
-  15: 'Medium',
-  16: 'Large',
-}
-const legacyBodySizeLabelByValue: Record<string, string> = {
-  sm: '14 px',
-  md: '15 px',
-  lg: '16 px',
-}
-const resolveHeadingSizeLabel = (value: string | null): string => {
-  if (!value) return 'Size'
-  return (
-    headingSizeLabelByValue[value as ResumeHeadingSize] ??
-    legacyHeadingSizeLabelByValue[value] ??
-    'Size'
-  )
-}
-const resolveBodySizeLabel = (value: string | null): string => {
-  if (!value) return 'Size'
-  return (
-    bodySizeLabelByValue[value as ResumeBodySize] ??
-    legacyBodySizeLabelByValue[value] ??
-    'Size'
-  )
-}
 export default function AppearanceSettings() {
-  const accent = useResumeStore((state) => state.resumeDisplay.theme?.accent)
-  const resumeTheme = useResumeStore((state) => state.resumeDisplay.theme)
-  const setResumeTheme = useResumeStore((state) => state.setResumeTheme)
-  const setResumeAccent = useResumeStore((state) => state.setResumeAccent)
-  const resolvedAccent = resolveResumeAccent({ accent })
-  const typography = resumeTheme.typography ?? {}
-  const headingFont =
-    typography.heading ?? DEFAULT_RESUME_THEME.typography?.heading ?? 'geologica'
-  const bodyFont =
-    typography.body ?? DEFAULT_RESUME_THEME.typography?.body ?? 'noto-sans'
-  const headingSize =
-    typography.headingSize ??
-    DEFAULT_RESUME_THEME.typography?.headingSize ??
-    'md'
-  const bodySize =
-    typography.bodySize ??
-    DEFAULT_RESUME_THEME.typography?.bodySize ??
-    '15'
+  const {
+    accentHelpText,
+    accentOptions,
+    bodyFont,
+    bodySize,
+    bodySizeOptions,
+    fontOptions,
+    headingFont,
+    headingSize,
+    headingSizeOptions,
+    labels,
+    resolvedAccent,
+    actions,
+  } = useAppearanceSettings()
 
   return (
     <Popover>
@@ -131,7 +69,7 @@ export default function AppearanceSettings() {
             aria-label="Accent color"
             className="flex flex-wrap gap-2"
           >
-            {RESUME_ACCENT_OPTIONS.map((option, index) => {
+            {accentOptions.map((option, index) => {
               const isSelected = option.value === resolvedAccent
               return (
                 <Tooltip key={option.value}>
@@ -152,16 +90,15 @@ export default function AppearanceSettings() {
                         style={{
                           backgroundColor: getResumeAccentSwatch(option.value),
                         }}
-                        onClick={() => setResumeAccent(option.value)}
+                        onClick={() => actions.setResumeAccent(option.value)}
                         onKeyDown={(event) => {
                           if (
                             event.key === 'ArrowRight' ||
                             event.key === 'ArrowDown'
                           ) {
                             event.preventDefault()
-                            const nextIndex =
-                              (index + 1) % RESUME_ACCENT_OPTIONS.length
-                            setResumeAccent(RESUME_ACCENT_OPTIONS[nextIndex].value)
+                            const nextIndex = (index + 1) % accentOptions.length
+                            actions.setResumeAccent(accentOptions[nextIndex].value)
                           }
                           if (
                             event.key === 'ArrowLeft' ||
@@ -169,20 +106,18 @@ export default function AppearanceSettings() {
                           ) {
                             event.preventDefault()
                             const prevIndex =
-                              (index - 1 + RESUME_ACCENT_OPTIONS.length) %
-                              RESUME_ACCENT_OPTIONS.length
-                            setResumeAccent(RESUME_ACCENT_OPTIONS[prevIndex].value)
+                              (index - 1 + accentOptions.length) %
+                              accentOptions.length
+                            actions.setResumeAccent(accentOptions[prevIndex].value)
                           }
                           if (event.key === 'Home') {
                             event.preventDefault()
-                            setResumeAccent(RESUME_ACCENT_OPTIONS[0].value)
+                            actions.setResumeAccent(accentOptions[0].value)
                           }
                           if (event.key === 'End') {
                             event.preventDefault()
-                            setResumeAccent(
-                              RESUME_ACCENT_OPTIONS[
-                                RESUME_ACCENT_OPTIONS.length - 1
-                              ].value
+                            actions.setResumeAccent(
+                              accentOptions[accentOptions.length - 1].value
                             )
                           }
                         }}
@@ -204,30 +139,15 @@ export default function AppearanceSettings() {
               Heading
             </Label>
             <div className="flex flex-wrap gap-2">
-              <Select
-                value={headingFont}
-                onValueChange={(value) =>
-                  setResumeTheme({
-                    ...resumeTheme,
-                    typography: {
-                      ...typography,
-                      heading: value as ResumeFont,
-                    },
-                  })
-                }
-              >
+              <Select value={headingFont} onValueChange={actions.setHeadingFont}>
                 <SelectTrigger className="min-w-[160px] flex-1">
                   <SelectValue placeholder="Select font">
-                    {(value) =>
-                      value
-                        ? fontLabelByValue[value as ResumeFont]
-                        : 'Select font'
-                    }
+                    {(value) => labels.resolveFontLabel(value as string | null)}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent align="start">
                   <SelectGroup>
-                    {RESUME_FONT_OPTIONS.map((option) => (
+                    {fontOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -235,26 +155,17 @@ export default function AppearanceSettings() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              <Select
-                value={headingSize}
-                onValueChange={(value) =>
-                  setResumeTheme({
-                    ...resumeTheme,
-                    typography: {
-                      ...typography,
-                      headingSize: value as ResumeHeadingSize,
-                    },
-                  })
-                }
-              >
+              <Select value={headingSize} onValueChange={actions.setHeadingSize}>
                 <SelectTrigger className="w-28">
                   <SelectValue placeholder="Size">
-                    {(value) => resolveHeadingSizeLabel(value as string | null)}
+                    {(value) =>
+                      labels.resolveHeadingSizeLabel(value as string | null)
+                    }
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent align="start">
                   <SelectGroup>
-                    {RESUME_HEADING_SIZE_OPTIONS.map((option) => (
+                    {headingSizeOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -269,30 +180,15 @@ export default function AppearanceSettings() {
               Body
             </Label>
             <div className="flex flex-wrap gap-2">
-              <Select
-                value={bodyFont}
-                onValueChange={(value) =>
-                  setResumeTheme({
-                    ...resumeTheme,
-                    typography: {
-                      ...typography,
-                      body: value as ResumeFont,
-                    },
-                  })
-                }
-              >
+              <Select value={bodyFont} onValueChange={actions.setBodyFont}>
                 <SelectTrigger className="min-w-[160px] flex-1">
                   <SelectValue placeholder="Select font">
-                    {(value) =>
-                      value
-                        ? fontLabelByValue[value as ResumeFont]
-                        : 'Select font'
-                    }
+                    {(value) => labels.resolveFontLabel(value as string | null)}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent align="start">
                   <SelectGroup>
-                    {RESUME_FONT_OPTIONS.map((option) => (
+                    {fontOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -300,26 +196,17 @@ export default function AppearanceSettings() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              <Select
-                value={bodySize}
-                onValueChange={(value) =>
-                  setResumeTheme({
-                    ...resumeTheme,
-                    typography: {
-                      ...typography,
-                      bodySize: value as ResumeBodySize,
-                    },
-                  })
-                }
-              >
+              <Select value={bodySize} onValueChange={actions.setBodySize}>
                 <SelectTrigger className="w-28">
                   <SelectValue placeholder="Size">
-                    {(value) => resolveBodySizeLabel(value as string | null)}
+                    {(value) =>
+                      labels.resolveBodySizeLabel(value as string | null)
+                    }
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent align="start">
                   <SelectGroup>
-                    {RESUME_BODY_SIZE_OPTIONS.map((option) => (
+                    {bodySizeOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>

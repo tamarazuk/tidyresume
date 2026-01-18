@@ -133,7 +133,12 @@ describe('POST /api/resumes/publish', () => {
         content: 'Content',
         theme: {
           accent: 'teal',
-          typography: { heading: 'geologica', body: 'noto-sans' },
+          typography: {
+            heading: 'geologica',
+            body: 'noto-sans',
+            headingSize: 'md',
+            bodySize: '15',
+          },
         },
       }),
     })
@@ -145,7 +150,12 @@ describe('POST /api/resumes/publish', () => {
       expect.objectContaining({
         theme: {
           accent: 'teal',
-          typography: { heading: 'geologica', body: 'noto-sans' },
+          typography: {
+            heading: 'geologica',
+            body: 'noto-sans',
+            headingSize: 'md',
+            bodySize: '15',
+          },
         },
       })
     )
