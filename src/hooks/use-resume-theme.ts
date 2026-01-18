@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useTheme } from '@/hooks/use-theme'
+import { useMounted } from '@/hooks/use-mounted'
 import type { Theme } from '@/types'
 import { useResumeStore } from '@/stores/resume-store'
 
@@ -13,15 +14,18 @@ interface UseResumeThemeResult {
 }
 
 export const useResumeTheme = (): UseResumeThemeResult => {
+  const mounted = useMounted()
   const uiTheme = useTheme()
   const themeMode = useResumeStore((state) => state.resumeDisplay.themeMode)
+  const resolvedThemeMode = mounted ? themeMode : 'auto'
+  const resolvedUiTheme = mounted ? uiTheme : 'light'
 
   const resumeTheme = useMemo<ResolvedResumeTheme>(() => {
-    if (themeMode === 'light' || themeMode === 'dark') {
-      return themeMode
+    if (resolvedThemeMode === 'light' || resolvedThemeMode === 'dark') {
+      return resolvedThemeMode
     }
-    return uiTheme
-  }, [themeMode, uiTheme])
+    return resolvedUiTheme
+  }, [resolvedThemeMode, resolvedUiTheme])
 
   const className = useMemo<ResumeThemeClassName>(() => {
     return resumeTheme === 'dark' ? 'resume-theme-dark' : 'resume-theme-light'
