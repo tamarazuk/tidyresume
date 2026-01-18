@@ -43,15 +43,21 @@ export const RESUME_HEADING_SIZE_OPTIONS: Array<{
   value: ResumeHeadingSize
   label: string
 }> = [
+  { value: 'xs', label: 'Extra small' },
   { value: 'sm', label: 'Small' },
   { value: 'md', label: 'Medium' },
   { value: 'lg', label: 'Large' },
+  { value: 'xl', label: 'Extra large' },
 ]
 
 export const RESUME_BODY_SIZE_OPTIONS: Array<{
   value: ResumeBodySize
   label: string
 }> = [
+  { value: '10', label: '10 px' },
+  { value: '11', label: '11 px' },
+  { value: '12', label: '12 px' },
+  { value: '13', label: '13 px' },
   { value: '14', label: '14 px' },
   { value: '15', label: '15 px' },
   { value: '16', label: '16 px' },
@@ -83,12 +89,18 @@ const RESUME_BODY_FONT_CLASS_NAMES: Record<ResumeFont, string> = {
 }
 
 const RESUME_HEADING_SIZE_CLASS_NAMES: Record<ResumeHeadingSize, string> = {
+  xs: 'resume-size-heading-xs',
   sm: 'resume-size-heading-sm',
   md: 'resume-size-heading-md',
   lg: 'resume-size-heading-lg',
+  xl: 'resume-size-heading-xl',
 }
 
 const RESUME_BODY_SIZE_CLASS_NAMES: Record<ResumeBodySize, string> = {
+  10: 'resume-size-body-10',
+  11: 'resume-size-body-11',
+  12: 'resume-size-body-12',
+  13: 'resume-size-body-13',
   14: 'resume-size-body-14',
   15: 'resume-size-body-15',
   16: 'resume-size-body-16',
@@ -97,9 +109,11 @@ const RESUME_BODY_SIZE_CLASS_NAMES: Record<ResumeBodySize, string> = {
 type ResumeHeadingSizeInput =
   | ResumeHeadingSize
   | ResumeBodySize
+  | 'xs'
   | 'sm'
   | 'md'
   | 'lg'
+  | 'xl'
   | null
   | undefined
 
@@ -115,6 +129,7 @@ type ResumeBodySizeInput =
 const normalizeResumeHeadingSize = (
   size: ResumeHeadingSizeInput
 ): ResumeHeadingSize => {
+  if (size === 'xs' || size === 'xl') return size
   if (size === 'sm' || size === 'md' || size === 'lg') return size
   if (size === '14') return 'sm'
   if (size === '15') return 'md'
@@ -123,6 +138,14 @@ const normalizeResumeHeadingSize = (
 }
 
 const normalizeResumeBodySize = (size: ResumeBodySizeInput): ResumeBodySize => {
+  if (
+    size === '10' ||
+    size === '11' ||
+    size === '12' ||
+    size === '13'
+  ) {
+    return size
+  }
   if (size === '14' || size === '15' || size === '16') return size
   if (size === 'sm') return '14'
   if (size === 'md') return '15'

@@ -28,6 +28,7 @@ const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
 
 // Normalize legacy size values from persisted themes.
 const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
+  if (value === 'xs' || value === 'xl') return value
   if (value === 'sm' || value === 'md' || value === 'lg') return value
   if (value === '14') return 'sm'
   if (value === '15') return 'md'
@@ -37,6 +38,14 @@ const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
 
 // Normalize legacy size values from persisted themes.
 const normalizeResumeBodySize = (value: unknown): ResumeBodySize => {
+  if (
+    value === '10' ||
+    value === '11' ||
+    value === '12' ||
+    value === '13'
+  ) {
+    return value
+  }
   if (value === '14' || value === '15' || value === '16') return value
   if (value === 'sm') return '14'
   if (value === 'md') return '15'

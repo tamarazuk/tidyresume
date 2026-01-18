@@ -128,6 +128,11 @@
   --resume-heading-scale: 0.95;
 }
 
+.resume-preview-theme.resume-size-heading-xs,
+.resume-theme.resume-size-heading-xs {
+  --resume-heading-scale: 0.9;
+}
+
 .resume-preview-theme.resume-size-heading-md,
 .resume-theme.resume-size-heading-md {
   --resume-heading-scale: 1;
@@ -136,6 +141,31 @@
 .resume-preview-theme.resume-size-heading-lg,
 .resume-theme.resume-size-heading-lg {
   --resume-heading-scale: 1.08;
+}
+
+.resume-preview-theme.resume-size-heading-xl,
+.resume-theme.resume-size-heading-xl {
+  --resume-heading-scale: 1.16;
+}
+
+.resume-preview-theme.resume-size-body-10,
+.resume-theme.resume-size-body-10 {
+  --resume-body-size: 0.625rem;
+}
+
+.resume-preview-theme.resume-size-body-11,
+.resume-theme.resume-size-body-11 {
+  --resume-body-size: 0.6875rem;
+}
+
+.resume-preview-theme.resume-size-body-12,
+.resume-theme.resume-size-body-12 {
+  --resume-body-size: 0.75rem;
+}
+
+.resume-preview-theme.resume-size-body-13,
+.resume-theme.resume-size-body-13 {
+  --resume-body-size: 0.8125rem;
 }
 
 .resume-preview-theme.resume-size-body-14,

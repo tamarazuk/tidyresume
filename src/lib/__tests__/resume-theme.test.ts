@@ -31,8 +31,9 @@ describe('resume-theme helpers', () => {
     expect(getResumeBodyFontClassName('noto-sans')).toBe(
       'resume-font-body-noto-sans'
     )
+    expect(getResumeHeadingSizeClassName('xs')).toBe('resume-size-heading-xs')
     expect(getResumeHeadingSizeClassName('lg')).toBe('resume-size-heading-lg')
     expect(getResumeHeadingSizeClassName('16')).toBe('resume-size-heading-lg')
-    expect(getResumeBodySizeClassName('14')).toBe('resume-size-body-14')
+    expect(getResumeBodySizeClassName('10')).toBe('resume-size-body-10')
   })
 })

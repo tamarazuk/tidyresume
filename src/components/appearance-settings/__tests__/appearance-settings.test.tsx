@@ -90,13 +90,15 @@ describe('AppearanceSettings', () => {
     expect(triggers).toHaveLength(4)
 
     fireEvent.click(triggers[1])
+    expect(screen.getAllByText('Extra small').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Small').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Medium').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Large').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Extra large').length).toBeGreaterThan(0)
 
     fireEvent.click(triggers[3])
-    expect(screen.getAllByText('14 px').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('15 px').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('10 px').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('12 px').length).toBeGreaterThan(0)
     expect(screen.getAllByText('16 px').length).toBeGreaterThan(0)
   })
 })
