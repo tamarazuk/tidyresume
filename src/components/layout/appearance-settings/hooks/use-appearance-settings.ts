@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useResumeStore } from '@/stores/resume-store'
 import {
   DEFAULT_RESUME_THEME,
@@ -46,10 +46,10 @@ interface AppearanceSettingsState {
   }
   actions: {
     setResumeAccent: (accent: (typeof RESUME_ACCENT_OPTIONS)[number]['value']) => void
-    setHeadingFont: (value: string) => void
-    setBodyFont: (value: string) => void
-    setHeadingSize: (value: string) => void
-    setBodySize: (value: string) => void
+    setHeadingFont: (value: ResumeFont | null) => void
+    setBodyFont: (value: ResumeFont | null) => void
+    setHeadingSize: (value: ResumeHeadingSize | null) => void
+    setBodySize: (value: ResumeBodySize | null) => void
   }
 }
 
@@ -60,7 +60,10 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
   const setResumeAccent = useResumeStore((state) => state.setResumeAccent)
 
   const resolvedAccent = resolveResumeAccent({ accent })
-  const typography = resumeTheme.typography ?? {}
+  const typography = useMemo(
+    () => resumeTheme.typography ?? {},
+    [resumeTheme.typography]
+  )
 
   const headingFont =
     typography.heading ?? DEFAULT_RESUME_THEME.typography?.heading ?? 'geologica'
@@ -71,43 +74,71 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
   const bodySize =
     typography.bodySize ?? DEFAULT_RESUME_THEME.typography?.bodySize ?? '15'
 
+  const setHeadingFont = useCallback(
+    (value: ResumeFont | null) => {
+      if (!value) return
+      setResumeTheme({
+        ...resumeTheme,
+        typography: {
+          ...typography,
+          heading: value,
+        },
+      })
+    },
+    [resumeTheme, setResumeTheme, typography]
+  )
+
+  const setBodyFont = useCallback(
+    (value: ResumeFont | null) => {
+      if (!value) return
+      setResumeTheme({
+        ...resumeTheme,
+        typography: {
+          ...typography,
+          body: value,
+        },
+      })
+    },
+    [resumeTheme, setResumeTheme, typography]
+  )
+
+  const setHeadingSize = useCallback(
+    (value: ResumeHeadingSize | null) => {
+      if (!value) return
+      setResumeTheme({
+        ...resumeTheme,
+        typography: {
+          ...typography,
+          headingSize: value,
+        },
+      })
+    },
+    [resumeTheme, setResumeTheme, typography]
+  )
+
+  const setBodySize = useCallback(
+    (value: ResumeBodySize | null) => {
+      if (!value) return
+      setResumeTheme({
+        ...resumeTheme,
+        typography: {
+          ...typography,
+          bodySize: value,
+        },
+      })
+    },
+    [resumeTheme, setResumeTheme, typography]
+  )
+
   const actions = useMemo(
     () => ({
       setResumeAccent,
-      setHeadingFont: (value: string) =>
-        setResumeTheme({
-          ...resumeTheme,
-          typography: {
-            ...typography,
-            heading: value as ResumeFont,
-          },
-        }),
-      setBodyFont: (value: string) =>
-        setResumeTheme({
-          ...resumeTheme,
-          typography: {
-            ...typography,
-            body: value as ResumeFont,
-          },
-        }),
-      setHeadingSize: (value: string) =>
-        setResumeTheme({
-          ...resumeTheme,
-          typography: {
-            ...typography,
-            headingSize: value as ResumeHeadingSize,
-          },
-        }),
-      setBodySize: (value: string) =>
-        setResumeTheme({
-          ...resumeTheme,
-          typography: {
-            ...typography,
-            bodySize: value as ResumeBodySize,
-          },
-        }),
+      setHeadingFont,
+      setBodyFont,
+      setHeadingSize,
+      setBodySize,
     }),
-    [resumeTheme, setResumeAccent, setResumeTheme, typography]
+    [setBodyFont, setBodySize, setHeadingFont, setHeadingSize, setResumeAccent]
   )
 
   return {

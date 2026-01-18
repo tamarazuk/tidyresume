@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, cleanup, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import AppearanceSettings from '../appearance-settings'
+import AppearanceSettings from '..'
 import { useResumeStore } from '@/stores/resume-store'
 
 describe('AppearanceSettings', () => {
