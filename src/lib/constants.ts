@@ -20,7 +20,8 @@ export const getBaseUrl = () => {
   }
 
   if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:3025'
+    const port = process.env.PORT ?? '3000'
+    return `http://localhost:${port}`
   }
 
   return 'https://tidyresume.tzuk.app'
