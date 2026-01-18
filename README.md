@@ -48,6 +48,22 @@ pnpm install
 pnpm dev
 ```
 
+### Worktree setup (repeat for each new worktree)
+
+```bash
+# Install dependencies
+pnpm install
+
+# Generate Cloudflare binding types (D1, R2, etc.)
+pnpm cf-typegen
+
+# Create/apply local D1 schema
+pnpm migrate:local
+
+# Start the dev server
+pnpm dev
+```
+
 Open [http://localhost:3000](http://localhost:3000) to see the app.
 
 ## Project Structure
