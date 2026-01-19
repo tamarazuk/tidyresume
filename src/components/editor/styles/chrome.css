@@ -22,8 +22,8 @@
 }
 
 .md-editor-toolbar-active {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
+  background-color: color-mix(in oklch, var(--primary) 10%, transparent);
+  color: var(--primary);
 }
 
 .md-editor-dropdown-overlay {
