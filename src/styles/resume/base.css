@@ -3,7 +3,8 @@
   display: none;
 }
 
-.md-editor-preview .resume-page-break {
+.md-editor-preview .resume-page-break,
+.md-editor-preview .page-break {
   display: block;
   width: 100%;
   break-after: page;
@@ -11,7 +12,8 @@
 }
 
 @media screen {
-  .md-editor-preview .resume-page-break {
+  .md-editor-preview .resume-page-break,
+  .md-editor-preview .page-break {
     position: relative;
     height: calc(var(--preview-page-gap) + (var(--preview-page-margin) * 2));
     margin: 24px calc(var(--preview-paper-padding) * -1);
@@ -28,7 +30,9 @@
   }
 
   .md-editor-preview .resume-page-break::before,
-  .md-editor-preview .resume-page-break::after {
+  .md-editor-preview .resume-page-break::after,
+  .md-editor-preview .page-break::before,
+  .md-editor-preview .page-break::after {
     content: '';
     position: absolute;
     z-index: 10;
@@ -38,17 +42,20 @@
     background: var(--background);
   }
 
-  .md-editor-preview .resume-page-break::before {
+  .md-editor-preview .resume-page-break::before,
+  .md-editor-preview .page-break::before {
     left: -24px;
   }
 
-  .md-editor-preview .resume-page-break::after {
+  .md-editor-preview .resume-page-break::after,
+  .md-editor-preview .page-break::after {
     right: -24px;
   }
 }
 
 @media print {
-  .md-editor-preview .resume-page-break {
+  .md-editor-preview .resume-page-break,
+  .md-editor-preview .page-break {
     height: 0;
     margin: 0;
     border: 0;
@@ -66,6 +73,33 @@
 .md-editor-preview a[target='_blank']::after {
   content: none !important;
   display: none !important;
+}
+
+.md-editor-preview .split-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block: 0 12px;
+}
+
+.md-editor-preview .split-line__left {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.md-editor-preview .split-line__right {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.md-editor-preview .divider--accent {
+  border: none;
+  height: 4px;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--resume-preview-primary);
+  margin-block: 16px;
 }
 
 /* Headings */
@@ -109,7 +143,6 @@
   margin-block-start: 0;
   margin-block-end: 24px;
   padding-block-end: 16px;
-  border-block-end: 2px solid var(--foreground);
   font-size: 0.9em;
   color: var(--muted-foreground);
 }

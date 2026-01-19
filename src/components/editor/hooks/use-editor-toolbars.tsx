@@ -15,11 +15,14 @@ import {
   type ToolbarNames,
 } from 'md-editor-rt'
 import { redo, undo } from '@codemirror/commands'
+import { EditorSelection } from '@codemirror/state'
 import {
   ArrowClockwiseIcon,
   ArrowCounterClockwiseIcon,
   ArrowsInSimpleIcon,
   ArrowsOutSimpleIcon,
+  ArrowsLeftRightIcon,
+  ArrowsOutLineVerticalIcon,
   CodeIcon,
   SquareSplitHorizontalIcon,
   SidebarSimpleIcon,
@@ -133,11 +136,47 @@ function useEditorToolbars({
     }))
   }, [editorRef])
 
-  const insertPageBreak = useCallback(() => {
+  const insertAccentRule = useCallback(() => {
     editorRef.current?.insert(() => ({
-      targetValue: '\n[[PAGEBREAK]]\n',
+      targetValue: '\n+++\n',
       select: false,
     }))
+  }, [editorRef])
+
+  const insertPageBreak = useCallback(() => {
+    editorRef.current?.insert(() => ({
+      targetValue: '\n///\n',
+      select: false,
+    }))
+  }, [editorRef])
+
+  const insertSplitLine = useCallback(() => {
+    const view = editorRef.current?.getEditorView?.()
+    const placeholder = 'Text || Text'
+    const insertValue = `\n${placeholder}\n`
+
+    if (!view) {
+      editorRef.current?.insert(() => ({
+        targetValue: insertValue,
+        select: true,
+      }))
+      return
+    }
+
+    const selection = view.state.selection.main
+    const from = selection.from
+    const to = selection.to
+    const start = from + 1
+
+    view.dispatch({
+      changes: { from, to, insert: insertValue },
+      selection: EditorSelection.create([
+        EditorSelection.range(start, start + 4),
+        EditorSelection.range(start + 8, start + 12),
+      ]),
+      scrollIntoView: true,
+    })
+    view.focus()
   }, [editorRef])
 
   const insertHeading = useCallback(
@@ -531,16 +570,38 @@ function useEditorToolbars({
           return (
             <ToolbarTooltipButton
               key="custom-divider"
-              label="Insert divider"
+              label="Divider"
+              tooltip="Insert divider"
               icon={<MinusIcon size={16} aria-hidden />}
               onClick={insertDivider}
+            />
+          )
+        case 'accentRule':
+          return (
+            <ToolbarTooltipButton
+              key="custom-accent-rule"
+              label="Accent rule"
+              tooltip="Accent divider"
+              icon={<ArrowsOutLineVerticalIcon size={16} aria-hidden />}
+              onClick={insertAccentRule}
+            />
+          )
+        case 'splitLine':
+          return (
+            <ToolbarTooltipButton
+              key="custom-split-line"
+              label="Split line"
+              tooltip="Align text to both edges"
+              icon={<ArrowsLeftRightIcon size={16} aria-hidden />}
+              onClick={insertSplitLine}
             />
           )
         case 'pageBreak':
           return (
             <ToolbarTooltipButton
               key="custom-page-break"
-              label="Insert page break"
+              label="Page break"
+              tooltip="Start a new page when printing"
               className="text-slate-900"
               icon={<PageBreakIcon aria-hidden />}
               onClick={insertPageBreak}
@@ -623,9 +684,11 @@ function useEditorToolbars({
       headingOverlay,
       imageMenuOpen,
       imageMenuOverlay,
+      insertAccentRule,
       insertComment,
       insertDivider,
       insertPageBreak,
+      insertSplitLine,
       modifierKey,
       renderShortcutTooltip,
       shortcutsOpen,

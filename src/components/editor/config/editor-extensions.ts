@@ -11,7 +11,81 @@ type CodeMirrorExtensionsConfig = NonNullable<
   ConfigOptions['codeMirrorExtensions']
 >
 
-const PAGE_BREAK_REGEX = /^\[\[PAGEBREAK\]\]$/i
+const PAGE_BREAK_REGEX = /^(?:\[\[PAGEBREAK\]\]|\/\/\/)$/i
+const ACCENT_RULE_REGEX = /^(?:\[\[HR:accent\]\]|\+\+\+)$/i
+
+const PAGE_BREAK_HTML = '<div class="resume-page-break page-break"></div>'
+const ACCENT_RULE_HTML = '<hr class="divider--accent" />'
+
+function isEscaped(value: string, index: number) {
+  let backslashCount = 0
+  for (let i = index - 1; i >= 0; i -= 1) {
+    if (value[i] !== '\\') break
+    backslashCount += 1
+  }
+  return backslashCount % 2 === 1
+}
+
+function findUnescapedSplitIndex(value: string) {
+  for (let i = 0; i < value.length - 1; i += 1) {
+    if (value[i] !== '|' || value[i + 1] !== '|') continue
+    if (isEscaped(value, i) || isEscaped(value, i + 1)) continue
+    return i
+  }
+  return -1
+}
+
+function parseSplitLine(value: string) {
+  if (value.includes('\n')) return null
+  const trimmed = value.trim()
+  if (!trimmed) return null
+  if (PAGE_BREAK_REGEX.test(trimmed) || ACCENT_RULE_REGEX.test(trimmed)) {
+    return null
+  }
+
+  let inner = trimmed
+  if (inner.startsWith('[[') && inner.endsWith(']]')) {
+    inner = inner.slice(2, -2).trim()
+  }
+
+  const splitIndex = findUnescapedSplitIndex(inner)
+  if (splitIndex < 0) return null
+
+  const left = inner.slice(0, splitIndex).trim()
+  const right = inner.slice(splitIndex + 2).trim()
+  if (!left || !right) return null
+
+  return { left, right }
+}
+
+function resumeShorthandBlockPlugin(md: MarkdownItInstance) {
+  md.block.ruler.before('blockquote', 'resume_shorthand', (state, startLine, _endLine, silent) => {
+    if (state.sCount[startLine] - state.blkIndent >= 4) return false
+    const pos = state.bMarks[startLine] + state.tShift[startLine]
+    const max = state.eMarks[startLine]
+    if (pos >= max) return false
+
+    const line = state.src.slice(pos, max)
+    const trimmed = line.trim()
+    if (!trimmed) return false
+
+    if (!PAGE_BREAK_REGEX.test(trimmed) && !ACCENT_RULE_REGEX.test(trimmed)) {
+      return false
+    }
+
+    if (silent) return true
+
+    const token = state.push('html_block', '', 0)
+    token.block = true
+    token.map = [startLine, startLine + 1]
+    token.content = PAGE_BREAK_REGEX.test(trimmed)
+      ? PAGE_BREAK_HTML
+      : ACCENT_RULE_HTML
+
+    state.line = startLine + 1
+    return true
+  })
+}
 
 function resumePageBreakPlugin(md: MarkdownItInstance) {
   md.core.ruler.after('block', 'resume_page_break', (state) => {
@@ -19,7 +93,7 @@ function resumePageBreakPlugin(md: MarkdownItInstance) {
       const token = state.tokens[index]
       if (token.type === 'html_block') {
         if (PAGE_BREAK_REGEX.test(token.content.trim())) {
-          token.content = '<div class="resume-page-break"></div>'
+          token.content = PAGE_BREAK_HTML
         }
         continue
       }
@@ -34,7 +108,66 @@ function resumePageBreakPlugin(md: MarkdownItInstance) {
       if (nextToken.type !== 'paragraph_close') continue
 
       const htmlToken = new state.Token('html_block', '', 0)
-      htmlToken.content = '<div class="resume-page-break"></div>'
+      htmlToken.content = PAGE_BREAK_HTML
+      htmlToken.block = true
+      htmlToken.map = token.map
+
+      state.tokens.splice(index - 1, 3, htmlToken)
+      index -= 1
+    }
+  })
+}
+
+function resumeSplitLinePlugin(md: MarkdownItInstance) {
+  md.core.ruler.after('block', 'resume_split_line', (state) => {
+    for (let index = 0; index < state.tokens.length; index += 1) {
+      const token = state.tokens[index]
+      if (token.type !== 'inline') continue
+
+      const split = parseSplitLine(token.content)
+      if (!split) continue
+
+      const prevToken = state.tokens[index - 1]
+      const nextToken = state.tokens[index + 1]
+      if (!prevToken || !nextToken) continue
+      if (prevToken.type !== 'paragraph_open') continue
+      if (nextToken.type !== 'paragraph_close') continue
+
+      const leftHtml = md.renderInline(split.left)
+      const rightHtml = md.renderInline(split.right)
+      const htmlToken = new state.Token('html_block', '', 0)
+      htmlToken.content = `<div class="split-line"><div class="split-line__left">${leftHtml}</div><div class="split-line__right">${rightHtml}</div></div>`
+      htmlToken.block = true
+      htmlToken.map = token.map
+
+      state.tokens.splice(index - 1, 3, htmlToken)
+      index -= 1
+    }
+  })
+}
+
+function resumeAccentRulePlugin(md: MarkdownItInstance) {
+  md.core.ruler.after('block', 'resume_accent_rule', (state) => {
+    for (let index = 0; index < state.tokens.length; index += 1) {
+      const token = state.tokens[index]
+      if (token.type === 'html_block') {
+        if (ACCENT_RULE_REGEX.test(token.content.trim())) {
+          token.content = ACCENT_RULE_HTML
+        }
+        continue
+      }
+
+      if (token.type !== 'inline') continue
+      if (!ACCENT_RULE_REGEX.test(token.content.trim())) continue
+
+      const prevToken = state.tokens[index - 1]
+      const nextToken = state.tokens[index + 1]
+      if (!prevToken || !nextToken) continue
+      if (prevToken.type !== 'paragraph_open') continue
+      if (nextToken.type !== 'paragraph_close') continue
+
+      const htmlToken = new state.Token('html_block', '', 0)
+      htmlToken.content = ACCENT_RULE_HTML
       htmlToken.block = true
       htmlToken.map = token.map
 
@@ -121,6 +254,9 @@ export const configureMarkdownIt: MarkdownItConfig = (md) => {
     true
   )
   md.use(resumePageBreakPlugin)
+  md.use(resumeShorthandBlockPlugin)
+  md.use(resumeSplitLinePlugin)
+  md.use(resumeAccentRulePlugin)
   md.use(targetBlankExtension)
   md.use(imgSize)
 }
