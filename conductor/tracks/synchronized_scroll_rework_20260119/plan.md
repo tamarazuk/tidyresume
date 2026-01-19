@@ -36,9 +36,9 @@ Connect the logic to the UI and ensure smooth performance.
     - [x] Connect the hook to the actual Editor and Preview components.
     - [x] Use `requestAnimationFrame` or `throttle` to limit scroll event frequency (target 60fps).
     - [x] Implement the "Active Scroller" detection (prevent infinite scroll loops between editor and preview).
-- [ ] Task: Optimize for Complex Layouts
-    - [ ] Test with the "A4" resume layout and complex grids.
-    - [ ] Adjust anchor detection to account for absolute positioning or print-specific CSS if necessary.
+- [x] Task: Optimize for Complex Layouts [cd71af0]
+    - [x] Test with the "A4" resume layout and complex grids.
+    - [x] Adjust anchor detection to account for absolute positioning or print-specific CSS if necessary.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
 ## Phase 4: Polish & Final Review
