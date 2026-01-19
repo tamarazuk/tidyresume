@@ -34,7 +34,8 @@ export function useEditorState() {
   const isSyncScrollEnabled = useEditorViewStore(
     (state) => state.isSyncScrollEnabled
   )
-  useSynchronizedScroll(editorRef, isSyncScrollEnabled)
+  const editorViewState = useEditorViewStore((state) => state.editorViewState)
+  useSynchronizedScroll(editorRef, isSyncScrollEnabled, editorViewState)
 
   const { toolbars, defToolbars, uploadInputProps } = useEditorToolbars({
     editorRef,

@@ -98,4 +98,20 @@ describe('useSynchronizedScroll', () => {
 
     vi.useRealTimers()
   })
+
+  it('re-initializes when dependency changes', () => {
+    const { rerender } = renderHook(
+      ({ dep }) => useSynchronizedScroll(editorRef, true, dep),
+      { initialProps: { dep: 'a' } }
+    )
+
+    expect(editorScroller.addEventListener).toHaveBeenCalledTimes(1)
+
+    // Change dependency
+    rerender({ dep: 'b' })
+
+    // Should have removed and added again
+    expect(editorScroller.removeEventListener).toHaveBeenCalledTimes(1)
+    expect(editorScroller.addEventListener).toHaveBeenCalledTimes(2)
+  })
 })

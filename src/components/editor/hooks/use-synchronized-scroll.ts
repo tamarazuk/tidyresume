@@ -7,10 +7,12 @@ import { getScrollAnchors, calculateScrollPosition } from '../utils/scroll-sync'
  *
  * @param editorRef Reference to the MdEditor instance (ExposeParam)
  * @param isEnabled Whether synchronized scrolling is enabled
+ * @param dependency Optional dependency to trigger re-initialization (e.g., view mode)
  */
 export function useSynchronizedScroll(
   editorRef: React.RefObject<ExposeParam | null>,
-  isEnabled: boolean
+  isEnabled: boolean,
+  dependency?: unknown
 ) {
   // To prevent infinite scroll loops
   const activeScroller = useRef<'editor' | 'preview' | null>(null)
@@ -121,5 +123,5 @@ export function useSynchronizedScroll(
       if (pollInterval) clearInterval(pollInterval)
       if (cleanupFn) cleanupFn()
     }
-  }, [isEnabled, editorRef])
+  }, [isEnabled, editorRef, dependency])
 }
