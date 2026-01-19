@@ -17,82 +17,109 @@ export function useSynchronizedScroll(
   const timeoutId = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    if (!isEnabled || !editorRef.current) return
+    if (!isEnabled) return
 
-    const editorView = editorRef.current.getEditorView()
-    if (!editorView) return
+    let cleanupFn: (() => void) | undefined
+    let pollInterval: NodeJS.Timeout | undefined
 
-    const editorScroller = editorView.scrollDOM
-    // md-editor-rt preview wrapper usually has this class
-    const previewScroller = editorScroller
-      .closest('.md-editor')
-      ?.querySelector('.md-editor-preview-wrapper') as HTMLElement
+    const initialize = () => {
+      if (!editorRef.current) return false
 
-    if (!previewScroller) return
+      const editorView = editorRef.current.getEditorView()
+      if (!editorView) return false
 
-    const clearActiveScroller = () => {
-      if (timeoutId.current) clearTimeout(timeoutId.current)
-      timeoutId.current = setTimeout(() => {
-        activeScroller.current = null
-      }, 50)
-    }
+      const editorScroller = editorView.scrollDOM
+      // md-editor-rt preview wrapper usually has this class
+      const previewScroller = editorScroller
+        .closest('.md-editor')
+        ?.querySelector('.md-editor-preview-wrapper') as HTMLElement
 
-    let ticking = false
+      if (!previewScroller) return false
 
-    const handleEditorScroll = () => {
-      if (activeScroller.current === 'preview') return
-      activeScroller.current = 'editor'
+      const clearActiveScroller = () => {
+        if (timeoutId.current) clearTimeout(timeoutId.current)
+        timeoutId.current = setTimeout(() => {
+          activeScroller.current = null
+        }, 50)
+      }
 
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const anchors = getScrollAnchors(editorView, previewScroller)
-          const targetTop = calculateScrollPosition(
-            editorScroller.scrollTop,
-            anchors,
-            'editor'
-          )
+      let ticking = false
 
-          previewScroller.scrollTo({ top: targetTop, behavior: 'auto' })
-          clearActiveScroller()
-          ticking = false
-        })
-        ticking = true
+      const handleEditorScroll = () => {
+        if (activeScroller.current === 'preview') return
+        activeScroller.current = 'editor'
+
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const anchors = getScrollAnchors(editorView, previewScroller)
+            const targetTop = calculateScrollPosition(
+              editorScroller.scrollTop,
+              anchors,
+              'editor'
+            )
+
+            previewScroller.scrollTo({ top: targetTop, behavior: 'auto' })
+            clearActiveScroller()
+            ticking = false
+          })
+          ticking = true
+        }
+      }
+
+      const handlePreviewScroll = () => {
+        if (activeScroller.current === 'editor') return
+        activeScroller.current = 'preview'
+
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const anchors = getScrollAnchors(editorView, previewScroller)
+            const targetTop = calculateScrollPosition(
+              previewScroller.scrollTop,
+              anchors,
+              'preview'
+            )
+
+            editorScroller.scrollTo({ top: targetTop, behavior: 'auto' })
+            clearActiveScroller()
+            ticking = false
+          })
+          ticking = true
+        }
+      }
+
+      // Use passive: true for better scroll performance
+      editorScroller.addEventListener('scroll', handleEditorScroll, {
+        passive: true,
+      })
+      previewScroller.addEventListener('scroll', handlePreviewScroll, {
+        passive: true,
+      })
+
+      return () => {
+        editorScroller.removeEventListener('scroll', handleEditorScroll)
+        previewScroller.removeEventListener('scroll', handlePreviewScroll)
+        if (timeoutId.current) clearTimeout(timeoutId.current)
       }
     }
 
-    const handlePreviewScroll = () => {
-      if (activeScroller.current === 'editor') return
-      activeScroller.current = 'preview'
-
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const anchors = getScrollAnchors(editorView, previewScroller)
-          const targetTop = calculateScrollPosition(
-            previewScroller.scrollTop,
-            anchors,
-            'preview'
-          )
-
-          editorScroller.scrollTo({ top: targetTop, behavior: 'auto' })
-          clearActiveScroller()
-          ticking = false
-        })
-        ticking = true
-      }
+    // Attempt initialization immediately
+    const result = initialize()
+    if (result) {
+      cleanupFn = result
+    } else {
+      // If not ready, poll until it is
+      pollInterval = setInterval(() => {
+        const res = initialize()
+        if (res) {
+          cleanupFn = res
+          clearInterval(pollInterval)
+        }
+      }, 100)
     }
-
-    // Use passive: true for better scroll performance
-    editorScroller.addEventListener('scroll', handleEditorScroll, {
-      passive: true,
-    })
-    previewScroller.addEventListener('scroll', handlePreviewScroll, {
-      passive: true,
-    })
 
     return () => {
-      editorScroller.removeEventListener('scroll', handleEditorScroll)
-      previewScroller.removeEventListener('scroll', handlePreviewScroll)
-      if (timeoutId.current) clearTimeout(timeoutId.current)
+      if (pollInterval) clearInterval(pollInterval)
+      if (cleanupFn) cleanupFn()
     }
   }, [isEnabled, editorRef])
 }
