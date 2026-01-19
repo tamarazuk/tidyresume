@@ -1,7 +1,7 @@
 'use client'
 
 import { useEditorViewStore } from '@/stores/editor-view-store'
-import { ArrowsDownUp } from '@phosphor-icons/react/dist/ssr'
+import { ArrowsDownUp } from '@phosphor-icons/react'
 import ToolbarTooltipButton from './toolbar-tooltip-button'
 import { cn } from '@/lib/utils'
 
