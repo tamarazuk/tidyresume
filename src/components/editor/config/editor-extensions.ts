@@ -59,32 +59,36 @@ function parseSplitLine(value: string) {
 }
 
 function resumeShorthandBlockPlugin(md: MarkdownItInstance) {
-  md.block.ruler.before('blockquote', 'resume_shorthand', (state, startLine, _endLine, silent) => {
-    if (state.sCount[startLine] - state.blkIndent >= 4) return false
-    const pos = state.bMarks[startLine] + state.tShift[startLine]
-    const max = state.eMarks[startLine]
-    if (pos >= max) return false
+  md.block.ruler.before(
+    'blockquote',
+    'resume_shorthand',
+    (state, startLine, _endLine, silent) => {
+      if (state.sCount[startLine] - state.blkIndent >= 4) return false
+      const pos = state.bMarks[startLine] + state.tShift[startLine]
+      const max = state.eMarks[startLine]
+      if (pos >= max) return false
 
-    const line = state.src.slice(pos, max)
-    const trimmed = line.trim()
-    if (!trimmed) return false
+      const line = state.src.slice(pos, max)
+      const trimmed = line.trim()
+      if (!trimmed) return false
 
-    if (!PAGE_BREAK_REGEX.test(trimmed) && !ACCENT_RULE_REGEX.test(trimmed)) {
-      return false
+      if (!PAGE_BREAK_REGEX.test(trimmed) && !ACCENT_RULE_REGEX.test(trimmed)) {
+        return false
+      }
+
+      if (silent) return true
+
+      const token = state.push('html_block', '', 0)
+      token.block = true
+      token.map = [startLine, startLine + 1]
+      token.content = PAGE_BREAK_REGEX.test(trimmed)
+        ? PAGE_BREAK_HTML
+        : ACCENT_RULE_HTML
+
+      state.line = startLine + 1
+      return true
     }
-
-    if (silent) return true
-
-    const token = state.push('html_block', '', 0)
-    token.block = true
-    token.map = [startLine, startLine + 1]
-    token.content = PAGE_BREAK_REGEX.test(trimmed)
-      ? PAGE_BREAK_HTML
-      : ACCENT_RULE_HTML
-
-    state.line = startLine + 1
-    return true
-  })
+  )
 }
 
 function resumePageBreakPlugin(md: MarkdownItInstance) {
@@ -124,24 +128,68 @@ function resumeSplitLinePlugin(md: MarkdownItInstance) {
       const token = state.tokens[index]
       if (token.type !== 'inline') continue
 
-      const split = parseSplitLine(token.content)
-      if (!split) continue
-
       const prevToken = state.tokens[index - 1]
       const nextToken = state.tokens[index + 1]
       if (!prevToken || !nextToken) continue
       if (prevToken.type !== 'paragraph_open') continue
       if (nextToken.type !== 'paragraph_close') continue
 
-      const leftHtml = md.renderInline(split.left)
-      const rightHtml = md.renderInline(split.right)
-      const htmlToken = new state.Token('html_block', '', 0)
-      htmlToken.content = `<div class="split-line"><div class="split-line__left">${leftHtml}</div><div class="split-line__right">${rightHtml}</div></div>`
-      htmlToken.block = true
-      htmlToken.map = token.map
+      const content = token.content
+      const lines = content.split('\n')
 
-      state.tokens.splice(index - 1, 3, htmlToken)
-      index -= 1
+      const hasSplitLine = lines.some((line) => parseSplitLine(line))
+      if (!hasSplitLine) continue
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const newTokens: any[] = []
+      let currentParaLines: string[] = []
+
+      for (let i = 0; i < lines.length; i += 1) {
+        const line = lines[i]
+        const split = parseSplitLine(line)
+
+        if (split) {
+          if (currentParaLines.length > 0) {
+            const pOpen = new state.Token('paragraph_open', 'p', 1)
+            const textToken = new state.Token('inline', '', 0)
+            textToken.content = currentParaLines.join('\n')
+            textToken.children = []
+            if (token.map && newTokens.length === 0) {
+              pOpen.map = [token.map[0], token.map[0] + currentParaLines.length]
+              textToken.map = pOpen.map
+            }
+            const pClose = new state.Token('paragraph_close', 'p', -1)
+            newTokens.push(pOpen, textToken, pClose)
+            currentParaLines = []
+          }
+
+          const leftHtml = md.renderInline(split.left)
+          const rightHtml = md.renderInline(split.right)
+          const htmlToken = new state.Token('html_block', '', 0)
+          htmlToken.content = `<div class="split-line"><div class="split-line__left">${leftHtml}</div><div class="split-line__right">${rightHtml}</div></div>`
+          htmlToken.block = true
+          newTokens.push(htmlToken)
+        } else {
+          currentParaLines.push(line)
+        }
+      }
+
+      if (currentParaLines.length > 0) {
+        const pOpen = new state.Token('paragraph_open', 'p', 1)
+        const textToken = new state.Token('inline', '', 0)
+        textToken.content = currentParaLines.join('\n')
+        textToken.children = []
+        if (token.map) {
+          const start = token.map[0] + lines.length - currentParaLines.length
+          pOpen.map = [start, token.map[1]]
+          textToken.map = pOpen.map
+        }
+        const pClose = new state.Token('paragraph_close', 'p', -1)
+        newTokens.push(pOpen, textToken, pClose)
+      }
+
+      state.tokens.splice(index - 1, 3, ...newTokens)
+      index += newTokens.length - 3
     }
   })
 }
