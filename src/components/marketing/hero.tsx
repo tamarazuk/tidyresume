@@ -27,13 +27,18 @@ function HeroMockup() {
                 ## Senior Software Engineer
               </div>
               <div className="text-muted-foreground mt-2">
-                San Francisco, CA | maya@example.com | portfolio.example.dev
+                San Francisco, CA ・ maya@example.com ・ portfolio.example.dev
+              </div>
+              <div className="text-muted-foreground mt-4">+++</div>
+              <div className="text-muted-foreground mt-3">
+                Product-minded senior engineer with 7+ years building reliable,
+                user-friendly web platforms. Strong in TypeScript/React, backend
+                APIs, and performance.
               </div>
               <div className="text-muted-foreground mt-4">## Experience</div>
               <div className="mt-4 text-blue-500">
-                **Senior Software Engineer** @ Stripe
+                **Senior Software Engineer** @ Stripe || *2022 — Present*
               </div>
-              <div className="text-slate-400">*2022 - Present*</div>
               <div className="text-muted-foreground mt-2">
                 - Architected a real-time fraud detection pipeline processing
                 10M+ transactions daily
@@ -46,9 +51,8 @@ function HeroMockup() {
                 - Mentored 4 engineers and established team coding standards
               </div>
               <div className="mt-4 text-blue-500">
-                **Software Engineer** @ Airbnb
+                **Software Engineer** @ Airbnb || *2019 — 2022*
               </div>
-              <div className="text-slate-400">*2019 - 2022*</div>
               <div className="text-muted-foreground mt-2">
                 - Built search ranking algorithms that improved booking
                 conversion by 18%
@@ -60,9 +64,8 @@ function HeroMockup() {
                 - Contributed to open-source design system components
               </div>
               <div className="mt-4 text-blue-500">
-                **Junior Software Engineer** @ Notion
+                **Junior Software Engineer** @ Notion || *2017 — 2019*
               </div>
-              <div className="text-slate-400">*2017 - 2019*</div>
               <div className="text-muted-foreground mt-2">
                 - Developed collaborative editing features using operational
                 transforms
@@ -73,6 +76,14 @@ function HeroMockup() {
               <div className="text-muted-foreground">
                 - Built automated testing suite covering 80% of core
                 functionality
+              </div>
+              <div className="text-muted-foreground mt-4">## Projects</div>
+              <div className="text-muted-foreground mt-2">
+                **SignalWatch** — Observability dashboard for distributed
+                services
+              </div>
+              <div className="text-muted-foreground">
+                - Built a metrics + alerting UI with role-based views
               </div>
               <div className="text-muted-foreground mt-4">## Skills</div>
               <div className="text-muted-foreground mt-2">
@@ -89,68 +100,100 @@ function HeroMockup() {
             </div>
             <div className="bg-background relative w-full overflow-hidden p-8 sm:w-1/2">
               <div className="bg-muted/40 pointer-events-none absolute inset-0 sm:opacity-0" />
-              <div className="border-border mb-4 border-b pb-4 text-left">
-                <div className="text-foreground text-lg font-semibold">
+              <div className="mb-4 text-left">
+                <div className="text-foreground font-heading text-lg font-semibold">
                   Maya Sandoval
                 </div>
-                <div className="text-primary text-sm">
+                <div className="text-muted-foreground font-heading text-base font-medium">
                   Senior Software Engineer
                 </div>
                 <div className="text-muted-foreground mt-2 text-xs">
-                  San Francisco, CA • maya@example.com • portfolio.example.dev
+                  San Francisco, CA ・{' '}
+                  <span className="text-primary hover:cursor-pointer">
+                    maya@example.com
+                  </span>{' '}
+                  ・{' '}
+                  <span className="text-primary hover:cursor-pointer">
+                    portfolio.example.dev
+                  </span>
                 </div>
+                <div className="bg-primary/70 mt-3 h-1 w-full rounded-full" />
+                <p className="text-muted-foreground mt-3 text-xs leading-relaxed">
+                  Product-minded senior engineer with 7+ years building
+                  reliable, user-friendly web platforms. Strong in
+                  TypeScript/React, backend APIs, and performance.
+                </p>
               </div>
               <div className="text-muted-foreground space-y-4 text-left text-xs">
                 <div>
-                  <div className="text-primary mb-1 text-[11px] font-semibold tracking-wide uppercase">
+                  <div className="text-primary font-heading mb-1 text-[11px] font-semibold tracking-wide uppercase">
                     Experience
                   </div>
-                  <div className="text-foreground flex items-center justify-between">
+                  <div className="text-foreground flex items-baseline justify-between gap-2">
                     <span className="font-medium">
-                      Senior Software Engineer
+                      Senior Software Engineer{' '}
+                      <span className="text-muted-foreground">@ Stripe</span>
                     </span>
-                    <span className="text-muted-foreground text-xs">
-                      2022 - Present
+                    <span className="text-muted-foreground text-xs italic">
+                      2022 — Present
                     </span>
                   </div>
-                  <div className="text-muted-foreground">Stripe</div>
                   <ul className="mt-2 list-disc space-y-1 pl-4">
                     <li>Architected a real-time fraud detection pipeline.</li>
                     <li>Led migration to microservices.</li>
+                    <li>Mentored 4 engineers and set coding standards.</li>
                   </ul>
                 </div>
                 <div>
-                  <div className="text-foreground flex items-center justify-between">
-                    <span className="font-medium">Software Engineer</span>
-                    <span className="text-muted-foreground text-xs">
-                      2019 - 2022
+                  <div className="text-foreground flex items-baseline justify-between gap-2">
+                    <span className="font-medium">
+                      Software Engineer{' '}
+                      <span className="text-muted-foreground">@ Airbnb</span>
+                    </span>
+                    <span className="text-muted-foreground text-xs italic">
+                      2019 — 2022
                     </span>
                   </div>
-                  <div className="text-muted-foreground">Airbnb</div>
                   <ul className="mt-2 list-disc space-y-1 pl-4">
                     <li>Improved search ranking conversion by 18%.</li>
                     <li>Built internal tooling for 200+ engineers.</li>
+                    <li>Contributed to a design system component library.</li>
                   </ul>
                 </div>
                 <div>
-                  <div className="text-foreground flex items-center justify-between">
+                  <div className="text-foreground flex items-baseline justify-between gap-2">
                     <span className="font-medium">
-                      Junior Software Engineer
+                      Junior Software Engineer{' '}
+                      <span className="text-muted-foreground">@ Notion</span>
                     </span>
-                    <span className="text-muted-foreground text-xs">
-                      2017 - 2019
+                    <span className="text-muted-foreground text-xs italic">
+                      2017 — 2019
                     </span>
                   </div>
-                  <div className="text-muted-foreground">Notion</div>
                   <ul className="mt-2 list-disc space-y-1 pl-4">
                     <li>
                       Built collaborative editing with operational transforms.
                     </li>
                     <li>Reduced page load time by 35%.</li>
+                    <li>Built automated tests for critical flows.</li>
                   </ul>
                 </div>
                 <div>
-                  <div className="text-primary mb-1 text-[11px] font-semibold tracking-wide uppercase">
+                  <div className="text-primary font-heading mb-1 text-[11px] font-semibold tracking-wide uppercase">
+                    Projects
+                  </div>
+                  <div className="text-foreground font-medium">SignalWatch</div>
+                  <div className="text-muted-foreground">
+                    Observability dashboard for distributed services
+                  </div>
+                  <ul className="mt-2 list-disc space-y-1 pl-4">
+                    <li>
+                      Built a metrics + alerting UI with role-based views.
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="text-primary font-heading mb-1 text-[11px] font-semibold tracking-wide uppercase">
                     Skills
                   </div>
                   <ul className="text-muted-foreground list-disc space-y-1 pl-4">
