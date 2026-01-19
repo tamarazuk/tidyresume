@@ -7,7 +7,9 @@ const ACCENT_RULE_HTML = '<hr class="divider--accent" />'
 
 const createMarkdown = () => {
   const md = new MarkdownIt()
-  configureMarkdownIt(md as Parameters<typeof configureMarkdownIt>[0])
+  configureMarkdownIt(md as Parameters<typeof configureMarkdownIt>[0], {
+    editorId: 'test-editor',
+  })
   return md
 }
 
