@@ -52,7 +52,7 @@ const ALLOWED_ATTRIBUTES: sanitize.IOptions['allowedAttributes'] = {
   input: ['type', 'checked', 'disabled'],
   th: ['colspan', 'rowspan'],
   td: ['colspan', 'rowspan'],
-  '*': ['class'],
+  '*': ['class', 'data-line'],
 }
 
 type SanitizeAttributes = Record<string, string>
