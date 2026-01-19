@@ -1,6 +1,6 @@
 # Implementation Plan: Synchronized Scroll Rework
 
-## Phase 1: Foundation & Toggle Control
+## Phase 1: Foundation & Toggle Control [checkpoint: 86bcadf]
 Establish the control mechanism and hook structure for the new sync behavior.
 
 - [x] Task: Create `useSynchronizedScroll` hook skeleton [6154039]
@@ -13,7 +13,7 @@ Establish the control mechanism and hook structure for the new sync behavior.
     - [x] Create `SyncScrollToggle` component in `src/components/editor/components/`.
     - [x] Integrate toggle into the editor footer or toolbar.
     - [x] Write unit tests for the toggle component and store updates.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [86bcadf]
 
 ## Phase 2: Core Mapping Logic
 Implement the "Hybrid/Block Mapping" strategy to calculate scroll positions.
