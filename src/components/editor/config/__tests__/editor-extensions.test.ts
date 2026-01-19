@@ -59,4 +59,12 @@ describe('configureMarkdownIt', () => {
     expect(md.render('Left ||')).not.toContain('split-line')
     expect(md.render('|| Right')).not.toContain('split-line')
   })
+
+  it('injects data-line attributes for scroll synchronization', () => {
+    const md = createMarkdown()
+    const html = md.render('# Header\n\nParagraph')
+    
+    expect(html).toContain('data-line="0"') // Header
+    expect(html).toContain('data-line="2"') // Paragraph
+  })
 })
