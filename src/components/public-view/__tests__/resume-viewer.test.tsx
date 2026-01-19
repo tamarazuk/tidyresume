@@ -24,6 +24,7 @@ vi.mock('md-editor-rt', () => ({
   MdPreview: ({ className }: { className?: string }) => (
     <div data-testid="preview" className={className} />
   ),
+  config: vi.fn(),
 }))
 
 vi.mock('@/icons/app-icon', () => ({

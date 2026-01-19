@@ -35,9 +35,12 @@ import {
 import type { ResumeThemeSettings } from '@/types/resume'
 import { cn } from '@/lib/utils'
 import { useResumeStore } from '@/stores/resume-store'
+import { initMdEditorConfig } from '@/components/editor/config/editor-config'
 
 import 'md-editor-rt/lib/preview.css'
 import '@/components/editor/styles/preview.css'
+
+initMdEditorConfig()
 
 interface ResumeViewerProps {
   id: string
@@ -57,12 +60,18 @@ export function ResumeViewer({
   const { formatShortcutKeys } = usePlatformShortcuts()
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
   const isOwner = useOwnerCheck(id)
-  const resumeDisplayTheme = useResumeStore((state) => state.resumeDisplay.theme)
+  const resumeDisplayTheme = useResumeStore(
+    (state) => state.resumeDisplay.theme
+  )
   const shortcutKeys = formatShortcutKeys(['Mod', 'P'])
   const resolvedTheme = isOwner ? resumeDisplayTheme : theme
   const resumeAccentClassName = getResumeAccentClassName(resolvedTheme?.accent)
-  const resumeTypographyClassNames = getResumeTypographyClassNames(resolvedTheme)
-  const menuItemClassName = cn(dropdownMenuItemClassName, 'w-full justify-start')
+  const resumeTypographyClassNames =
+    getResumeTypographyClassNames(resolvedTheme)
+  const menuItemClassName = cn(
+    dropdownMenuItemClassName,
+    'w-full justify-start'
+  )
 
   usePublicResumeThemeSync({
     id,
@@ -87,18 +96,18 @@ export function ResumeViewer({
         </Link>
         <div className="order-2 flex items-center justify-end gap-2 sm:order-3 sm:justify-self-end">
           <DropdownMenu>
-          <DropdownMenuTrigger
-            render={(props) => (
-              <Button
-                {...props}
-                variant="ghost"
-                size="icon"
-                aria-label="Open actions menu"
-              >
-                <DotsNineIcon size={18} weight="bold" />
-              </Button>
-            )}
-          />
+            <DropdownMenuTrigger
+              render={(props) => (
+                <Button
+                  {...props}
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Open actions menu"
+                >
+                  <DotsNineIcon size={18} weight="bold" />
+                </Button>
+              )}
+            />
             <DropdownMenuContent align="end" className="w-64">
               <DropdownMenuItem onClick={() => window.print()}>
                 <PrinterIcon size={16} />

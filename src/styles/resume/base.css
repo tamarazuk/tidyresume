@@ -12,6 +12,7 @@
 
 @media screen {
   .md-editor-preview .resume-page-break {
+    position: relative;
     height: calc(var(--preview-page-gap) + (var(--preview-page-margin) * 2));
     margin: 24px calc(var(--preview-paper-padding) * -1);
     width: calc(100% + (var(--preview-paper-padding) * 2));
@@ -24,6 +25,25 @@
       var(--card) calc(100% - var(--preview-page-margin)),
       var(--card) 100%
     );
+  }
+
+  .md-editor-preview .resume-page-break::before,
+  .md-editor-preview .resume-page-break::after {
+    content: '';
+    position: absolute;
+    z-index: 10;
+    top: var(--preview-page-margin);
+    bottom: var(--preview-page-margin);
+    width: 48px;
+    background: var(--background);
+  }
+
+  .md-editor-preview .resume-page-break::before {
+    left: -24px;
+  }
+
+  .md-editor-preview .resume-page-break::after {
+    right: -24px;
   }
 }
 
