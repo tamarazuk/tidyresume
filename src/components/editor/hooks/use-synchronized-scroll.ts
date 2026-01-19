@@ -1,40 +1,78 @@
-import { useEffect, type RefObject } from 'react'
+import { useEffect, useRef } from 'react'
+import type { ExposeParam } from 'md-editor-rt'
+import { getScrollAnchors, calculateScrollPosition } from '../utils/scroll-sync'
 
 /**
  * Hook to synchronize scrolling between the markdown editor and the preview.
  *
- * @param editorRef Reference to the editor container
- * @param previewRef Reference to the preview container
+ * @param editorRef Reference to the MdEditor instance (ExposeParam)
  * @param isEnabled Whether synchronized scrolling is enabled
  */
-export const useSynchronizedScroll = (
-  editorRef: RefObject<HTMLElement | null>,
-  previewRef: RefObject<HTMLElement | null>,
+export function useSynchronizedScroll(
+  editorRef: React.RefObject<ExposeParam | null>,
   isEnabled: boolean
-) => {
+) {
+  // To prevent infinite scroll loops
+  const activeScroller = useRef<'editor' | 'preview' | null>(null)
+  const timeoutId = useRef<NodeJS.Timeout | null>(null)
+
   useEffect(() => {
-    if (!isEnabled || !editorRef.current || !previewRef.current) {
-      return
+    if (!isEnabled || !editorRef.current) return
+
+    const editorView = editorRef.current.getEditorView()
+    if (!editorView) return
+
+    const editorScroller = editorView.scrollDOM
+    // md-editor-rt preview wrapper usually has this class
+    const previewScroller = editorScroller.closest('.md-editor')?.querySelector('.md-editor-preview-wrapper') as HTMLElement
+
+    if (!previewScroller) return
+
+    const clearActiveScroller = () => {
+      if (timeoutId.current) clearTimeout(timeoutId.current)
+      timeoutId.current = setTimeout(() => {
+        activeScroller.current = null
+      }, 50)
     }
 
-    const editorEl = editorRef.current
-    const previewEl = previewRef.current
+    const handleEditorScroll = () => {
+      if (activeScroller.current === 'preview') return
+      activeScroller.current = 'editor'
 
-    const handleScroll = (e: Event) => {
-      // Placeholder for scroll logic
-      // const target = e.target as HTMLElement
-      // console.log('Scrolling:', target === editorEl ? 'Editor' : 'Preview')
+      const anchors = getScrollAnchors(editorView, previewScroller)
+      const targetTop = calculateScrollPosition(
+        editorScroller.scrollTop,
+        anchors,
+        'editor'
+      )
+
+      previewScroller.scrollTo({ top: targetTop })
+      clearActiveScroller()
     }
 
-    // Add passive listeners for better performance
-    const options: AddEventListenerOptions = { passive: true }
+    const handlePreviewScroll = () => {
+      if (activeScroller.current === 'editor') return
+      activeScroller.current = 'preview'
 
-    editorEl.addEventListener('scroll', handleScroll, options)
-    previewEl.addEventListener('scroll', handleScroll, options)
+      const anchors = getScrollAnchors(editorView, previewScroller)
+      const targetTop = calculateScrollPosition(
+        previewScroller.scrollTop,
+        anchors,
+        'preview'
+      )
+
+      editorScroller.scrollTo({ top: targetTop })
+      clearActiveScroller()
+    }
+
+    // Use passive: true for better scroll performance
+    editorScroller.addEventListener('scroll', handleEditorScroll, { passive: true })
+    previewScroller.addEventListener('scroll', handlePreviewScroll, { passive: true })
 
     return () => {
-      editorEl.removeEventListener('scroll', handleScroll)
-      previewEl.removeEventListener('scroll', handleScroll)
+      editorScroller.removeEventListener('scroll', handleEditorScroll)
+      previewScroller.removeEventListener('scroll', handlePreviewScroll)
+      if (timeoutId.current) clearTimeout(timeoutId.current)
     }
-  }, [editorRef, previewRef, isEnabled])
+  }, [isEnabled, editorRef])
 }

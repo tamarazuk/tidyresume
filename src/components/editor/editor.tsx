@@ -25,6 +25,7 @@ export default function Editor() {
     uploadInputProps,
     footers,
     defFooters,
+    isSyncScrollEnabled,
   } = useEditorState()
   const { className: resumeThemeClassName } = useResumeTheme()
   const { accentClassName, typographyClassNames } =
@@ -52,6 +53,7 @@ export default function Editor() {
         defFooters={defFooters}
         sanitize={sanitizeHtml}
         theme={editorTheme}
+        scrollAuto={false}
       />
     </div>
   )

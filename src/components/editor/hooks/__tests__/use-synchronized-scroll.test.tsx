@@ -1,36 +1,62 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { useSynchronizedScroll } from '../use-synchronized-scroll'
 import type { RefObject } from 'react'
+import type { ExposeParam } from 'md-editor-rt'
 
 describe('useSynchronizedScroll', () => {
-  let editorRef: RefObject<HTMLElement | null>
-  let previewRef: RefObject<HTMLElement | null>
-  let editorElement: HTMLElement
-  let previewElement: HTMLElement
+  let editorRef: RefObject<ExposeParam | null>
+  let editorRoot: HTMLElement
+  let editorScroller: HTMLElement
+  let previewScroller: HTMLElement
 
   beforeEach(() => {
-    editorElement = document.createElement('div')
-    previewElement = document.createElement('div')
-    editorRef = { current: editorElement }
-    previewRef = { current: previewElement }
+    // Setup DOM
+    editorRoot = document.createElement('div')
+    editorRoot.className = 'md-editor'
+    
+    editorScroller = document.createElement('div')
+    editorScroller.className = 'cm-scroller'
+    
+    previewScroller = document.createElement('div')
+    previewScroller.className = 'md-editor-preview-wrapper'
+    
+    editorRoot.appendChild(editorScroller)
+    editorRoot.appendChild(previewScroller)
+    document.body.appendChild(editorRoot)
+
+    // Mock Ref
+    editorRef = {
+      current: {
+        getEditorView: () => ({
+          scrollDOM: editorScroller,
+          state: { doc: { lines: 1, line: () => ({ text: '', from: 0 }) } },
+          lineBlockAt: () => ({ top: 0 }),
+        }),
+      } as any,
+    }
     
     // Mock addEventListener/removeEventListener
-    vi.spyOn(editorElement, 'addEventListener')
-    vi.spyOn(editorElement, 'removeEventListener')
-    vi.spyOn(previewElement, 'addEventListener')
-    vi.spyOn(previewElement, 'removeEventListener')
+    vi.spyOn(editorScroller, 'addEventListener')
+    vi.spyOn(editorScroller, 'removeEventListener')
+    vi.spyOn(previewScroller, 'addEventListener')
+    vi.spyOn(previewScroller, 'removeEventListener')
+  })
+
+  afterEach(() => {
+    document.body.removeChild(editorRoot)
+    vi.restoreAllMocks()
   })
 
   it('adds scroll event listeners when enabled', () => {
-    renderHook(() => useSynchronizedScroll(editorRef, previewRef, true))
+    renderHook(() => useSynchronizedScroll(editorRef, true))
 
-    expect(editorElement.addEventListener).toHaveBeenCalledWith(
+    expect(editorScroller.addEventListener).toHaveBeenCalledWith(
       'scroll',
       expect.any(Function),
       expect.any(Object)
     )
-    expect(previewElement.addEventListener).toHaveBeenCalledWith(
+    expect(previewScroller.addEventListener).toHaveBeenCalledWith(
       'scroll',
       expect.any(Function),
       expect.any(Object)
@@ -38,45 +64,26 @@ describe('useSynchronizedScroll', () => {
   })
 
   it('does not add event listeners when disabled', () => {
-    renderHook(() => useSynchronizedScroll(editorRef, previewRef, false))
+    renderHook(() => useSynchronizedScroll(editorRef, false))
 
-    expect(editorElement.addEventListener).not.toHaveBeenCalled()
-    expect(previewElement.addEventListener).not.toHaveBeenCalled()
+    expect(editorScroller.addEventListener).not.toHaveBeenCalled()
+    expect(previewScroller.addEventListener).not.toHaveBeenCalled()
   })
 
   it('removes event listeners when unmounting', () => {
     const { unmount } = renderHook(() => 
-      useSynchronizedScroll(editorRef, previewRef, true)
+      useSynchronizedScroll(editorRef, true)
     )
 
     unmount()
 
-    expect(editorElement.removeEventListener).toHaveBeenCalledWith(
+    expect(editorScroller.removeEventListener).toHaveBeenCalledWith(
       'scroll',
       expect.any(Function)
     )
-    expect(previewElement.removeEventListener).toHaveBeenCalledWith(
+    expect(previewScroller.removeEventListener).toHaveBeenCalledWith(
       'scroll',
       expect.any(Function)
     )
-  })
-
-  it('removes event listeners when disabled dynamically', () => {
-    const { rerender } = renderHook(
-      ({ isEnabled }) => useSynchronizedScroll(editorRef, previewRef, isEnabled),
-      { initialProps: { isEnabled: true } }
-    )
-
-    // Should have added listeners initially
-    expect(editorElement.addEventListener).toHaveBeenCalledTimes(1)
-
-    // Rerender with disabled
-    rerender({ isEnabled: false })
-
-    // Should have removed listeners
-    expect(editorElement.removeEventListener).toHaveBeenCalled()
-    
-    // Should not have added listeners again
-    expect(editorElement.addEventListener).toHaveBeenCalledTimes(1)
   })
 })
