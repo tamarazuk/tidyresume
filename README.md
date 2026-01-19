@@ -21,6 +21,41 @@ A markdown-based resume builder that lets you create professional resumes in Mar
 - **Multiple Templates** — Additional layouts are coming soon
 - **Dark Mode** — Editor UI supports dark mode (preview stays light)
 
+## Markdown Extensions
+
+Quick reference for resume-specific shortcuts (shorthand and verbose forms are both supported):
+
+| Feature | Shorthand | Verbose | Output |
+| --- | --- | --- | --- |
+| Split line | `Left || Right` | `[[Left \|\| Right]]` | Left/right aligned line |
+| Accent divider | `+++` | `[[HR:accent]]` | Thick accent divider |
+| Page break | `///` | `[[PAGEBREAK]]` | Page break for print/PDF |
+
+Example (raw Markdown in editor):
+
+```md
+Tamara Zuk
+Senior Software Engineer
+Toronto, Ontario • hello@tamarazuk.dev • linkedin.com/in/tamarazuk • tamarazuk.dev
+
++++
+
+PROFESSIONAL SUMMARY
+Senior Full-Stack Engineer with 15+ years of experience...
+
+Help Scout • Remote || 05/2022 — 07/2025
+Senior Software Engineer
+
+///
+
+COMMUNITY
+Mentor • Tech Ladies || Since 2021
+```
+
+Notes:
+- Split lines support inline formatting (e.g., `**Bold** || 2020`).
+- Verbose `[[...]]` syntax works everywhere the shorthand does.
+
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router)
