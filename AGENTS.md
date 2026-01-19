@@ -35,6 +35,7 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 | Hosting/Runtime | OpenNext Cloudflare (edge runtime for routes) |
 | Email | Resend + React Email |
 | Package Manager | pnpm |
+
 > Waiting for Cloudflare/OpenNext to fully support Next 16 before upgrading the framework version.
 
 ## Separation of concerns
