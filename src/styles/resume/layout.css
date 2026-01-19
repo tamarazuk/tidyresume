@@ -116,6 +116,30 @@
   box-shadow: none;
 }
 
+.resume-view-full .md-editor-preview .resume-page-break {
+  height: 4rem;
+  margin-block: 0;
+  margin-inline: calc(var(--preview-paper-padding) * -1);
+  width: calc(100% + (var(--preview-paper-padding) * 2));
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.resume-view-full .md-editor-preview .resume-page-break::before {
+  content: '';
+  position: static;
+  height: 0;
+  background: transparent;
+  width: 100%;
+  border-top: 1px dashed var(--muted-foreground);
+  opacity: 0.4;
+}
+
+.resume-view-full .md-editor-preview .resume-page-break::after {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .resume-view {
     --preview-paper-padding: clamp(1.1rem, 4vw, 1.5rem);
