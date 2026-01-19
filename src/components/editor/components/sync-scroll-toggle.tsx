@@ -1,7 +1,7 @@
 'use client'
 
 import { useEditorViewStore } from '@/stores/editor-view-store'
-import { Link, LinkBreak } from '@phosphor-icons/react/dist/ssr'
+import { ArrowsDownUp } from '@phosphor-icons/react/dist/ssr'
 import ToolbarTooltipButton from './toolbar-tooltip-button'
 import { cn } from '@/lib/utils'
 
@@ -21,25 +21,15 @@ export default function SyncScrollToggle({
 
   return (
     <ToolbarTooltipButton
-      label={isSyncScrollEnabled ? 'Disable Scroll Sync' : 'Enable Scroll Sync'}
-      icon={
-        isSyncScrollEnabled ? (
-          <Link size={14} className="shrink-0" />
-        ) : (
-          <LinkBreak size={14} className="shrink-0" />
-        )
-      }
+      label={isSyncScrollEnabled ? 'Disable Sync Scroll' : 'Enable Sync Scroll'}
+      icon={<ArrowsDownUp size={14} className="shrink-0" />}
       onClick={toggleSyncScroll}
       className={cn(
-        isSyncScrollEnabled ? 'text-brand-primary' : 'text-muted-foreground',
+        isSyncScrollEnabled ? 'text-brand-primary' : 'text-muted-foreground/50',
         className
       )}
       baseClass={baseClass}
-      tooltip={
-        isSyncScrollEnabled
-          ? 'Synchronized Scrolling is On'
-          : 'Synchronized Scrolling is Off'
-      }
+      tooltip={isSyncScrollEnabled ? 'Sync Scroll On' : 'Sync Scroll Off'}
     />
   )
 }

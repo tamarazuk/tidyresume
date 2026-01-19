@@ -29,7 +29,7 @@ describe('SyncScrollToggle', () => {
 
   it('renders correctly when enabled', () => {
     render(<SyncScrollToggle />)
-    const button = screen.getByRole('button', { name: /disable scroll sync/i })
+    const button = screen.getByRole('button', { name: /disable sync scroll/i })
     expect(button).toBeInTheDocument()
     // Check if it has the active class (simplified check)
     expect(button.className).toContain('text-brand-primary')
@@ -38,9 +38,9 @@ describe('SyncScrollToggle', () => {
   it('renders correctly when disabled', () => {
     useEditorViewStore.setState({ isSyncScrollEnabled: false })
     render(<SyncScrollToggle />)
-    const button = screen.getByRole('button', { name: /enable scroll sync/i })
+    const button = screen.getByRole('button', { name: /enable sync scroll/i })
     expect(button).toBeInTheDocument()
-    expect(button.className).toContain('text-muted-foreground')
+    expect(button.className).toContain('text-muted-foreground/50')
   })
 
   it('toggles state on click', () => {
