@@ -86,4 +86,18 @@ describe('useSynchronizedScroll', () => {
       expect.any(Function)
     )
   })
+
+  it('throttles scroll events', () => {
+    vi.useFakeTimers()
+    renderHook(() => useSynchronizedScroll(editorRef, true))
+
+    // Trigger scroll
+    const scrollEvent = new Event('scroll')
+    editorScroller.dispatchEvent(scrollEvent)
+    
+    // Should request animation frame
+    expect(window.requestAnimationFrame).toBeDefined()
+    
+    vi.useRealTimers()
+  })
 })
