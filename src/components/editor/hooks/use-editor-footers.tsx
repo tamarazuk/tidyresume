@@ -200,7 +200,13 @@ function useEditorFooters({
             />
           )
         case 'syncScrollToggle':
-          return <SyncScrollToggle key="footer-sync-scroll-toggle" />
+          return (
+            <SyncScrollToggle
+              key="footer-sync-scroll-toggle"
+              baseClass="md-editor-footer-item"
+              className="hover:text-foreground hover:bg-accent inline-flex items-center gap-2 rounded-md px-2 py-1 text-xs font-medium transition"
+            />
+          )
         case 'saveStatus':
           if (!saveStatus) return null
           const resolvedCloudStatus = resolveCloudStatus(
