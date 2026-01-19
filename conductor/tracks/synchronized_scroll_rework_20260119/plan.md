@@ -32,10 +32,10 @@ Implement the "Hybrid/Block Mapping" strategy to calculate scroll positions.
 ## Phase 3: Integration & Performance
 Connect the logic to the UI and ensure smooth performance.
 
-- [ ] Task: Integrate `useSynchronizedScroll` into Editor
-    - [ ] Connect the hook to the actual Editor and Preview components.
-    - [ ] Use `requestAnimationFrame` or `throttle` to limit scroll event frequency (target 60fps).
-    - [ ] Implement the "Active Scroller" detection (prevent infinite scroll loops between editor and preview).
+- [x] Task: Integrate `useSynchronizedScroll` into Editor [6498ad2]
+    - [x] Connect the hook to the actual Editor and Preview components.
+    - [x] Use `requestAnimationFrame` or `throttle` to limit scroll event frequency (target 60fps).
+    - [x] Implement the "Active Scroller" detection (prevent infinite scroll loops between editor and preview).
 - [ ] Task: Optimize for Complex Layouts
     - [ ] Test with the "A4" resume layout and complex grids.
     - [ ] Adjust anchor detection to account for absolute positioning or print-specific CSS if necessary.
