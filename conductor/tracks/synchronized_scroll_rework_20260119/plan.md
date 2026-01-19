@@ -15,7 +15,7 @@ Establish the control mechanism and hook structure for the new sync behavior.
     - [x] Write unit tests for the toggle component and store updates.
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [86bcadf]
 
-## Phase 2: Core Mapping Logic
+## Phase 2: Core Mapping Logic [checkpoint: 53fa2b4]
 Implement the "Hybrid/Block Mapping" strategy to calculate scroll positions.
 
 - [x] Task: Implement `getScrollAnchors` utility [838a3ca]
@@ -27,7 +27,7 @@ Implement the "Hybrid/Block Mapping" strategy to calculate scroll positions.
     - [x] Implement the interpolation logic: given a scroll position in Source A, find the two nearest anchors, calculate percentage between them, and apply to Source B.
     - [x] Handle edge cases: Top of document (0%), Bottom of document (100%), and sections with no anchors.
     - [x] Write unit tests for the calculation logic.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md) [53fa2b4]
 
 ## Phase 3: Integration & Performance
 Connect the logic to the UI and ensure smooth performance.
