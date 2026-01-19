@@ -1,5 +1,10 @@
 # <img src="https://tidyresume.tzuk.app/logo-icon.svg" alt="TidyResume" width="32" align="top" />&nbsp;&nbsp;TidyResume
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0F172A?style=flat&logo=tailwindcss&logoColor=38BDF8)](https://tailwindcss.com/)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/tamarazuk/tidyresume?utm_source=oss&utm_medium=github&utm_campaign=tamarazuk%2Ftidyresume&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
 A markdown-based resume builder that lets you create professional resumes in Markdown with local-first saving, PDF export, and shareable links.
 
 ![TidyResume Editor - Dark Mode](/.github/images/editor-preview-dark.png)
@@ -55,35 +60,6 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the app.
-
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── (marketing)/       # Landing page route group
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   │   └── privacy-policy/
-│   │       └── page.tsx
-│   ├── edit/              # Resume editor page
-│   │   └── page.tsx
-│   ├── layout.tsx         # Root layout
-├── styles/
-│   ├── globals.css        # Global styles, Tailwind imports
-│   ├── print.css          # Print styles for PDF export
-│   └── theme.css          # CSS custom properties (colors, shadows, etc.)
-├── components/
-│   ├── editor/            # Markdown editor components
-│   ├── layout/            # Header, navigation
-│   ├── marketing/         # Landing page sections
-│   └── ui/                # Reusable UI primitives
-├── stores/                # Zustand stores (editor state, drafts)
-├── lib/
-│   └── utils.ts           # Utility functions (cn, etc.)
-└── providers/
-    └── theme-provider.tsx # next-themes wrapper
-```
 
 ## Scripts
 
