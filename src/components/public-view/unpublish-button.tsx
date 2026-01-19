@@ -32,8 +32,10 @@ export function UnpublishButton({
   labelClassName = 'hidden sm:inline',
   showTooltip = true,
 }: UnpublishButtonProps) {
-  const isOwner = useOwnerCheck(id)
+  const ownsResume = useOwnerCheck(id)
   const router = useRouter()
+  const isActiveOwner = useResumeStore((state) => state.id === id)
+  const isOwner = ownsResume && isActiveOwner
   const unpublish = useResumeStore((state) => state.unpublish)
   const editSecret = useResumeStore((state) => state.editSecret)
   const [isUnpublishing, setIsUnpublishing] = useState(false)

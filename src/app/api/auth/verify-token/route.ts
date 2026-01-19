@@ -3,6 +3,12 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { eq } from 'drizzle-orm'
 import { getDb } from '@/db'
 import { authTokens } from '@/db/schema'
+import { safeJsonParse } from '@/lib/json-utils'
+import type { ResumeThemeSettings } from '@/types/resume'
+
+const isThemeValue = (value: unknown): value is ResumeThemeSettings => {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
 
 export async function POST(request: Request) {
   try {
@@ -44,7 +50,15 @@ export async function POST(request: Request) {
       .set({ usedAt: new Date() })
       .where(eq(authTokens.id, authToken.id))
 
-    return NextResponse.json({ resume: authToken.resume })
+    const resume = authToken.resume
+    const theme = safeJsonParse(resume.theme ?? null, isThemeValue)
+
+    return NextResponse.json({
+      resume: {
+        ...resume,
+        theme,
+      },
+    })
 
   } catch (error) {
     console.error('Verify token error:', error)

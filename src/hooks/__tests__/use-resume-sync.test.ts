@@ -15,6 +15,7 @@ let storeState = {
   resumeTitle: 'Title',
   markdown: 'Content',
   slug: 'slug',
+  editSecret: null,
   resumeDisplay: {
     theme: {
       accent: 'indigo',
@@ -43,6 +44,7 @@ describe('useResumeSync', () => {
       resumeTitle: 'Title',
       markdown: 'Content',
       slug: 'slug',
+      editSecret: null,
       resumeDisplay: {
         theme: {
           accent: 'indigo',

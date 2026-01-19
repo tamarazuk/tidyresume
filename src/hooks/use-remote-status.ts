@@ -4,18 +4,34 @@ import { useEffect, useRef, useCallback } from 'react'
 import { useResumeStore } from '@/stores/resume-store'
 import { useMounted } from '@/hooks/use-mounted'
 
-export function useRemoteStatus() {
-  const id = useResumeStore((state) => state.id)
-  const isPublished = useResumeStore((state) => state.isPublished)
+interface UseRemoteStatusOptions {
+  resumeId?: string | null
+  enabled?: boolean
+}
+
+export function useRemoteStatus(options: UseRemoteStatusOptions = {}) {
+  const { resumeId, enabled = true } = options
+  const activeId = useResumeStore((state) => state.id)
+  const activeIsPublished = useResumeStore((state) => state.isPublished)
+  const isPublished = useResumeStore((state) => {
+    if (!resumeId) return activeIsPublished
+    return (
+      state.resumes.find((resume) => resume.id === resumeId)
+        ?.isPublished ?? false
+    )
+  })
   const unpublish = useResumeStore((state) => state.unpublish)
+  const unpublishById = useResumeStore((state) => state.unpublishById)
   const isMounted = useMounted()
   const lastCheckedId = useRef<string | null>(null)
+  const targetId = resumeId ?? activeId
+  const isEnabled = enabled
 
   const checkStatus = useCallback(async () => {
-    if (!id || !isPublished) return
+    if (!isEnabled || !targetId || !isPublished) return
 
     try {
-      const response = await fetch(`/api/resumes/${id}`, {
+      const response = await fetch(`/api/resumes/${targetId}`, {
         method: 'GET',
         // Cache: 'no-store' to ensure we get fresh status
         cache: 'no-store',
@@ -23,23 +39,34 @@ export function useRemoteStatus() {
 
       if (response.status === 404) {
         // Resume was deleted/unpublished from another device
-        unpublish()
+        if (resumeId) {
+          unpublishById(targetId)
+        } else {
+          unpublish()
+        }
       }
     } catch (error) {
       console.error('Failed to check remote status:', error)
     }
-  }, [id, isPublished, unpublish])
+  }, [
+    isEnabled,
+    targetId,
+    isPublished,
+    resumeId,
+    unpublish,
+    unpublishById,
+  ])
 
   useEffect(() => {
-    if (!isMounted) return
-    if (!id || !isPublished) {
+    if (!isMounted || !isEnabled) return
+    if (!targetId || !isPublished) {
       lastCheckedId.current = null
       return
     }
 
     // Check on initial mount or when ID changes
-    if (lastCheckedId.current !== id) {
-      lastCheckedId.current = id
+    if (lastCheckedId.current !== targetId) {
+      lastCheckedId.current = targetId
       checkStatus()
     }
 
@@ -60,7 +87,7 @@ export function useRemoteStatus() {
       window.removeEventListener('focus', handleFocus)
       window.removeEventListener('visibilitychange', handleFocus)
     }
-  }, [id, isPublished, isMounted, checkStatus])
+  }, [targetId, isPublished, isMounted, isEnabled, checkStatus])
 
   return { checkStatus }
 }

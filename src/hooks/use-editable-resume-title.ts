@@ -18,7 +18,9 @@ export function useEditableResumeTitle({
   title,
   content,
 }: UseEditableResumeTitleOptions) {
-  const isOwner = useOwnerCheck(id)
+  const ownsResume = useOwnerCheck(id)
+  const isActiveOwner = useResumeStore((state) => state.id === id)
+  const isOwner = ownsResume && isActiveOwner
   const setResumeTitle = useResumeStore((state) => state.setResumeTitle)
   const editSecret = useResumeStore((state) => state.editSecret)
   const [currentTitle, setCurrentTitle] = useState(title)

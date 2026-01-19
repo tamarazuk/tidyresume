@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { MdPreview } from 'md-editor-rt'
 import { DotsNineIcon, PrinterIcon } from '@phosphor-icons/react/dist/ssr'
@@ -59,12 +60,15 @@ export function ResumeViewer({
 }: ResumeViewerProps) {
   const { formatShortcutKeys } = usePlatformShortcuts()
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
-  const isOwner = useOwnerCheck(id)
-  const resumeDisplayTheme = useResumeStore(
-    (state) => state.resumeDisplay.theme
+  const ownsResume = useOwnerCheck(id)
+  const isActiveOwner = useResumeStore((state) => state.id === id)
+  const setActiveResumeById = useResumeStore(
+    (state) => state.setActiveResumeById
   )
+  const resumeDisplayTheme = useResumeStore((state) => state.resumeDisplay.theme)
   const shortcutKeys = formatShortcutKeys(['Mod', 'P'])
-  const resolvedTheme = isOwner ? resumeDisplayTheme : theme
+  const canEdit = ownsResume && isActiveOwner
+  const resolvedTheme = canEdit ? resumeDisplayTheme : theme
   const resumeAccentClassName = getResumeAccentClassName(resolvedTheme?.accent)
   const resumeTypographyClassNames =
     getResumeTypographyClassNames(resolvedTheme)
@@ -73,9 +77,15 @@ export function ResumeViewer({
     'w-full justify-start'
   )
 
+  useEffect(() => {
+    if (ownsResume && !isActiveOwner) {
+      setActiveResumeById(id)
+    }
+  }, [id, isActiveOwner, ownsResume, setActiveResumeById])
+
   usePublicResumeThemeSync({
     id,
-    isOwner,
+    isOwner: canEdit,
     serverTheme: theme,
   })
 
@@ -118,7 +128,7 @@ export function ResumeViewer({
                   ))}
                 </div>
               </DropdownMenuItem>
-              {isOwner ? (
+              {canEdit ? (
                 <AppearanceSettings
                   label="Appearance"
                   labelClassName="inline"
@@ -130,7 +140,7 @@ export function ResumeViewer({
                   )}
                 />
               ) : null}
-              {isOwner ? (
+              {canEdit ? (
                 <SlugSettings
                   label="Edit link"
                   labelClassName="inline"
@@ -139,7 +149,7 @@ export function ResumeViewer({
                   className={menuItemClassName}
                 />
               ) : null}
-              {isOwner ? (
+              {canEdit ? (
                 <UnpublishButton
                   id={id}
                   showTooltip={false}

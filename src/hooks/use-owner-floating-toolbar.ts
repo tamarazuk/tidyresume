@@ -9,7 +9,9 @@ interface UseOwnerFloatingToolbarOptions {
 }
 
 export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) {
-  const isOwner = useOwnerCheck(id)
+  const ownsResume = useOwnerCheck(id)
+  const isActiveOwner = useResumeStore((state) => state.id === id)
+  const isOwner = ownsResume && isActiveOwner
   const router = useRouter()
   const slug = useResumeStore((state) => state.slug)
 

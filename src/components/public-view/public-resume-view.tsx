@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { OwnerFloatingToolbar } from '@/components/public-view/owner-floating-toolbar'
 import { ResumeViewer } from '@/components/public-view/resume-viewer'
 import { useRemoteStatus } from '@/hooks/use-remote-status'
+import { useOwnerCheck } from '@/hooks/use-owner-check'
 import type { ResumeThemeSettings } from '@/types/resume'
 
 interface PublicResumeViewProps {
@@ -21,7 +22,8 @@ export function PublicResumeView({
   theme,
 }: PublicResumeViewProps) {
   const [isFullWidth, setIsFullWidth] = useState(false)
-  useRemoteStatus()
+  const isOwner = useOwnerCheck(id)
+  useRemoteStatus({ resumeId: id, enabled: isOwner })
 
   return (
     <>

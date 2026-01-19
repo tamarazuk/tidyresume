@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { toast } from 'sonner'
 import EditorLoading from '@/components/editor/editor-loading'
 import { useResumeStore } from '@/stores/resume-store'
+import type { ResumeThemeSettings } from '@/types/resume'
 
 const MarkdownEditor = dynamic(() => import('@/components/editor/editor'), {
   ssr: false,
@@ -17,13 +18,9 @@ function TokenHandler() {
   const router = useRouter()
   const token = searchParams.get('token')
 
-  const setMarkdown = useResumeStore((state) => state.setMarkdown)
-  const setResumeTitle = useResumeStore((state) => state.setResumeTitle)
-  const setId = useResumeStore((state) => state.setId)
-  const setSlug = useResumeStore((state) => state.setSlug)
-  const setEditSecret = useResumeStore((state) => state.setEditSecret)
-  const setIsPublished = useResumeStore((state) => state.setIsPublished)
-  const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
+  const loadResumeFromRemote = useResumeStore(
+    (state) => state.loadResumeFromRemote
+  )
 
   useEffect(() => {
     if (!token) return
@@ -46,6 +43,7 @@ function TokenHandler() {
             title: string
             content: string
             editSecret?: string | null
+            theme?: ResumeThemeSettings | null
           }
           error?: string
         }
@@ -56,15 +54,7 @@ function TokenHandler() {
 
         const { resume } = data
 
-        setId(resume.id)
-        setSlug(resume.slug)
-        setResumeTitle(resume.title)
-        setMarkdown(resume.content)
-        if (resume.editSecret) {
-          setEditSecret(resume.editSecret)
-        }
-        setIsPublished(true)
-        setSyncStatus('synced')
+        loadResumeFromRemote(resume)
 
         toast.success('Resume loaded successfully', { id: toastId })
         router.replace('/edit')
@@ -82,19 +72,19 @@ function TokenHandler() {
   }, [
     token,
     router,
-    setId,
-    setSlug,
-    setResumeTitle,
-    setMarkdown,
-    setEditSecret,
-    setIsPublished,
-    setSyncStatus,
+    loadResumeFromRemote,
   ])
 
   return null
 }
 
 export default function EditorClient() {
+  const touchActiveResume = useResumeStore((state) => state.touchActiveResume)
+
+  useEffect(() => {
+    touchActiveResume()
+  }, [touchActiveResume])
+
   return (
     <Suspense fallback={<EditorLoading />}>
       <TokenHandler />
