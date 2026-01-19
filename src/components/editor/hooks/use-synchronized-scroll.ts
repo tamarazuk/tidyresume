@@ -35,34 +35,48 @@ export function useSynchronizedScroll(
       }, 50)
     }
 
+    let ticking = false
+
     const handleEditorScroll = () => {
       if (activeScroller.current === 'preview') return
       activeScroller.current = 'editor'
 
-      const anchors = getScrollAnchors(editorView, previewScroller)
-      const targetTop = calculateScrollPosition(
-        editorScroller.scrollTop,
-        anchors,
-        'editor'
-      )
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const anchors = getScrollAnchors(editorView, previewScroller)
+          const targetTop = calculateScrollPosition(
+            editorScroller.scrollTop,
+            anchors,
+            'editor'
+          )
 
-      previewScroller.scrollTo({ top: targetTop })
-      clearActiveScroller()
+          previewScroller.scrollTo({ top: targetTop, behavior: 'auto' })
+          clearActiveScroller()
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
     const handlePreviewScroll = () => {
       if (activeScroller.current === 'editor') return
       activeScroller.current = 'preview'
 
-      const anchors = getScrollAnchors(editorView, previewScroller)
-      const targetTop = calculateScrollPosition(
-        previewScroller.scrollTop,
-        anchors,
-        'preview'
-      )
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const anchors = getScrollAnchors(editorView, previewScroller)
+          const targetTop = calculateScrollPosition(
+            previewScroller.scrollTop,
+            anchors,
+            'preview'
+          )
 
-      editorScroller.scrollTo({ top: targetTop })
-      clearActiveScroller()
+          editorScroller.scrollTo({ top: targetTop, behavior: 'auto' })
+          clearActiveScroller()
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
     // Use passive: true for better scroll performance
