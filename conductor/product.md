@@ -8,6 +8,7 @@
 - **Secure Ownership:** Magic link authentication allows owners to securely edit resumes across devices. Publishing and unpublishing are protected by a secure secret key system.
 - **Unpublish Feature:** Owners can take their resume offline ("Unpublish") without losing their work. The remote record is deleted to disable the public link, but the Markdown content remains in the local editor.
 - **Reliable Sync:** Automatic retry mechanisms ensure work is never lost, even with spotty internet connections.
+- **Synchronized Scroll:** A high-performance, anchor-based synchronization system that keeps the editor and preview perfectly aligned, even with complex resume layouts. Includes a toggle to enable/disable sync.
 
 ### Viral Growth
 - **Viral Loop CTA:** A tasteful, pill-shaped floating CTA on public resume views that invites visitors to "Tidy up your resume". It features a 2-second delayed slide-up animation, a helpful hover tooltip, and opens the editor in a new tab. It is automatically hidden for resume owners and excluded from print layouts.
