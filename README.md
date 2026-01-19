@@ -34,22 +34,26 @@ Quick reference for resume-specific shortcuts (shorthand and verbose forms are b
 Example (raw Markdown in editor):
 
 ```md
-Tamara Zuk
-Senior Software Engineer
-Toronto, Ontario • hello@tamarazuk.dev • linkedin.com/in/tamarazuk • tamarazuk.dev
+# Maya Sandoval
+## Senior Software Engineer
+
+San Francisco, CA ・ maya@example.com ・ portfolio.example.dev ・ (555) 123-4567
 
 +++
 
-PROFESSIONAL SUMMARY
-Senior Full-Stack Engineer with 15+ years of experience...
+## Profesional Summary
+Product-minded senior engineer with 7+ years building...
 
-Help Scout • Remote || 05/2022 — 07/2025
-Senior Software Engineer
+## Experience
+**Senior Software Engineer** @ Stripe || *2022 — Present*
+- Architected a real-time fraud detection pipeline...
 
 ///
 
-COMMUNITY
-Mentor • Tech Ladies || Since 2021
+## Volunteering
+
+**Mentor** — TechCareer Mentorship Program
+- Helped early-career engineers with interview prep...
 ```
 
 Notes:
