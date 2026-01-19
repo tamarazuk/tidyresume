@@ -20,8 +20,7 @@ in sync.
 ## Design system
 
 - App UI uses the brand accent for controls and marketing surfaces.
-- Resume output uses its own accent palette (default indigo) so exported resumes
-  stay neutral.
+- Resume output defaults to the brand indigo accent but exposes accent/color, font, and spacing controls so people can choose what works best for their resume.
 
 ## Styling and theming
 
