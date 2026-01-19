@@ -1,8 +1,0 @@
-{
-  "track_id": "unpublish_feature_20260116",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-01-16T22:44:21Z",
-  "updated_at": "2026-01-16T22:44:21Z",
-  "description": "Replace the Delete button with an Unpublish button to preserve local data while removing remote visibility, and add periodic existence checks to sync status across devices."
-}

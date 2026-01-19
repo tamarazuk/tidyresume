@@ -6,8 +6,10 @@ import { usePrintTitle } from '@/hooks/use-print-title'
 import { useResumeSync } from '@/hooks/use-resume-sync'
 import { useRemoteStatus } from '@/hooks/use-remote-status'
 import { useResumeStore } from '@/stores/resume-store'
+import { useEditorViewStore } from '@/stores/editor-view-store'
 import { useEditorFooters } from './use-editor-footers'
 import { useEditorToolbars } from './use-editor-toolbars'
+import { useSynchronizedScroll } from './use-synchronized-scroll'
 
 export function useEditorState() {
   usePrintCleanup()
@@ -28,6 +30,19 @@ export function useEditorState() {
   const toggleFullWidth = useCallback(() => {
     setIsFullWidth((prev) => !prev)
   }, [])
+
+  const isSyncScrollEnabled = useEditorViewStore(
+    (state) => state.isSyncScrollEnabled
+  )
+  const editorViewState = useEditorViewStore((state) => state.editorViewState)
+
+  // Only enable sync scroll if globally enabled AND we are in split view (both panes visible)
+  const shouldEnableSyncScroll =
+    isSyncScrollEnabled &&
+    editorViewState.preview &&
+    !editorViewState.previewOnly
+
+  useSynchronizedScroll(editorRef, shouldEnableSyncScroll, editorViewState)
 
   const { toolbars, defToolbars, uploadInputProps } = useEditorToolbars({
     editorRef,
@@ -54,5 +69,6 @@ export function useEditorState() {
     uploadInputProps,
     footers,
     defFooters,
+    isSyncScrollEnabled,
   }
 }

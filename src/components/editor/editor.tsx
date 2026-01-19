@@ -52,6 +52,7 @@ export default function Editor() {
         defFooters={defFooters}
         sanitize={sanitizeHtml}
         theme={editorTheme}
+        scrollAuto={false}
       />
     </div>
   )

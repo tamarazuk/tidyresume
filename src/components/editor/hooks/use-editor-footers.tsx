@@ -22,6 +22,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import SyncScrollToggle from '../components/sync-scroll-toggle'
 import EditorShortcutsMenu from '../components/toolbar-shortcuts-menu'
 import {
   FOOTER_LAYOUT,
@@ -196,6 +197,14 @@ function useEditorFooters({
               key="footer-character-count"
               label="Characters"
               value={characterCount}
+            />
+          )
+        case 'syncScrollToggle':
+          return (
+            <SyncScrollToggle
+              key="footer-sync-scroll-toggle"
+              baseClass="md-editor-footer-item"
+              className="hover:text-foreground hover:bg-accent inline-flex items-center gap-2 rounded-md px-2 py-1 text-xs font-medium transition"
             />
           )
         case 'saveStatus':

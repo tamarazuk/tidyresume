@@ -256,6 +256,20 @@ function targetBlankExtension(md: MarkdownItInstance) {
   }
 }
 
+function injectLineNumberPlugin(md: MarkdownItInstance) {
+  md.core.ruler.push('inject_line_number', (state) => {
+    state.tokens.forEach((token) => {
+      if (token.map) {
+        if (!token.attrs) {
+          token.attrs = []
+        }
+        token.attrs.push(['data-line', token.map[0].toString()])
+      }
+    })
+    return true
+  })
+}
+
 export const buildCodeMirrorExtensions: CodeMirrorExtensionsConfig = (
   extensions,
   options
@@ -306,6 +320,7 @@ export const configureMarkdownIt: MarkdownItConfig = (md) => {
   md.use(resumeSplitLinePlugin)
   md.use(resumeAccentRulePlugin)
   md.use(targetBlankExtension)
+  md.use(injectLineNumberPlugin)
   md.use(imgSize)
 }
 

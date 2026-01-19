@@ -15,6 +15,7 @@ interface ToolbarTooltipButtonProps {
   disabled?: boolean
   tooltip?: ReactNode
   className?: string
+  baseClass?: string
 }
 
 const TOOLBAR_BASE_CLASS = 'md-editor-toolbar-item'
@@ -27,6 +28,7 @@ export default function ToolbarTooltipButton({
   disabled,
   tooltip,
   className,
+  baseClass,
 }: ToolbarTooltipButtonProps) {
   return (
     <Tooltip>
@@ -34,7 +36,7 @@ export default function ToolbarTooltipButton({
         type="button"
         aria-label={label}
         className={cn(
-          TOOLBAR_BASE_CLASS,
+          baseClass ?? TOOLBAR_BASE_CLASS,
           disabled && TOOLBAR_DISABLED_CLASS,
           className
         )}

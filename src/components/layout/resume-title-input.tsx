@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { PencilSimpleIcon } from '@phosphor-icons/react/dist/ssr'
+import { PencilSimpleIcon } from '@phosphor-icons/react'
 
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
