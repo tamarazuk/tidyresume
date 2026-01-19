@@ -67,6 +67,7 @@ describe('scroll-sync utils', () => {
       })
       expect(anchors[2]).toMatchObject({
         line: 99,
+        editorTop: 1000,
         previewTop: 0,
       })
     })
