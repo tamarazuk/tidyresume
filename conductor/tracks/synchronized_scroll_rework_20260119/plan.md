@@ -18,11 +18,11 @@ Establish the control mechanism and hook structure for the new sync behavior.
 ## Phase 2: Core Mapping Logic
 Implement the "Hybrid/Block Mapping" strategy to calculate scroll positions.
 
-- [ ] Task: Implement `getScrollAnchors` utility
-    - [ ] Create `src/components/editor/utils/scroll-sync.ts`.
-    - [ ] Implement function to extract anchor points (H1-H3, HR) from the editor (CodeMirror/TextArea).
-    - [ ] Implement function to find corresponding DOM elements in the preview.
-    - [ ] Write unit tests with mock HTML/Markdown content to verify anchor extraction.
+- [x] Task: Implement `getScrollAnchors` utility [838a3ca]
+    - [x] Create `src/components/editor/utils/scroll-sync.ts`.
+    - [x] Implement function to extract anchor points (H1-H3, HR) from the editor (CodeMirror/TextArea).
+    - [x] Implement function to find corresponding DOM elements in the preview.
+    - [x] Write unit tests with mock HTML/Markdown content to verify anchor extraction.
 - [ ] Task: Implement `calculateScrollPosition` logic
     - [ ] Implement the interpolation logic: given a scroll position in Source A, find the two nearest anchors, calculate percentage between them, and apply to Source B.
     - [ ] Handle edge cases: Top of document (0%), Bottom of document (100%), and sections with no anchors.
