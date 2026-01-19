@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react'
 import type { ExposeParam } from 'md-editor-rt'
-import { getScrollAnchors, calculateScrollPosition } from '../utils/scroll-sync'
+import {
+  getScrollAnchors,
+  calculateScrollPosition,
+  type ScrollAnchor,
+} from '../utils/scroll-sync'
 
 /**
  * Hook to synchronize scrolling between the markdown editor and the preview.
@@ -38,6 +42,33 @@ export function useSynchronizedScroll(
 
       if (!previewScroller) return false
 
+      // Cache for scroll anchors to reduce expensive DOM reads
+      let cachedAnchors: ScrollAnchor[] | null = null
+
+      const invalidateCache = () => {
+        cachedAnchors = null
+      }
+
+      // Observe content changes in preview (Markdown rendering updates)
+      const mutationObserver = new MutationObserver(invalidateCache)
+      mutationObserver.observe(previewScroller, {
+        childList: true,
+        subtree: true,
+        attributes: true, // In case data-line attributes change
+      })
+
+      // Observe layout changes (resizing)
+      const resizeObserver = new ResizeObserver(invalidateCache)
+      resizeObserver.observe(editorScroller)
+      resizeObserver.observe(previewScroller)
+
+      const getAnchors = () => {
+        if (!cachedAnchors) {
+          cachedAnchors = getScrollAnchors(editorView, previewScroller)
+        }
+        return cachedAnchors
+      }
+
       const clearActiveScroller = () => {
         if (timeoutId.current) clearTimeout(timeoutId.current)
         timeoutId.current = setTimeout(() => {
@@ -53,7 +84,7 @@ export function useSynchronizedScroll(
 
         if (!ticking) {
           requestAnimationFrame(() => {
-            const anchors = getScrollAnchors(editorView, previewScroller)
+            const anchors = getAnchors()
             const targetTop = calculateScrollPosition(
               editorScroller.scrollTop,
               anchors,
@@ -74,7 +105,7 @@ export function useSynchronizedScroll(
 
         if (!ticking) {
           requestAnimationFrame(() => {
-            const anchors = getScrollAnchors(editorView, previewScroller)
+            const anchors = getAnchors()
             const targetTop = calculateScrollPosition(
               previewScroller.scrollTop,
               anchors,
@@ -100,6 +131,8 @@ export function useSynchronizedScroll(
       return () => {
         editorScroller.removeEventListener('scroll', handleEditorScroll)
         previewScroller.removeEventListener('scroll', handlePreviewScroll)
+        mutationObserver.disconnect()
+        resizeObserver.disconnect()
         if (timeoutId.current) clearTimeout(timeoutId.current)
       }
     }
