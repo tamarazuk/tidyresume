@@ -35,7 +35,14 @@ export function useEditorState() {
     (state) => state.isSyncScrollEnabled
   )
   const editorViewState = useEditorViewStore((state) => state.editorViewState)
-  useSynchronizedScroll(editorRef, isSyncScrollEnabled, editorViewState)
+
+  // Only enable sync scroll if globally enabled AND we are in split view (both panes visible)
+  const shouldEnableSyncScroll =
+    isSyncScrollEnabled &&
+    editorViewState.preview &&
+    !editorViewState.previewOnly
+
+  useSynchronizedScroll(editorRef, shouldEnableSyncScroll, editorViewState)
 
   const { toolbars, defToolbars, uploadInputProps } = useEditorToolbars({
     editorRef,
