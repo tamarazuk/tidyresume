@@ -173,7 +173,7 @@ function useEditorToolbars({
       selection: EditorSelection.create([
         EditorSelection.range(start, start + 4),
         EditorSelection.range(start + 8, start + 12),
-      ]),
+      ]) as unknown as typeof view.state.selection,
       scrollIntoView: true,
     })
     view.focus()
