@@ -14,13 +14,13 @@ describe('useSynchronizedScroll', () => {
     // Setup DOM
     editorRoot = document.createElement('div')
     editorRoot.className = 'md-editor'
-    
+
     editorScroller = document.createElement('div')
     editorScroller.className = 'cm-scroller'
-    
+
     previewScroller = document.createElement('div')
     previewScroller.className = 'md-editor-preview-wrapper'
-    
+
     editorRoot.appendChild(editorScroller)
     editorRoot.appendChild(previewScroller)
     document.body.appendChild(editorRoot)
@@ -35,7 +35,7 @@ describe('useSynchronizedScroll', () => {
         }),
       } as unknown as ExposeParam,
     }
-    
+
     // Mock addEventListener/removeEventListener
     vi.spyOn(editorScroller, 'addEventListener')
     vi.spyOn(editorScroller, 'removeEventListener')
@@ -71,9 +71,7 @@ describe('useSynchronizedScroll', () => {
   })
 
   it('removes event listeners when unmounting', () => {
-    const { unmount } = renderHook(() => 
-      useSynchronizedScroll(editorRef, true)
-    )
+    const { unmount } = renderHook(() => useSynchronizedScroll(editorRef, true))
 
     unmount()
 
@@ -94,10 +92,10 @@ describe('useSynchronizedScroll', () => {
     // Trigger scroll
     const scrollEvent = new Event('scroll')
     editorScroller.dispatchEvent(scrollEvent)
-    
+
     // Should request animation frame
     expect(window.requestAnimationFrame).toBeDefined()
-    
+
     vi.useRealTimers()
   })
 })

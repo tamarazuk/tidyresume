@@ -37,9 +37,6 @@ export const useEditorViewStore = create<EditorViewStore>()(
       name: 'editor-view-storage',
       partialize: (state) => ({
         isSyncScrollEnabled: state.isSyncScrollEnabled,
-        // We only persist sync scroll setting for now as per requirements, 
-        // but we can add others if needed.
-        // The original file didn't persist editorViewState, so I'll keep it that way for now unless requested.
       }),
     }
   )

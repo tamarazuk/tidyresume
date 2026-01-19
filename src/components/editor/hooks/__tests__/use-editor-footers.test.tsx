@@ -5,7 +5,7 @@ import { useEditorFooters } from '../use-editor-footers'
 
 // Mock the toggle component since it's tested separately
 vi.mock('../../components/sync-scroll-toggle', () => ({
-  default: () => <div data-testid="sync-scroll-toggle">Toggle</div>
+  default: () => <div data-testid="sync-scroll-toggle">Toggle</div>,
 }))
 
 describe('useEditorFooters', () => {
@@ -56,9 +56,7 @@ describe('useEditorFooters', () => {
       { type: 'custom', id: 'syncScrollToggle' },
     ]
 
-    const { result } = renderHook(() =>
-      useEditorFooters({ value: '', layout })
-    )
+    const { result } = renderHook(() => useEditorFooters({ value: '', layout }))
 
     render(<>{result.current.defFooters}</>)
 

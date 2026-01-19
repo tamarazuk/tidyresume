@@ -1,6 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import type { EditorView } from '@codemirror/view'
-import { getScrollAnchors, calculateScrollPosition, type ScrollAnchor } from '../scroll-sync'
+import {
+  getScrollAnchors,
+  calculateScrollPosition,
+  type ScrollAnchor,
+} from '../scroll-sync'
 
 describe('scroll-sync utils', () => {
   describe('getScrollAnchors', () => {
@@ -27,18 +31,26 @@ describe('scroll-sync utils', () => {
       // We'll need to mock getBoundingClientRect as it's not available in JSDOM easily
       const h1 = previewEl.querySelector('#header-1') as HTMLElement
       const h2 = previewEl.querySelector('#header-2') as HTMLElement
-      
-      vi.spyOn(previewEl, 'getBoundingClientRect').mockReturnValue({ top: 0 } as DOMRect)
-      vi.spyOn(h1, 'getBoundingClientRect').mockReturnValue({ top: 100 } as DOMRect)
-      vi.spyOn(h2, 'getBoundingClientRect').mockReturnValue({ top: 300 } as DOMRect)
+
+      vi.spyOn(previewEl, 'getBoundingClientRect').mockReturnValue({
+        top: 0,
+      } as DOMRect)
+      vi.spyOn(h1, 'getBoundingClientRect').mockReturnValue({
+        top: 100,
+      } as DOMRect)
+      vi.spyOn(h2, 'getBoundingClientRect').mockReturnValue({
+        top: 300,
+      } as DOMRect)
       previewEl.scrollTop = 0
 
       // Mock the markdown content to match
-      mockEditorView.state.doc.line = vi.fn().mockImplementation((n: number) => {
-        if (n === 1) return { from: 0, text: '# Header 1' }
-        if (n === 10) return { from: 100, text: '## Header 2' }
-        return { from: n * 10, text: 'other' }
-      })
+      mockEditorView.state.doc.line = vi
+        .fn()
+        .mockImplementation((n: number) => {
+          if (n === 1) return { from: 0, text: '# Header 1' }
+          if (n === 10) return { from: 100, text: '## Header 2' }
+          return { from: n * 10, text: 'other' }
+        })
 
       const anchors = getScrollAnchors(mockEditorView, previewEl)
 
@@ -70,7 +82,7 @@ describe('scroll-sync utils', () => {
     it('interpolates correctly from editor to preview', () => {
       // Middle of first range (100 is half of 200) -> should be 200 (half of 400)
       expect(calculateScrollPosition(100, anchors, 'editor')).toBe(200)
-      
+
       // 3/4 of second range: 200 + 0.75 * (500-200) = 200 + 0.75 * 300 = 425
       // Target: 400 + 0.75 * (800-400) = 400 + 0.75 * 400 = 700
       expect(calculateScrollPosition(425, anchors, 'editor')).toBe(700)

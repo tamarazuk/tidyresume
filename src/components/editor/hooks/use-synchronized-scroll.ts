@@ -24,7 +24,9 @@ export function useSynchronizedScroll(
 
     const editorScroller = editorView.scrollDOM
     // md-editor-rt preview wrapper usually has this class
-    const previewScroller = editorScroller.closest('.md-editor')?.querySelector('.md-editor-preview-wrapper') as HTMLElement
+    const previewScroller = editorScroller
+      .closest('.md-editor')
+      ?.querySelector('.md-editor-preview-wrapper') as HTMLElement
 
     if (!previewScroller) return
 
@@ -80,8 +82,12 @@ export function useSynchronizedScroll(
     }
 
     // Use passive: true for better scroll performance
-    editorScroller.addEventListener('scroll', handleEditorScroll, { passive: true })
-    previewScroller.addEventListener('scroll', handlePreviewScroll, { passive: true })
+    editorScroller.addEventListener('scroll', handleEditorScroll, {
+      passive: true,
+    })
+    previewScroller.addEventListener('scroll', handlePreviewScroll, {
+      passive: true,
+    })
 
     return () => {
       editorScroller.removeEventListener('scroll', handleEditorScroll)
