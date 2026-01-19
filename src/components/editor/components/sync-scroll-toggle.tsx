@@ -25,7 +25,9 @@ export default function SyncScrollToggle({
       icon={<ArrowsDownUp size={14} className="shrink-0" />}
       onClick={toggleSyncScroll}
       className={cn(
-        isSyncScrollEnabled ? 'text-brand-primary' : 'text-muted-foreground/50',
+        isSyncScrollEnabled
+          ? 'bg-brand-primary/10 text-brand-primary'
+          : 'text-muted-foreground/50',
         className
       )}
       baseClass={baseClass}
