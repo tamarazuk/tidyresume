@@ -29,7 +29,7 @@ export default function SyncScrollToggle({
         className
       )}
       baseClass={baseClass}
-      tooltip={isSyncScrollEnabled ? 'Sync Scroll On' : 'Sync Scroll Off'}
+      tooltip={isSyncScrollEnabled ? 'Turn Sync Scroll Off' : 'Turn Sync Scroll On'}
     />
   )
 }

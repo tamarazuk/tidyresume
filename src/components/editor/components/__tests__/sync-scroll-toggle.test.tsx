@@ -33,6 +33,7 @@ describe('SyncScrollToggle', () => {
     expect(button).toBeInTheDocument()
     // Check if it has the active class (simplified check)
     expect(button.className).toContain('text-brand-primary')
+    expect(screen.getByText('Turn Sync Scroll Off')).toBeInTheDocument()
   })
 
   it('renders correctly when disabled', () => {
@@ -41,6 +42,7 @@ describe('SyncScrollToggle', () => {
     const button = screen.getByRole('button', { name: /enable sync scroll/i })
     expect(button).toBeInTheDocument()
     expect(button.className).toContain('text-muted-foreground/50')
+    expect(screen.getByText('Turn Sync Scroll On')).toBeInTheDocument()
   })
 
   it('toggles state on click', () => {
