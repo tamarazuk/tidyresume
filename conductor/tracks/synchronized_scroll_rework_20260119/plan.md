@@ -48,7 +48,7 @@ Refine the experience and ensure quality.
     - [x] (Optional) Add subtle visual cues when sync is active/inactive.
     - [x] Implement throttling/debouncing for scroll events to reduce jitter during fast scrolling.
     - [x] Ensure the scroll movement feels "natural" (use smooth scrolling behavior where appropriate).
-- [ ] Task: Final End-to-End Testing
-    - [ ] Verify bidirectional syncing works flawlessly on long documents.
-    - [ ] Verify toggle persistence works after page reload.
+- [x] Task: Final End-to-End Testing [175edce]
+    - [x] Verify bidirectional syncing works flawlessly on long documents.
+    - [x] Verify toggle persistence works after page reload.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
