@@ -25,7 +25,6 @@ export default function Editor() {
     uploadInputProps,
     footers,
     defFooters,
-    isSyncScrollEnabled,
   } = useEditorState()
   const { className: resumeThemeClassName } = useResumeTheme()
   const { accentClassName, typographyClassNames } =

@@ -6,7 +6,7 @@ import { useEditorViewStore } from '@/stores/editor-view-store'
 // Mock the Tooltip component since it might rely on contexts not present in tests
 vi.mock('@/components/ui/tooltip', () => ({
   Tooltip: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  TooltipTrigger: ({ children, onClick, 'aria-label': ariaLabel, className }: any) => (
+  TooltipTrigger: ({ children, onClick, 'aria-label': ariaLabel, className }: React.ComponentProps<'button'>) => (
     <button onClick={onClick} aria-label={ariaLabel} className={className}>
       {children}
     </button>

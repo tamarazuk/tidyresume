@@ -14,7 +14,7 @@ describe('scroll-sync utils', () => {
         },
         lineBlockAt: (pos: number) => ({ top: pos }),
         scrollDOM: { scrollTop: 0, scrollHeight: 1000, clientHeight: 0 },
-      } as any
+      } as unknown as import('@codemirror/view').EditorView
 
       // Mock Preview Element
       const previewEl = document.createElement('div')
@@ -27,9 +27,9 @@ describe('scroll-sync utils', () => {
       const h1 = previewEl.querySelector('#header-1') as HTMLElement
       const h2 = previewEl.querySelector('#header-2') as HTMLElement
       
-      vi.spyOn(previewEl, 'getBoundingClientRect').mockReturnValue({ top: 0 } as any)
-      vi.spyOn(h1, 'getBoundingClientRect').mockReturnValue({ top: 100 } as any)
-      vi.spyOn(h2, 'getBoundingClientRect').mockReturnValue({ top: 300 } as any)
+      vi.spyOn(previewEl, 'getBoundingClientRect').mockReturnValue({ top: 0 } as DOMRect)
+      vi.spyOn(h1, 'getBoundingClientRect').mockReturnValue({ top: 100 } as DOMRect)
+      vi.spyOn(h2, 'getBoundingClientRect').mockReturnValue({ top: 300 } as DOMRect)
       previewEl.scrollTop = 0
 
       // Mock the markdown content to match

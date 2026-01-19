@@ -33,7 +33,7 @@ describe('useSynchronizedScroll', () => {
           state: { doc: { lines: 1, line: () => ({ text: '', from: 0 }) } },
           lineBlockAt: () => ({ top: 0 }),
         }),
-      } as any,
+      } as unknown as ExposeParam,
     }
     
     // Mock addEventListener/removeEventListener
