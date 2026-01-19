@@ -39,7 +39,7 @@ Connect the logic to the UI and ensure smooth performance.
 - [x] Task: Optimize for Complex Layouts [cd71af0]
     - [x] Test with the "A4" resume layout and complex grids.
     - [x] Adjust anchor detection to account for absolute positioning or print-specific CSS if necessary.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md) [06fbc13]
 
 ## Phase 4: Polish & Final Review
 Refine the experience and ensure quality.
