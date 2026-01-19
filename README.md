@@ -5,7 +5,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0F172A?style=flat&logo=tailwindcss&logoColor=38BDF8)](https://tailwindcss.com/)
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/tamarazuk/tidyresume?utm_source=oss&utm_medium=github&utm_campaign=tamarazuk%2Ftidyresume&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
-A markdown-based resume builder that lets you create professional resumes in Markdown with local-first saving, PDF export, and shareable links.
+A local-first Markdown resume builder with live preview, resume theming, shareable links, and print-ready output.
 
 ![TidyResume Editor - Light Mode](/.github/images/tidyresume-editor-preview-light.png)
 
@@ -13,13 +13,20 @@ A markdown-based resume builder that lets you create professional resumes in Mar
 
 ## Features
 
-- **Markdown Editor** — Write your resume in familiar Markdown syntax with live preview
-- **Local-first Saving** — Drafts stay in your browser (no account required)
+- **Markdown Editor** — Write your resume in Markdown with live preview and resume-specific shortcuts
+- **Local-first Drafts** — Drafts stay in your browser (no account required)
+- **Resume Appearance** — Accent colors, font families, sizing, and spacing controls
+- **Shareable Links** — Publish to a public URL with an optional custom slug
+- **Magic-Link Editing** — Continue editing on another device via email link
+- **Auto Sync + Unpublish** — Changes sync after publishing, with one-click unpublish
 - **Print to PDF** — Use your browser to export a clean, ATS-friendly PDF
-- **One-click PDF Export** — Coming soon
-- **Shareable URLs** — Publish and share a public link
-- **Multiple Templates** — Additional layouts are coming soon
-- **Dark Mode** — Editor UI supports dark mode (preview stays light)
+- **Dark Mode** — Editor UI supports light/dark themes and preview theming
+
+## How it works
+
+- Write locally in the editor; drafts stay in your browser.
+- Publish to Cloudflare D1 and share at `/r/[slug]` (slug optional).
+- Use a magic link to edit elsewhere; updates auto-sync while published.
 
 ## Markdown Extensions
 
@@ -41,7 +48,7 @@ San Francisco, CA ・ maya@example.com ・ portfolio.example.dev ・ (555) 123-4
 
 +++
 
-## Profesional Summary
+## Professional Summary
 Product-minded senior engineer with 7+ years building...
 
 ## Experience
@@ -62,14 +69,18 @@ Notes:
 
 ## Tech Stack
 
-- **Framework:** Next.js 16 (App Router)
+- **Framework:** Next.js 15 (App Router)
+- **UI:** React 19, custom components + shadcn/ui patterns (Base UI primitives)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS v4
-- **UI Components:** Custom components + shadcn/ui patterns (Base UI primitives)
-- **Icons:** Phosphor Icons
 - **Editor:** md-editor-rt
 - **Theming:** next-themes
 - **State:** zustand (localStorage persistence)
+- **Database:** Cloudflare D1 + Drizzle ORM
+- **Email:** Resend + React Email
+- **Hosting/Runtime:** OpenNext Cloudflare (Workers)
+- **Icons:** Phosphor Icons
+> Waiting for Cloudflare/OpenNext to fully support Next 16 before upgrading the framework version.
 
 ## Getting Started
 
@@ -91,14 +102,24 @@ pnpm install
 # Generate Cloudflare binding types (D1, R2, etc.)
 pnpm cf-typegen
 
-# Create/apply local D1 schema
-pnpm migrate:local
-
-# Start the dev server
+# Start the dev server (runs local D1 migrations)
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the app.
+Need a fresh local database? Run `pnpm migrate:local`.
+
+## Environment Variables
+
+Create `.env.local` if you want to send magic links or customize base URLs.
+
+- `NEXT_PUBLIC_APP_URL` — Base URL used for magic links (defaults to request origin).
+- `NEXT_PUBLIC_SITE_URL` — Site URL for metadata/SEO.
+- `RESEND_API_KEY` — Resend API key for production.
+- `RESEND_DEV_API_KEY` — Resend API key for development.
+- `EMAIL_FROM` — From address for outbound emails.
+- `DISABLE_OUTBOUND_EMAILS` — Set to `true` to disable all emails.
+- `DISABLE_MAGIC_LINK_EMAILS` — Legacy flag to disable magic-link emails.
 
 ## Scripts
 
@@ -106,47 +127,34 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 pnpm dev        # Start development server
 pnpm build      # Build for production
 pnpm start      # Start production server
+pnpm test       # Run Vitest
 pnpm lint       # Run ESLint
 pnpm format     # Format code with Prettier
 ```
 
-## Database Migrations
+## Docs
 
-When adding a new migration in `drizzle/`, make sure to update the schema snapshots in `drizzle/meta` (the `*_snapshot.json` files and `_journal.json`) so migrations stay in sync.
-
-## Design System
-
-The app uses a dual-color scheme:
-
-- **App UI (Indigo `#6366f1`)** — Used for buttons, links, and interactive elements
-- **Resume Output (Indigo by default)** — The resume preview uses the brand indigo by default, with user-selectable accent colors
-
-This separation ensures the app has personality while resumes remain universally professional.
-
-## Printing and PDF export
-
-TidyResume supports browser-native printing: use the print button in the editor, or your browser's File → Print/print shortcut. The print view is scoped so only the resume renders (no app chrome), and you can save to PDF using the browser's built-in print dialog.
-
-## Component Library Note
-
-When adding new UI primitives, use Base UI (`@base-ui/react`) instead of Radix.
+- Development notes: `docs/DEVELOPMENT.md`
 
 ## Roadmap
 
-- [x] Markdown editor with live preview
-- [x] Landing page
-- [x] Dark mode support
-- [x] Publish flow with shareable URLs
-- [ ] Edit via secret token (no auth)
-- [x] Print to PDF (browser)
-- [ ] PDF export
-- [ ] Multiple resume templates
-- [ ] Guided editor mode (form-based)
-- [x] Custom slug selection
+_Last updated: January 2026_
+
+- [x] 🎯 Markdown editor with live preview
+- [x] 🖼️ Landing page
+- [x] 🌙 Dark mode support
+- [x] 🚀 Publish flow with shareable URLs
+- [x] 🪄 Magic link editing (no auth)
+- [x] 🖨️ Print to PDF (browser)
+- [ ] 🧾 PDF export (one-click)
+- [ ] 📚 Multiple resume templates
+- [ ] 🧭 Guided editor mode (form-based)
+- [x] 🔗 Custom slug selection
+- [x] 🎨 Resume appearance customization (accent, typography, spacing)
 
 ## Contributing
 
-This is a personal portfolio project, but suggestions and feedback are welcome! Feel free to open an issue.
+Suggestions and feedback are welcome! Feel free to open an issue or start a discussion. For development details, see `docs/DEVELOPMENT.md`.
 
 ## License
 

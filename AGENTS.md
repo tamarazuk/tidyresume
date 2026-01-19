@@ -17,7 +17,7 @@ Guidelines for AI assistants working on this codebase.
 
 ## Project Overview
 
-TidyResume is a markdown-based resume builder built with Next.js 15 (App Router), TypeScript, and Tailwind CSS v4. Users write resumes in Markdown, see a live preview, and export/print to PDF. Drafts are stored locally; publishing saves to Cloudflare D1 and generates a shareable public view at `/r/[slug]`.
+TidyResume is a markdown-based resume builder built with Next.js 15 (App Router), React 19, TypeScript, and Tailwind CSS v4. Users compose resumes in Markdown, style them with accent colors, fonts, and spacing options, preview in sync, and export/print to PDF. Drafts stay local, publishing saves to Cloudflare D1, shareable views live under `/r/[slug]`, and magic links let owners edit from any device while autosync/unpublish keep the published version fresh.
 
 ## Tech Stack
 
@@ -25,15 +25,23 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 |----------|------------|
 | Framework | Next.js 15 (App Router) |
 | Language | TypeScript (strict mode) |
+| UI | React 19 + custom components, shadcn/ui patterns (Base UI primitives) |
 | Styling | Tailwind CSS v4 (CSS-first config) |
-| UI | Custom components, shadcn/ui patterns (Base UI primitives) |
 | Icons | @phosphor-icons/react |
 | Editor | md-editor-rt |
 | Theming | next-themes |
 | State | zustand (persist to localStorage) |
 | Database | Drizzle ORM + Cloudflare D1 |
 | Hosting/Runtime | OpenNext Cloudflare (edge runtime for routes) |
+| Email | Resend + React Email |
 | Package Manager | pnpm |
+> Waiting for Cloudflare/OpenNext to fully support Next 16 before upgrading the framework version.
+
+## Separation of concerns
+
+- Prefer moving business logic into helpers, custom hooks, or utilities (`src/lib/`, `src/hooks/`, `src/services/`) rather than bloating components.
+- Components should stay focused on rendering and composition, especially when orchestrating state or side effects.
+- If you spot a component mixing UI and data logic, flag it and consider extracting the logic so new code can maintain a clean surface—legacy files may still blur the lines, but new changes should strive for this separation.
 
 ## Architecture Decisions
 
@@ -171,6 +179,7 @@ The app uses dynamic SVG-to-PNG generation for the brand logo and favicons via `
 ## Testing
 
 Vitest is configured for unit tests with Testing Library and jsdom. Prefer Playwright for E2E tests if/when added.
+> Aim to add or update tests whenever you touch existing behaviour; new functionality should ship with coverage (unit, hook, or integration) that demonstrates the change.
 
 ## Database Migrations
 
@@ -193,6 +202,11 @@ pnpm lint
 pnpm build
 ```
 
+### Run tests
+```bash
+pnpm test
+```
+
 ### Phosphor Icons
 The `@phosphor-icons/react` package has deprecated all icon component names without the suffix of `Icon`.
 - **Incorrect**: `import { PencilSimple } from '@phosphor-icons/react'`
@@ -201,9 +215,13 @@ Please ensure all new imports and existing ones are using the `Icon` suffix.
 
 ## Known Issues / TODOs
 
-- [ ] Guided editor mode (form-based) not yet built.
-- [ ] Multiple resume templates.
-- [ ] Token-based edit URLs (`edit/[token]`) not yet implemented.
+- [ ] Guided editor mode (form-based)
+- [ ] Multiple resume templates
+- [ ] One-click PDF export
+
+## Documentation
+
+- `docs/DEVELOPMENT.md` contains migration, theming, and Base UI notes referenced by the README.
 
 ## Questions?
 
