@@ -180,7 +180,7 @@ The app uses dynamic SVG-to-PNG generation for the brand logo and favicons via `
 
 Vitest is configured for unit tests with Testing Library and jsdom. Prefer Playwright for E2E tests if/when added.
 > Aim to add or update tests whenever you touch existing behaviour; new functionality should ship with coverage (unit, hook, or integration) that demonstrates the change.
-> `pnpm test` runs the default Vitest entry (interactive watch); to run once, set `CI=1` (e.g., `CI=1 pnpm test`).
+> `pnpm test` runs the default Vitest entry (interactive watch); to run one-shot runs, use the helper `pnpm test:once` (or fallback to `CI=1 pnpm test`).
 
 ## Database Migrations
 
@@ -205,7 +205,7 @@ pnpm build
 
 ### Run tests
 ```bash
-CI=1 pnpm test
+pnpm test:once
 ```
 
 ### Phosphor Icons

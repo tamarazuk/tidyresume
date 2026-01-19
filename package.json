@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "lint": "eslint",
     "test": "vitest",
+    "test:once": "vitest run",
     "email": "email dev -d src/emails",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
