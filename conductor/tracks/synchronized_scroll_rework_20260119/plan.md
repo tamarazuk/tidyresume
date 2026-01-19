@@ -8,11 +8,11 @@ Establish the control mechanism and hook structure for the new sync behavior.
     - [x] Define the hook interface: `(editorRef, previewRef, isEnabled) => void`
     - [x] Add basic event listener setup/teardown logic (no sync logic yet).
     - [x] Write unit tests to verify event listeners are attached/detached correctly.
-- [ ] Task: Implement Sync Toggle in Editor UI
-    - [ ] Update `src/stores/editor-view-store.ts` to add `isSyncScrollEnabled` state (persisted).
-    - [ ] Create `SyncScrollToggle` component in `src/components/editor/components/`.
-    - [ ] Integrate toggle into the editor footer or toolbar.
-    - [ ] Write unit tests for the toggle component and store updates.
+- [x] Task: Implement Sync Toggle in Editor UI [7a2c958]
+    - [x] Update `src/stores/editor-view-store.ts` to add `isSyncScrollEnabled` state (persisted).
+    - [x] Create `SyncScrollToggle` component in `src/components/editor/components/`.
+    - [x] Integrate toggle into the editor footer or toolbar.
+    - [x] Write unit tests for the toggle component and store updates.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 ## Phase 2: Core Mapping Logic
