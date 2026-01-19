@@ -216,4 +216,12 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
+  :is(.editor-page, .resume-view) .md-editor-preview .divider--accent {
+    height: 0 !important;
+    border: 0 !important;
+    border-top: 3px solid var(--resume-preview-primary) !important;
+    background: none !important;
+    margin-block: 12px !important;
+  }
 }

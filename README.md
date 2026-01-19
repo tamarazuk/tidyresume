@@ -27,7 +27,7 @@ Quick reference for resume-specific shortcuts (shorthand and verbose forms are b
 
 | Feature | Shorthand | Verbose | Output |
 | --- | --- | --- | --- |
-| Split line | `Left || Right` | `[[Left \|\| Right]]` | Left/right aligned line |
+| Split line | `Left &#124;&#124; Right` | `[[Left &#124;&#124; Right]]` | Left/right aligned line |
 | Accent divider | `+++` | `[[HR:accent]]` | Thick accent divider |
 | Page break | `///` | `[[PAGEBREAK]]` | Page break for print/PDF |
 
