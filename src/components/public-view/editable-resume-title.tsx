@@ -1,6 +1,6 @@
 'use client'
 
-import { PencilSimpleIcon } from '@phosphor-icons/react/dist/ssr'
+import { PencilSimpleIcon } from '@phosphor-icons/react'
 
 import { Input } from '@/components/ui/input'
 import { RESUME_TITLE_MAX_LENGTH } from '@/lib/constants'

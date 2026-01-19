@@ -9,7 +9,7 @@ import {
   InfoIcon,
   PencilSimpleIcon,
   ShareFatIcon,
-} from '@phosphor-icons/react/dist/ssr'
+} from '@phosphor-icons/react'
 import { SlugSettings } from '@/components/layout/slug-settings'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {

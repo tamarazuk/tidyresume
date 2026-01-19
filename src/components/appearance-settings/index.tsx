@@ -1,6 +1,6 @@
 'use client'
 
-import { PaletteIcon } from '@phosphor-icons/react/dist/ssr'
+import { PaletteIcon } from '@phosphor-icons/react'
 import type { VariantProps } from 'class-variance-authority'
 import { buttonVariants } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
