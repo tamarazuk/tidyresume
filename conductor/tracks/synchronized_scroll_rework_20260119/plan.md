@@ -44,9 +44,10 @@ Connect the logic to the UI and ensure smooth performance.
 ## Phase 4: Polish & Final Review
 Refine the experience and ensure quality.
 
-- [ ] Task: Visual Polish
-    - [ ] (Optional) Add subtle visual cues when sync is active/inactive.
-    - [ ] Ensure the scroll movement feels "natural" (use smooth scrolling behavior where appropriate).
+- [x] Task: Visual Polish & Performance [c009d01]
+    - [x] (Optional) Add subtle visual cues when sync is active/inactive.
+    - [x] Implement throttling/debouncing for scroll events to reduce jitter during fast scrolling.
+    - [x] Ensure the scroll movement feels "natural" (use smooth scrolling behavior where appropriate).
 - [ ] Task: Final End-to-End Testing
     - [ ] Verify bidirectional syncing works flawlessly on long documents.
     - [ ] Verify toggle persistence works after page reload.
