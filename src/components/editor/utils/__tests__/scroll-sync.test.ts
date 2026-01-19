@@ -23,11 +23,14 @@ describe('scroll-sync utils', () => {
         <p>Some text</p>
         <h2 id="header-2" data-line="9">Header 2</h2>
       `
-      // We'll need to mock offsetTop as it's not available in JSDOM easily
+      // We'll need to mock getBoundingClientRect as it's not available in JSDOM easily
       const h1 = previewEl.querySelector('#header-1') as HTMLElement
       const h2 = previewEl.querySelector('#header-2') as HTMLElement
-      Object.defineProperty(h1, 'offsetTop', { value: 100 })
-      Object.defineProperty(h2, 'offsetTop', { value: 300 })
+      
+      vi.spyOn(previewEl, 'getBoundingClientRect').mockReturnValue({ top: 0 } as any)
+      vi.spyOn(h1, 'getBoundingClientRect').mockReturnValue({ top: 100 } as any)
+      vi.spyOn(h2, 'getBoundingClientRect').mockReturnValue({ top: 300 } as any)
+      previewEl.scrollTop = 0
 
       // Mock the markdown content to match
       mockEditorView.state.doc.line = vi.fn().mockImplementation((n: number) => {

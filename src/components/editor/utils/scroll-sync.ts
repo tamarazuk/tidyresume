@@ -47,8 +47,10 @@ export function getScrollAnchors(
       const linePos = doc.line(lineIdx + 1).from
       const editorTop = editorView.lineBlockAt(linePos).top
       
-      // We use offsetTop relative to the preview scroller
-      const previewTop = element.offsetTop
+      // Use getBoundingClientRect to account for potential scaling or nested offsetParents
+      const previewRect = element.getBoundingClientRect()
+      const scrollerRect = previewEl.getBoundingClientRect()
+      const previewTop = previewRect.top - scrollerRect.top + previewEl.scrollTop
 
       anchors.push({
         line: lineIdx,
