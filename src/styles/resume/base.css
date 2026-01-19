@@ -93,7 +93,7 @@
   text-align: right;
 }
 
-.md-editor-preview .divider--accent {
+.md-editor-preview hr.divider--accent {
   border: none;
   height: 4px;
   width: 100%;
@@ -137,14 +137,6 @@
   text-transform: none;
   border: none;
   padding: 0;
-}
-
-.md-editor-preview h1 + h2 + p {
-  margin-block-start: 0;
-  margin-block-end: 24px;
-  padding-block-end: 16px;
-  font-size: 0.9em;
-  color: var(--muted-foreground);
 }
 
 .md-editor-preview h2 {
