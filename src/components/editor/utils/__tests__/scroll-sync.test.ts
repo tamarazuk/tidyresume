@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import type { EditorView } from '@codemirror/view'
 import { getScrollAnchors, calculateScrollPosition, type ScrollAnchor } from '../scroll-sync'
 
 describe('scroll-sync utils', () => {
@@ -14,7 +15,7 @@ describe('scroll-sync utils', () => {
         },
         lineBlockAt: (pos: number) => ({ top: pos }),
         scrollDOM: { scrollTop: 0, scrollHeight: 1000, clientHeight: 0 },
-      } as unknown as import('@codemirror/view').EditorView
+      } as unknown as EditorView
 
       // Mock Preview Element
       const previewEl = document.createElement('div')
