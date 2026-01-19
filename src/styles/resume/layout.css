@@ -100,6 +100,12 @@
   flex: 0 1 auto;
 }
 
+/* Keep the public resume view free of page-break markers */
+.resume-view .md-editor-preview .resume-page-break,
+.resume-view .md-editor-preview .page-break {
+  display: none;
+}
+
 .resume-view-full {
   --resume-preview-background: var(--resume-preview-card);
   --preview-paper-shadow: none;
