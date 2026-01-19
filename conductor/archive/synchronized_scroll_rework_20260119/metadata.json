@@ -1,0 +1,8 @@
+{
+  "track_id": "synchronized_scroll_rework_20260119",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-19T10:00:00Z",
+  "updated_at": "2026-01-19T10:00:00Z",
+  "description": "Re-engineer the synchronized scroll mechanism in TidyResume to address alignment issues caused by custom CSS and complex resume layouts."
+}
