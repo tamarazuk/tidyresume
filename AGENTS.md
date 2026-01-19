@@ -14,7 +14,7 @@ Guidelines for AI assistants working on this codebase.
 - **Context is Key:** Always include enough context in your `old_string` to ensure uniqueness, but verify that your `new_string` contains the *complete* replacement logic, including any closing braces or return statements that were part of the original block.
 - **Read First:** Always read the file content immediately before modifying it to ensure you are working with the latest version.
 - **Verify:** After any modification, read the file again to ensure integrity.
-- **Final Validation (MANDATORY):** Before wrapping up any task or completing a track, you **MUST** run `pnpm lint` followed by `pnpm build`. This ensures that no linting errors, TypeScript type mismatches, or production build failures were introduced during implementation. Never assume your changes are error-free without running these commands.
+- **Final Validation (MANDATORY):** Before wrapping up any task or completing a track, you **MUST** run `pnpm cf-typegen`, followed by `pnpm lint`, and finally `pnpm build`. This ensures that Cloudflare environment types are up to date, and that no linting errors, TypeScript type mismatches, or production build failures were introduced during implementation. Never assume your changes are error-free without running these commands.
 
 ## Project Overview
 
@@ -203,6 +203,11 @@ pnpm lint
 ### Build for production
 ```bash
 pnpm build
+```
+
+### Generate Cloudflare types
+```bash
+pnpm cf-typegen
 ```
 
 ### Run tests
