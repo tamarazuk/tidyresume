@@ -41,6 +41,8 @@ export type CustomToolbarItemId =
   | 'shortcuts'
   | 'fullWidth'
   | 'divider'
+  | 'accentRule'
+  | 'splitLine'
   | 'pageBreak'
   | 'imageMenu'
   | 'comment'
@@ -168,6 +170,7 @@ export const TOOLBAR_LAYOUT: ToolbarLayoutItem[] = [
   { type: 'aria', id: 'italic' },
   { type: 'aria', id: 'underline' },
   { type: 'aria', id: 'strikethrough' },
+  { type: 'custom', id: 'splitLine' },
   { type: 'separator' },
   { type: 'aria', id: 'unorderedList' },
   { type: 'aria', id: 'orderedList' },
@@ -178,6 +181,7 @@ export const TOOLBAR_LAYOUT: ToolbarLayoutItem[] = [
   { type: 'aria', id: 'table' },
   { type: 'separator' },
   { type: 'custom', id: 'divider' },
+  { type: 'custom', id: 'accentRule' },
   { type: 'custom', id: 'pageBreak' },
   { type: 'custom', id: 'comment' },
   { type: 'align' },

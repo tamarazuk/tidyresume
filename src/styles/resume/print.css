@@ -148,7 +148,8 @@
     flex: none !important;
   }
 
-  :is(.editor-page, .resume-view) .md-editor-preview .resume-page-break {
+  :is(.editor-page, .resume-view) .md-editor-preview .resume-page-break,
+  :is(.editor-page, .resume-view) .md-editor-preview .page-break {
     display: block !important;
     height: 0 !important;
     margin: 0 !important;
@@ -160,13 +161,15 @@
     page-break-after: auto !important;
   }
 
-  :is(.editor-page, .resume-view) .md-editor-preview .resume-page-break + * {
+  :is(.editor-page, .resume-view) .md-editor-preview .resume-page-break + *,
+  :is(.editor-page, .resume-view) .md-editor-preview .page-break + * {
     break-before: page !important;
     page-break-before: always !important;
     margin-top: 0 !important;
   }
 
-  :is(.editor-page, .resume-view) .md-editor-preview * + .resume-page-break {
+  :is(.editor-page, .resume-view) .md-editor-preview * + .resume-page-break,
+  :is(.editor-page, .resume-view) .md-editor-preview * + .page-break {
     margin-bottom: 0 !important;
   }
 
@@ -176,7 +179,15 @@
     + .resume-page-break,
   :is(.editor-page, .resume-view)
     .md-editor-preview
+    p:empty
+    + .page-break,
+  :is(.editor-page, .resume-view)
+    .md-editor-preview
     .resume-page-break
+    + p:empty,
+  :is(.editor-page, .resume-view)
+    .md-editor-preview
+    .page-break
     + p:empty {
     display: none !important;
   }
