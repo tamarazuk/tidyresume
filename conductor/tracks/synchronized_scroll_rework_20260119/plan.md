@@ -23,10 +23,10 @@ Implement the "Hybrid/Block Mapping" strategy to calculate scroll positions.
     - [x] Implement function to extract anchor points (H1-H3, HR) from the editor (CodeMirror/TextArea).
     - [x] Implement function to find corresponding DOM elements in the preview.
     - [x] Write unit tests with mock HTML/Markdown content to verify anchor extraction.
-- [ ] Task: Implement `calculateScrollPosition` logic
-    - [ ] Implement the interpolation logic: given a scroll position in Source A, find the two nearest anchors, calculate percentage between them, and apply to Source B.
-    - [ ] Handle edge cases: Top of document (0%), Bottom of document (100%), and sections with no anchors.
-    - [ ] Write unit tests for the calculation logic.
+- [x] Task: Implement `calculateScrollPosition` logic [e50cb22]
+    - [x] Implement the interpolation logic: given a scroll position in Source A, find the two nearest anchors, calculate percentage between them, and apply to Source B.
+    - [x] Handle edge cases: Top of document (0%), Bottom of document (100%), and sections with no anchors.
+    - [x] Write unit tests for the calculation logic.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
 ## Phase 3: Integration & Performance
