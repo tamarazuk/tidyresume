@@ -81,3 +81,51 @@ export function getScrollAnchors(
 
   return anchors
 }
+
+/**
+ * Calculates the target scroll position based on the current scroll position and anchors.
+ * 
+ * @param scrollTop The current scroll position in the source container
+ * @param anchors Array of synchronization anchors
+ * @param source The source of the scroll ('editor' or 'preview')
+ * @returns The calculated scroll position for the target container
+ */
+export function calculateScrollPosition(
+  scrollTop: number,
+  anchors: ScrollAnchor[],
+  source: 'editor' | 'preview'
+): number {
+  if (anchors.length === 0) return scrollTop
+
+  const sourceKey = source === 'editor' ? 'editorTop' : 'previewTop'
+  const targetKey = source === 'editor' ? 'previewTop' : 'editorTop'
+
+  // Clamp to boundaries
+  if (scrollTop <= anchors[0][sourceKey]) return anchors[0][targetKey]
+  if (scrollTop >= anchors[anchors.length - 1][sourceKey])
+    return anchors[anchors.length - 1][targetKey]
+
+  // Find the two nearest anchors
+  let startAnchor = anchors[0]
+  let endAnchor = anchors[anchors.length - 1]
+
+  for (let i = 0; i < anchors.length - 1; i++) {
+    if (
+      scrollTop >= anchors[i][sourceKey] &&
+      scrollTop <= anchors[i + 1][sourceKey]
+    ) {
+      startAnchor = anchors[i]
+      endAnchor = anchors[i + 1]
+      break
+    }
+  }
+
+  // Linear interpolation
+  const sourceRange = endAnchor[sourceKey] - startAnchor[sourceKey]
+  if (sourceRange === 0) return startAnchor[targetKey]
+
+  const progress = (scrollTop - startAnchor[sourceKey]) / sourceRange
+  const targetRange = endAnchor[targetKey] - startAnchor[targetKey]
+
+  return startAnchor[targetKey] + progress * targetRange
+}
