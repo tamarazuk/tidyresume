@@ -1,7 +1,12 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, renderHook, screen } from '@testing-library/react'
 import type { FooterLayoutItem } from '../footer-items'
 import { useEditorFooters } from '../use-editor-footers'
+
+// Mock the toggle component since it's tested separately
+vi.mock('../../components/sync-scroll-toggle', () => ({
+  default: () => <div data-testid="sync-scroll-toggle">Toggle</div>
+}))
 
 describe('useEditorFooters', () => {
   it('renders word and character counts', () => {
@@ -44,5 +49,19 @@ describe('useEditorFooters', () => {
     expect(screen.getByText('Saved locally')).toBeInTheDocument()
     expect(screen.getByText('Saved to cloud')).toBeInTheDocument()
     expect(screen.getByText('Image too large')).toBeInTheDocument()
+  })
+
+  it('renders sync scroll toggle', () => {
+    const layout: FooterLayoutItem[] = [
+      { type: 'custom', id: 'syncScrollToggle' },
+    ]
+
+    const { result } = renderHook(() =>
+      useEditorFooters({ value: '', layout })
+    )
+
+    render(<>{result.current.defFooters}</>)
+
+    expect(screen.getByTestId('sync-scroll-toggle')).toBeInTheDocument()
   })
 })

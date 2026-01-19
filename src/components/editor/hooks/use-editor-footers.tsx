@@ -22,6 +22,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import SyncScrollToggle from '../components/sync-scroll-toggle'
 import EditorShortcutsMenu from '../components/toolbar-shortcuts-menu'
 import {
   FOOTER_LAYOUT,
@@ -198,6 +199,8 @@ function useEditorFooters({
               value={characterCount}
             />
           )
+        case 'syncScrollToggle':
+          return <SyncScrollToggle key="footer-sync-scroll-toggle" />
         case 'saveStatus':
           if (!saveStatus) return null
           const resolvedCloudStatus = resolveCloudStatus(

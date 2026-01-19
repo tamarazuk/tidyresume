@@ -6,6 +6,7 @@ export type CustomFooterItemId =
   | 'characterCount'
   | 'saveStatus'
   | 'warning'
+  | 'syncScrollToggle'
 
 export type FooterLayoutItem =
   | { type: 'builtin'; name: Footers }
@@ -19,6 +20,8 @@ export const FOOTER_LAYOUT: FooterLayoutItem[] = [
   { type: 'custom', id: 'saveStatus' },
   { type: 'custom', id: 'warning' },
   { type: 'align' },
+  { type: 'custom', id: 'syncScrollToggle' },
+  { type: 'divider' },
   { type: 'custom', id: 'wordCount' },
   { type: 'divider' },
   { type: 'custom', id: 'characterCount' },
