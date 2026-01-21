@@ -22,6 +22,14 @@ export const DEFAULT_RESUME_THEME: ResumeThemeSettings = {
     bodyLineHeight: '1.6',
     bodyLetterSpacing: '0',
   },
+  page: {
+    margins: {
+      top: 15,
+      right: 15,
+      bottom: 15,
+      left: 15,
+    },
+  },
 }
 
 export const RESUME_ACCENT_OPTIONS: Array<{

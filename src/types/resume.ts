@@ -43,6 +43,14 @@ export interface ResumeThemeSettings {
     bodyLineHeight?: ResumeBodyLineHeight
     bodyLetterSpacing?: ResumeBodyLetterSpacing
   }
+  page?: {
+    margins?: {
+      top: number
+      right: number
+      bottom: number
+      left: number
+    }
+  }
   fontScale?: string
 }
 
