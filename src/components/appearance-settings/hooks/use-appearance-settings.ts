@@ -1,4 +1,4 @@
-import { useCallback, useMemo, type KeyboardEvent } from 'react'
+import { useCallback, useMemo, useState, type KeyboardEvent } from 'react'
 import { useResumeStore } from '@/stores/resume-store'
 import {
   DEFAULT_RESUME_THEME,
@@ -46,6 +46,9 @@ interface AppearanceSettingsState {
   headingSize: ResumeHeadingSize
   headingSizeOptions: typeof RESUME_HEADING_SIZE_OPTIONS
   resolvedAccent: ReturnType<typeof resolveResumeAccent>
+  margins: NonNullable<NonNullable<typeof DEFAULT_RESUME_THEME.page>['margins']>
+  verticalLock: boolean
+  horizontalLock: boolean
   labels: {
     resolveFontLabel: (value: string | null) => string
     resolveHeadingSizeLabel: (value: string | null) => string
@@ -66,6 +69,9 @@ interface AppearanceSettingsState {
     setBodySize: (value: ResumeBodySize | null) => void
     setBodyLineHeight: (value: ResumeBodyLineHeight | null) => void
     setBodyLetterSpacing: (value: ResumeBodyLetterSpacing | null) => void
+    setMargins: (margins: Partial<NonNullable<NonNullable<typeof DEFAULT_RESUME_THEME.page>['margins']>>) => void
+    toggleVerticalLock: () => void
+    toggleHorizontalLock: () => void
     handleAccentKeyDown: (
       event: KeyboardEvent<HTMLButtonElement>,
       index: number
@@ -78,12 +84,18 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
   const resumeTheme = useResumeStore((state) => state.resumeDisplay.theme)
   const setResumeTheme = useResumeStore((state) => state.setResumeTheme)
   const setResumeAccent = useResumeStore((state) => state.setResumeAccent)
+  const [verticalLock, setVerticalLock] = useState(false)
+  const [horizontalLock, setHorizontalLock] = useState(false)
 
   const resolvedAccent = resolveResumeAccent({ accent })
   const accentOptions = RESUME_ACCENT_OPTIONS
   const typography = useMemo(
     () => resumeTheme.typography ?? {},
     [resumeTheme.typography]
+  )
+  const margins = useMemo(
+    () => resumeTheme.page?.margins ?? DEFAULT_RESUME_THEME.page?.margins ?? { top: 15, right: 15, bottom: 15, left: 15 },
+    [resumeTheme.page?.margins]
   )
 
   const headingFont =
@@ -187,6 +199,62 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     [resumeTheme, setResumeTheme, typography]
   )
 
+  const setMargins = useCallback(
+    (newMargins: Partial<typeof margins>) => {
+      const updatedMargins = { ...newMargins }
+
+      if (verticalLock) {
+        if (typeof newMargins.top === 'number') {
+          updatedMargins.bottom = newMargins.top
+        } else if (typeof newMargins.bottom === 'number') {
+          updatedMargins.top = newMargins.bottom
+        }
+      }
+
+      if (horizontalLock) {
+        if (typeof newMargins.left === 'number') {
+          updatedMargins.right = newMargins.left
+        } else if (typeof newMargins.right === 'number') {
+          updatedMargins.left = newMargins.right
+        }
+      }
+
+      setResumeTheme({
+        ...resumeTheme,
+        page: {
+          ...resumeTheme.page,
+          margins: {
+            ...margins,
+            ...updatedMargins,
+          },
+        },
+      })
+    },
+    [margins, resumeTheme, setResumeTheme, verticalLock, horizontalLock]
+  )
+
+  const toggleVerticalLock = useCallback(() => {
+    setVerticalLock((prev) => {
+      const next = !prev
+      if (next) {
+        // Sync bottom to top
+        setMargins({ bottom: margins.top })
+      }
+      return next
+    })
+  }, [margins.top, setMargins])
+
+  const toggleHorizontalLock = useCallback(() => {
+    setHorizontalLock((prev) => {
+      const next = !prev
+      if (next) {
+        // Sync right to left
+        setMargins({ right: margins.left })
+      }
+      return next
+    })
+  }, [margins.left, setMargins])
+
   const handleAccentKeyDown = useCallback(
     (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
       if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
@@ -221,6 +289,9 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       setBodySize,
       setBodyLineHeight,
       setBodyLetterSpacing,
+      setMargins,
+      toggleVerticalLock,
+      toggleHorizontalLock,
       handleAccentKeyDown,
     }),
     [
@@ -231,7 +302,10 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       setBodySize,
       setHeadingFont,
       setHeadingSize,
+      setMargins,
       setResumeAccent,
+      toggleHorizontalLock,
+      toggleVerticalLock,
     ]
   )
 
@@ -250,6 +324,9 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     headingSize,
     headingSizeOptions: RESUME_HEADING_SIZE_OPTIONS,
     resolvedAccent,
+    margins,
+    verticalLock,
+    horizontalLock,
     labels: {
       resolveFontLabel,
       resolveHeadingSizeLabel,
