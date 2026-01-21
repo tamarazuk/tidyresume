@@ -6,7 +6,7 @@
 - [x] Task: Conductor - User Manual Verification 'Data Model & State Management' (Protocol in workflow.md)
 
 ## Phase 2: UI Implementation
-- [ ] Task: Create `MarginInput` sub-component for reuse in `AppearanceSettings`
+- [x] Task: Create `MarginInput` sub-component for reuse in `AppearanceSettings` 1093885
 - [ ] Task: Integrate "Page Setup" section into `src/components/appearance-settings/index.tsx`
     - [ ] Add section header and separator
     - [ ] Add 2x2 grid for Top, Bottom, Left, Right inputs
