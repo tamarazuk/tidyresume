@@ -1,0 +1,8 @@
+{
+  "track_id": "page_setup_20260121",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-21T12:00:00Z",
+  "updated_at": "2026-01-21T12:00:00Z",
+  "description": "The appearance pop-up menu should have page setup settings to allow users to change the top, bottom, left and right margins. They should be allowed to lock the top and bottom so that they can set them up just on one side and they will be the same for top and bottom. Similarly for left and right as well."
+}

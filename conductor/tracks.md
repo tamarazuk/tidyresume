@@ -8,6 +8,11 @@ This file tracks all major tracks for the project. Each track has its own detail
 
   *Link: [./tracks/owner_privacy_assurance_20260115/](./tracks/owner_privacy_assurance_20260115/)*
 
+---
+
+- [~] **Track: Page Setup & Margins**
+*Link: [./tracks/page_setup_20260121/](./tracks/page_setup_20260121/)*
+
 
 
 
