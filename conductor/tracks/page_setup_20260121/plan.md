@@ -2,10 +2,7 @@
 
 ## Phase 1: Data Model & State Management
 - [x] Task: Update `ResumeThemeSettings` type in `src/types/resume.ts` 8eb6f28
-- [ ] Task: Implement `margins` state and actions in `useAppearanceSettings` hook
-    - [ ] Add margin defaults (15mm)
-    - [ ] Add `setMargins` action
-    - [ ] Add locking logic (syncing top/bottom or left/right)
+- [x] Task: Implement `margins` state and actions in `useAppearanceSettings` hook 30fca29
 - [ ] Task: Conductor - User Manual Verification 'Data Model & State Management' (Protocol in workflow.md)
 
 ## Phase 2: UI Implementation
