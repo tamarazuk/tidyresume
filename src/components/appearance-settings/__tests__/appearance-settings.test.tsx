@@ -115,4 +115,18 @@ describe('AppearanceSettings', () => {
     expect(screen.getAllByText('Normal').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Wide').length).toBeGreaterThan(0)
   })
+
+  it('renders page setup controls', () => {
+    render(<AppearanceSettings />)
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /customize appearance/i })
+    )
+
+    expect(screen.getByText('Page Setup')).toBeInTheDocument()
+    expect(screen.getByLabelText('Top')).toBeInTheDocument()
+    expect(screen.getByLabelText('Bottom')).toBeInTheDocument()
+    expect(screen.getByLabelText('Left')).toBeInTheDocument()
+    expect(screen.getByLabelText('Right')).toBeInTheDocument()
+  })
 })

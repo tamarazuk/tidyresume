@@ -1,6 +1,6 @@
 'use client'
 
-import { PaletteIcon } from '@phosphor-icons/react'
+import { PaletteIcon, Link as LinkIcon, LinkBreak as LinkBreakIcon } from '@phosphor-icons/react'
 import type { VariantProps } from 'class-variance-authority'
 import { buttonVariants } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -22,8 +22,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import { Toggle } from '@/components/ui/toggle'
 import { getResumeAccentSwatch } from '@/lib/resume-theme'
 import { cn } from '@/lib/utils'
+import { MarginInput } from './components/margin-input'
 import { useAppearanceSettings } from './hooks/use-appearance-settings'
 
 interface AppearanceSettingsProps {
@@ -61,6 +63,9 @@ export default function AppearanceSettings({
     headingSizeOptions,
     labels,
     resolvedAccent,
+    margins,
+    verticalLock,
+    horizontalLock,
     actions,
   } = useAppearanceSettings()
 
@@ -316,6 +321,73 @@ export default function AppearanceSettings({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+        </div>
+        <Separator />
+        <div className="grid gap-4">
+          <div className="text-sm font-medium">Page Setup</div>
+          <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 gap-y-4 items-end">
+            <MarginInput
+              label="Top"
+              value={margins.top}
+              onChange={(value) => actions.setMargins({ top: value })}
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Toggle
+                    size="sm"
+                    aria-label="Link vertical margins"
+                    pressed={verticalLock}
+                    onPressedChange={actions.toggleVerticalLock}
+                    className="h-9 w-9 mb-[1px]"
+                  >
+                    {verticalLock ? (
+                      <LinkIcon size={16} />
+                    ) : (
+                      <LinkBreakIcon size={16} className="opacity-50" />
+                    )}
+                  </Toggle>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>Link vertical margins</TooltipContent>
+            </Tooltip>
+            <MarginInput
+              label="Bottom"
+              value={margins.bottom}
+              onChange={(value) => actions.setMargins({ bottom: value })}
+            />
+
+            <MarginInput
+              label="Left"
+              value={margins.left}
+              onChange={(value) => actions.setMargins({ left: value })}
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Toggle
+                    size="sm"
+                    aria-label="Link horizontal margins"
+                    pressed={horizontalLock}
+                    onPressedChange={actions.toggleHorizontalLock}
+                    className="h-9 w-9 mb-[1px]"
+                  >
+                    {horizontalLock ? (
+                      <LinkIcon size={16} />
+                    ) : (
+                      <LinkBreakIcon size={16} className="opacity-50" />
+                    )}
+                  </Toggle>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>Link horizontal margins</TooltipContent>
+            </Tooltip>
+            <MarginInput
+              label="Right"
+              value={margins.right}
+              onChange={(value) => actions.setMargins({ right: value })}
+            />
           </div>
         </div>
       </PopoverContent>
