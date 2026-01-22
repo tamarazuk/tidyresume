@@ -7,10 +7,11 @@
 
 ## Phase 2: UI Implementation
 - [x] Task: Create `MarginInput` sub-component for reuse in `AppearanceSettings` 1093885
-- [ ] Task: Integrate "Page Setup" section into `src/components/appearance-settings/index.tsx`
-    - [ ] Add section header and separator
-    - [ ] Add 2x2 grid for Top, Bottom, Left, Right inputs
-    - [ ] Add lock buttons with Phosphor icons
+- [x] Task: Integrate "Page Setup" section into `src/components/appearance-settings/index.tsx` 7b5d79e
+    - [x] Add section header and separator
+    - [x] Add 2x2 grid for Top, Bottom, Left, Right inputs
+    - [x] Add lock buttons with Phosphor icons
+- [ ] Task: Conductor - User Manual Verification 'UI Implementation' (Protocol in workflow.md)
 - [ ] Task: Conductor - User Manual Verification 'UI Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Resume Styling & Print Support
