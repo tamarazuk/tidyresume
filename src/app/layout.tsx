@@ -59,6 +59,21 @@ export const metadata: Metadata = {
   },
   description:
     'Create a clean, professional resume in Markdown or use the guided editor. Publish instantly with a shareable URL and export to PDF. Free, no signup required.',
+  openGraph: {
+    title: 'TidyResume - Markdown Resume Builder',
+    description:
+      'Create a clean, professional resume in Markdown or use the guided editor. Publish instantly with a shareable URL and export to PDF. Free, no signup required.',
+    url: siteUrl,
+    siteName: 'TidyResume',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TidyResume - Markdown Resume Builder',
+    description:
+      'Create a clean, professional resume in Markdown or use the guided editor. Publish instantly with a shareable URL and export to PDF. Free, no signup required.',
+  },
 }
 
 export default function RootLayout({
