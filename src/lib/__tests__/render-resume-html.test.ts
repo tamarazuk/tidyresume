@@ -89,6 +89,18 @@ describe('renderResumeHtml', () => {
       expect(html).toContain('Software Engineer')
       expect(html).toContain('2020 — Present')
     })
+
+    it('preserves inline formatting in paragraphs around split lines', () => {
+      const markdown = `**Bold intro**
+Job Title || Date
+More *italic* text`
+      const html = renderResumeHtml(markdown)
+
+      // Paragraphs around split lines should have inline formatting
+      expect(html).toContain('<strong>Bold intro</strong>')
+      expect(html).toContain('<em>italic</em>')
+      expect(html).toContain('class="split-line"')
+    })
   })
 
   describe('HTML structure', () => {
