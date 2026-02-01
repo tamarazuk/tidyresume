@@ -89,6 +89,7 @@ describe('usePdfDownload', () => {
   })
 
   it('should create blob URL and trigger download', async () => {
+    vi.useFakeTimers()
     const mockBlob = new Blob(['pdf content'], { type: 'application/pdf' })
     mockFetch.mockResolvedValue({
       ok: true,
@@ -102,9 +103,16 @@ describe('usePdfDownload', () => {
     })
 
     expect(URL.createObjectURL).toHaveBeenCalledWith(mockBlob)
+
+    // URL.revokeObjectURL is called after a 100ms delay to ensure browser
+    // finishes reading the blob
+    await act(async () => {
+      vi.advanceTimersByTime(100)
+    })
     expect(URL.revokeObjectURL).toHaveBeenCalledWith(
       'blob:http://localhost/test-blob'
     )
+    vi.useRealTimers()
   })
 
   it('should show success toast on successful download', async () => {

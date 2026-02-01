@@ -306,7 +306,8 @@ interface RenderOptions {
   bodySize?: string
   headingScale?: string
   bodyLeading?: string
-  bodyTracking?: string
+  // Note: bodyTracking intentionally not supported - letter-spacing is hardcoded
+  // to 'normal' for ATS-safe text extraction (Chrome PDF text layer bug)
 }
 
 export function renderResumeHtml(

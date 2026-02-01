@@ -44,7 +44,8 @@ export function usePdfDownload() {
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
-      URL.revokeObjectURL(url)
+      // Delay URL revocation to ensure browser finishes reading the blob
+      setTimeout(() => URL.revokeObjectURL(url), 100)
 
       toast.success('PDF downloaded')
     } catch (error) {
