@@ -3,6 +3,26 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+export function sanitizeFilename(filename: string | undefined): string {
+  if (!filename) return 'resume.pdf'
+
+  // Remove characters invalid for filesystems: / \ ? % * : | " < >
+  let sanitized = filename.replace(/[/\\?%*:|"<>]/g, '')
+
+  // Trim whitespace
+  sanitized = sanitized.trim()
+
+  // If empty after sanitization, use default
+  if (!sanitized) return 'resume.pdf'
+
+  // Ensure it ends with .pdf
+  if (!sanitized.toLowerCase().endsWith('.pdf')) {
+    sanitized = `${sanitized}.pdf`
+  }
+
+  return sanitized
+}
+
 export function usePdfDownload() {
   const [isDownloading, setIsDownloading] = useState(false)
 
@@ -20,7 +40,7 @@ export function usePdfDownload() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = filename ? `${filename}.pdf` : 'resume.pdf'
+      a.download = sanitizeFilename(filename)
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)

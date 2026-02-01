@@ -54,7 +54,7 @@ export async function GET(
     const renderOptions = {
       accentColor: theme?.accent,
       headingFont: theme?.typography?.heading,
-      bodyFont: 'Arial', //theme?.typography?.body,
+      bodyFont: theme?.typography?.body,
       bodySize: theme?.typography?.bodySize
         ? BODY_SIZE_REM[theme.typography.bodySize]
         : undefined,
