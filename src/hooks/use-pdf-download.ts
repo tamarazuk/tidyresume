@@ -2,31 +2,17 @@
 
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { sanitizeFilename } from '@/lib/sanitize-filename'
 
-export function sanitizeFilename(filename: string | undefined): string {
-  if (!filename) return 'resume.pdf'
-
-  // Remove characters invalid for filesystems: / \ ? % * : | " < >
-  let sanitized = filename.replace(/[/\\?%*:|"<>]/g, '')
-
-  // Trim whitespace
-  sanitized = sanitized.trim()
-
-  // If empty after sanitization, use default
-  if (!sanitized) return 'resume.pdf'
-
-  // Ensure it ends with .pdf
-  if (!sanitized.toLowerCase().endsWith('.pdf')) {
-    sanitized = `${sanitized}.pdf`
-  }
-
-  return sanitized
-}
+// Re-export for backwards compatibility with existing imports
+export { sanitizeFilename } from '@/lib/sanitize-filename'
 
 export function usePdfDownload() {
   const [isDownloading, setIsDownloading] = useState(false)
 
   const downloadPdf = async (resumeId: string, filename?: string) => {
+    if (isDownloading) return
+
     setIsDownloading(true)
     try {
       const response = await fetch(`/api/resumes/${resumeId}/pdf`)

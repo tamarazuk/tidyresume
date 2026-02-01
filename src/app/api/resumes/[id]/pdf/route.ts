@@ -3,24 +3,11 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 import { getDb } from '@/db'
 import * as resumeService from '@/services/resume-service'
 import { renderResumeHtml } from '@/lib/render-resume-html'
+import { sanitizeFilename } from '@/lib/sanitize-filename'
+import { HEADING_SIZE_SCALE, BODY_SIZE_REM } from '@/lib/theme-constants'
 
-const HEADING_SIZE_SCALE: Record<string, string> = {
-  xs: '0.9',
-  sm: '0.95',
-  md: '1',
-  lg: '1.08',
-  xl: '1.16',
-}
-
-const BODY_SIZE_REM: Record<string, string> = {
-  '10': '0.625rem',
-  '11': '0.6875rem',
-  '12': '0.75rem',
-  '13': '0.8125rem',
-  '14': '0.875rem',
-  '15': '0.9375rem',
-  '16': '1rem',
-}
+// Timeout for Cloudflare Browser Rendering API (45 seconds)
+const PDF_GENERATION_TIMEOUT_MS = 45000
 
 export async function GET(
   request: Request,
@@ -68,33 +55,45 @@ export async function GET(
 
     const html = renderResumeHtml(resume.content, renderOptions)
 
-    // Use Cloudflare Browser Rendering REST API
-    const pdfResponse = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${accountId}/browser-rendering/pdf`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          html,
-          gotoOptions: {
-            waitUntil: 'networkidle0',
-          },
-          pdfOptions: {
-            format: 'letter',
-            printBackground: true,
-            margin: {
-              top: '0.5in',
-              bottom: '0.5in',
-              left: '0.5in',
-              right: '0.5in',
-            },
-          },
-        }),
-      }
+    // Use Cloudflare Browser Rendering REST API with timeout
+    const controller = new AbortController()
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      PDF_GENERATION_TIMEOUT_MS
     )
+
+    let pdfResponse: Response
+    try {
+      pdfResponse = await fetch(
+        `https://api.cloudflare.com/client/v4/accounts/${accountId}/browser-rendering/pdf`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            html,
+            gotoOptions: {
+              waitUntil: 'networkidle0',
+            },
+            pdfOptions: {
+              format: 'letter',
+              printBackground: true,
+              margin: {
+                top: '0.5in',
+                bottom: '0.5in',
+                left: '0.5in',
+                right: '0.5in',
+              },
+            },
+          }),
+          signal: controller.signal,
+        }
+      )
+    } finally {
+      clearTimeout(timeoutId)
+    }
 
     if (!pdfResponse.ok) {
       const errorText = await pdfResponse.text()
@@ -104,9 +103,7 @@ export async function GET(
 
     const pdfBuffer = await pdfResponse.arrayBuffer()
 
-    const filename = resume.title
-      ? `${resume.title.replace(/[^a-zA-Z0-9-_ ]/g, '')}.pdf`
-      : 'resume.pdf'
+    const filename = sanitizeFilename(resume.title)
 
     return new Response(pdfBuffer, {
       status: 200,

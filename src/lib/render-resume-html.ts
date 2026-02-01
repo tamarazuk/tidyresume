@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it'
+import type Token from 'markdown-it/lib/token.mjs'
 import { imgSize } from '@mdit/plugin-img-size'
 import { sanitizeHtml } from './sanitize-html'
 
@@ -133,8 +134,7 @@ function resumeSplitLinePlugin(md: MarkdownItInstance) {
       const hasSplitLine = lines.some((line) => parseSplitLine(line))
       if (!hasSplitLine) continue
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const newTokens: any[] = []
+      const newTokens: Token[] = []
       let currentParaLines: string[] = []
 
       for (let i = 0; i < lines.length; i += 1) {
