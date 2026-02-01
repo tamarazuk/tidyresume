@@ -50,7 +50,8 @@ export async function GET(
         ? HEADING_SIZE_SCALE[theme.typography.headingSize]
         : undefined,
       bodyLeading: theme?.typography?.bodyLineHeight,
-      bodyTracking: theme?.typography?.bodyLetterSpacing,
+      // Note: bodyTracking intentionally omitted - letter-spacing is hardcoded
+      // to 'normal' in renderResumeHtml for ATS-safe text extraction
     }
 
     const html = renderResumeHtml(resume.content, renderOptions)

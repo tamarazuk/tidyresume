@@ -121,7 +121,6 @@ describe('GET /api/resumes/[id]/pdf/html (debug endpoint)', () => {
         headingScale: '1.16',
         bodySize: '1rem',
         bodyLeading: '1.8',
-        bodyTracking: '0.025em',
       })
     )
   })
