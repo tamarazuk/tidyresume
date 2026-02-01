@@ -168,6 +168,39 @@ describe('renderResumeHtml', () => {
     })
   })
 
+  describe('XSS protection', () => {
+    it('removes script tags from markdown', () => {
+      const markdown = '<script>alert("xss")</script>'
+      const html = renderResumeHtml(markdown)
+
+      expect(html).not.toContain('<script>')
+      expect(html).not.toContain('alert')
+    })
+
+    it('removes onclick handlers', () => {
+      const markdown = '<div onclick="alert(1)">Click me</div>'
+      const html = renderResumeHtml(markdown)
+
+      expect(html).not.toContain('onclick')
+      expect(html).toContain('Click me')
+    })
+
+    it('removes javascript: URLs', () => {
+      const markdown = '[click](javascript:alert(1))'
+      const html = renderResumeHtml(markdown)
+
+      expect(html).not.toContain('javascript:')
+    })
+
+    it('allows safe HTML elements', () => {
+      const markdown = '<strong>Bold</strong> and <em>italic</em>'
+      const html = renderResumeHtml(markdown)
+
+      expect(html).toContain('<strong>Bold</strong>')
+      expect(html).toContain('<em>italic</em>')
+    })
+  })
+
   describe('edge cases', () => {
     it('handles empty markdown', () => {
       const html = renderResumeHtml('')

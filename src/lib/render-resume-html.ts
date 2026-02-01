@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import { imgSize } from '@mdit/plugin-img-size'
+import { sanitizeHtml } from './sanitize-html'
 
 type MarkdownItInstance = MarkdownIt
 
@@ -315,7 +316,8 @@ export function renderResumeHtml(
   options: RenderOptions = {}
 ): string {
   const md = createMarkdownRenderer()
-  const contentHtml = md.render(markdown)
+  // Sanitize rendered HTML to prevent XSS in the browser rendering sandbox
+  const contentHtml = sanitizeHtml(md.render(markdown))
 
   const accentColor =
     ACCENT_COLORS[options.accentColor ?? 'indigo'] ?? ACCENT_COLORS.indigo
