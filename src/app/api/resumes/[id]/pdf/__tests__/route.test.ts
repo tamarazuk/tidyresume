@@ -266,8 +266,9 @@ describe('GET /api/resumes/[id]/pdf', () => {
       params: Promise.resolve({ id: 'test-id' }),
     })
 
+    // Apostrophes are preserved, angle brackets are removed
     expect(response.headers.get('Content-Disposition')).toBe(
-      'attachment; filename="Johns Resume 2024.pdf"'
+      'attachment; filename="John\'s Resume 2024.pdf"'
     )
   })
 
