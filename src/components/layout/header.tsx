@@ -6,6 +6,7 @@ import {
   CloudArrowUpIcon,
   CloudSlashIcon,
   DotsNineIcon,
+  FilePdfIcon,
   PrinterIcon,
   SpinnerGapIcon,
 } from '@phosphor-icons/react/dist/ssr'
@@ -35,6 +36,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { usePdfDownload } from '@/hooks/use-pdf-download'
 import { usePublish } from '@/hooks/use-publish'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useResumeStore } from '@/stores/resume-store'
@@ -48,6 +50,7 @@ interface HeaderProps {
 export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
   const { isPublishing, isUnpublishing, publishResume, unpublishResume } =
     usePublish()
+  const { isDownloading, downloadPdf } = usePdfDownload()
   const { formatShortcutKeys } = usePlatformShortcuts()
   const resumeId = useResumeStore((state) => state.id)
   const isPublished = useResumeStore((state) => state.isPublished)
@@ -95,6 +98,21 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
                   <Kbd key={`print-${key}`}>{key}</Kbd>
                 ))}
               </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                if (resumeId) {
+                  downloadPdf(resumeId, resumeTitle)
+                }
+              }}
+              disabled={isDownloading || !resumeId}
+            >
+              {isDownloading ? (
+                <SpinnerGapIcon size={16} className="animate-spin" />
+              ) : (
+                <FilePdfIcon size={16} />
+              )}
+              <span>Download PDF</span>
             </DropdownMenuItem>
             <AppearanceSettings
               label="Appearance"
