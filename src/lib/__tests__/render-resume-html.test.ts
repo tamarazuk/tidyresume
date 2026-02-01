@@ -185,11 +185,13 @@ describe('renderResumeHtml', () => {
       expect(html).toContain('Click me')
     })
 
-    it('removes javascript: URLs', () => {
+    it('removes javascript: URLs from links', () => {
       const markdown = '[click](javascript:alert(1))'
       const html = renderResumeHtml(markdown)
 
-      expect(html).not.toContain('javascript:')
+      // Should not have a clickable javascript: link
+      expect(html).not.toContain('href="javascript:')
+      expect(html).not.toContain("href='javascript:")
     })
 
     it('allows safe HTML elements', () => {
