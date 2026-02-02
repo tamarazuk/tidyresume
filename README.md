@@ -19,7 +19,7 @@ A local-first Markdown resume builder with live preview, resume theming, shareab
 - **Shareable Links** — Publish to a public URL with an optional custom slug
 - **Magic-Link Editing** — Continue editing on another device via email link
 - **Auto Sync + Unpublish** — Changes sync after publishing, with one-click unpublish
-- **Print to PDF** — Use your browser to export a clean, ATS-friendly PDF
+- **PDF Export** — One-click download or print from your browser — both ATS-friendly
 - **Dark Mode** — Editor UI supports light/dark themes and preview theming
 
 ## How it works
@@ -146,7 +146,7 @@ _Last updated: January 2026_
 - [x] 🚀 Publish flow with shareable URLs
 - [x] 🪄 Magic link editing (no auth)
 - [x] 🖨️ Print to PDF (browser)
-- [ ] 🧾 PDF export (one-click)
+- [x] 🧾 PDF export (one-click)
 - [ ] 📚 Multiple resume templates
 - [ ] 🧭 Guided editor mode (form-based)
 - [x] 🔗 Custom slug selection

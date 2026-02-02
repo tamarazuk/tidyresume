@@ -223,8 +223,7 @@ export default function Hero() {
             </h1>
             <p className="text-muted-foreground text-lg leading-relaxed md:text-xl">
               No signups, no paywalls. Just write in Markdown or use our guided
-              editor, and export a PDF in seconds. Shareable URLs are coming
-              soon.
+              editor, and export a PDF in seconds. Share with a link anytime.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-3 pt-4">

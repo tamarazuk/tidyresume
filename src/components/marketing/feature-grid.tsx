@@ -51,7 +51,7 @@ const features = [
     icon: FilePdfIcon,
     title: 'PDF when you need it',
     description:
-      'Print to PDF straight from your browser. ATS-friendly, no watermarks.',
+      'One-click download or print from your browser. ATS-friendly, no watermarks.',
   },
   {
     icon: LayoutIcon,

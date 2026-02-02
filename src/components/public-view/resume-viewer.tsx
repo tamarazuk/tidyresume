@@ -2,7 +2,12 @@
 
 import Link from 'next/link'
 import { MdPreview } from 'md-editor-rt'
-import { DotsNineIcon, PrinterIcon } from '@phosphor-icons/react/dist/ssr'
+import {
+  DotsNineIcon,
+  FilePdfIcon,
+  PrinterIcon,
+  SpinnerGapIcon,
+} from '@phosphor-icons/react/dist/ssr'
 import AppIcon from '@/icons/app-icon'
 import AppearanceSettings from '@/components/appearance-settings'
 import { SlugSettings } from '@/components/layout/slug-settings'
@@ -25,6 +30,7 @@ import {
   dropdownMenuItemClassName,
 } from '@/components/ui/dropdown-menu'
 import { useOwnerCheck } from '@/hooks/use-owner-check'
+import { usePdfDownload } from '@/hooks/use-pdf-download'
 import { usePublicResumeThemeSync } from '@/hooks/use-public-resume-theme-sync'
 import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
@@ -60,6 +66,7 @@ export function ResumeViewer({
   const { formatShortcutKeys } = usePlatformShortcuts()
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
   const isOwner = useOwnerCheck(id)
+  const { isDownloading, downloadPdf } = usePdfDownload()
   const resumeDisplayTheme = useResumeStore(
     (state) => state.resumeDisplay.theme
   )
@@ -118,6 +125,17 @@ export function ResumeViewer({
                   ))}
                 </div>
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => downloadPdf(id, title)}
+                disabled={isDownloading}
+              >
+                {isDownloading ? (
+                  <SpinnerGapIcon size={16} className="animate-spin" />
+                ) : (
+                  <FilePdfIcon size={16} />
+                )}
+                <span>Download PDF</span>
+              </DropdownMenuItem>
               {isOwner ? (
                 <AppearanceSettings
                   label="Appearance"
@@ -165,6 +183,29 @@ export function ResumeViewer({
               />
             </DropdownMenuContent>
           </DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger
+              render={(props) => (
+                <Button
+                  {...props}
+                  onClick={(event) => {
+                    props.onClick?.(event)
+                    if (event.defaultPrevented) return
+                    downloadPdf(id, title)
+                  }}
+                  disabled={isDownloading}
+                  aria-label="Download PDF"
+                >
+                  {isDownloading ? (
+                    <SpinnerGapIcon size={16} className="animate-spin" />
+                  ) : (
+                    <FilePdfIcon size={16} />
+                  )}
+                </Button>
+              )}
+            />
+            <TooltipContent>Download PDF</TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger
               render={(props) => (
