@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { Toggle } from '@/components/ui/toggle'
+import { toggleVariants } from '@/components/ui/toggle'
 import { getResumeAccentSwatch } from '@/lib/resume-theme'
 import { cn } from '@/lib/utils'
 import { MarginInput } from './components/margin-input'
@@ -333,22 +333,22 @@ export default function AppearanceSettings({
               onChange={(value) => actions.setMargins({ top: value })}
             />
             <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Toggle
-                    size="sm"
-                    aria-label="Link vertical margins"
-                    pressed={verticalLock}
-                    onPressedChange={actions.toggleVerticalLock}
-                    className="h-9 w-9 mb-[1px]"
-                  >
-                    {verticalLock ? (
-                      <LinkIcon size={16} />
-                    ) : (
-                      <LinkBreakIcon size={16} className="opacity-50" />
-                    )}
-                  </Toggle>
-                </span>
+              <TooltipTrigger
+                type="button"
+                aria-label="Link vertical margins"
+                aria-pressed={verticalLock}
+                onClick={actions.toggleVerticalLock}
+                className={cn(
+                  toggleVariants({ size: 'sm' }),
+                  'h-9 w-9 mb-[1px]',
+                  verticalLock && 'bg-accent text-accent-foreground'
+                )}
+              >
+                {verticalLock ? (
+                  <LinkIcon size={16} />
+                ) : (
+                  <LinkBreakIcon size={16} className="opacity-50" />
+                )}
               </TooltipTrigger>
               <TooltipContent>Link vertical margins</TooltipContent>
             </Tooltip>
@@ -364,22 +364,22 @@ export default function AppearanceSettings({
               onChange={(value) => actions.setMargins({ left: value })}
             />
             <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Toggle
-                    size="sm"
-                    aria-label="Link horizontal margins"
-                    pressed={horizontalLock}
-                    onPressedChange={actions.toggleHorizontalLock}
-                    className="h-9 w-9 mb-[1px]"
-                  >
-                    {horizontalLock ? (
-                      <LinkIcon size={16} />
-                    ) : (
-                      <LinkBreakIcon size={16} className="opacity-50" />
-                    )}
-                  </Toggle>
-                </span>
+              <TooltipTrigger
+                type="button"
+                aria-label="Link horizontal margins"
+                aria-pressed={horizontalLock}
+                onClick={actions.toggleHorizontalLock}
+                className={cn(
+                  toggleVariants({ size: 'sm' }),
+                  'h-9 w-9 mb-[1px]',
+                  horizontalLock && 'bg-accent text-accent-foreground'
+                )}
+              >
+                {horizontalLock ? (
+                  <LinkIcon size={16} />
+                ) : (
+                  <LinkBreakIcon size={16} className="opacity-50" />
+                )}
               </TooltipTrigger>
               <TooltipContent>Link horizontal margins</TooltipContent>
             </Tooltip>
