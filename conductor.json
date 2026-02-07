@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "setup": "cp $CONDUCTOR_ROOT_PATH/.env.local .env.local && pnpm install && pnpm cf-typegen && yes | pnpm migrate:local",
+    "run": "PORT=$CONDUCTOR_PORT npm run dev",
+    "archive": "rm -rf node_modules"
+  }
+}
