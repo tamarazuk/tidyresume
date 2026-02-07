@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react'
 import {
   LinkSimpleIcon,
   LinkSimpleBreakIcon,
@@ -430,6 +431,26 @@ function MarginInput({
   max: number
   onChange: (value: number) => void
 }) {
+  const [inputValue, setInputValue] = useState(() => String(value))
+
+  useEffect(() => {
+    setInputValue(String(value))
+  }, [value])
+
+  const commitValue = useCallback(() => {
+    const parsed = Number.parseInt(inputValue.trim(), 10)
+    if (Number.isNaN(parsed)) {
+      setInputValue(String(value))
+      return
+    }
+
+    const clamped = Math.max(min, Math.min(max, parsed))
+    setInputValue(String(clamped))
+    if (clamped !== value) {
+      onChange(clamped)
+    }
+  }, [inputValue, max, min, onChange, value])
+
   const increment = () => {
     if (value < max) {
       onChange(value + 1)
@@ -457,11 +478,13 @@ function MarginInput({
           min={min}
           max={max}
           step={1}
-          value={value}
-          onChange={(e) => {
-            const parsed = parseInt(e.target.value, 10)
-            if (!Number.isNaN(parsed)) {
-              onChange(parsed)
+          value={inputValue}
+          onChange={(event) => setInputValue(event.target.value)}
+          onBlur={commitValue}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              commitValue()
             }
           }}
           className="hide-spinners pr-16 tabular-nums"

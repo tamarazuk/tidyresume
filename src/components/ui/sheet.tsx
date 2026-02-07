@@ -12,11 +12,11 @@ function Sheet({
   return <DialogPrimitive.Root data-slot="sheet" modal={modal} {...props} />
 }
 
-function SheetTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
+function SheetTrigger(props: DialogPrimitive.Trigger.Props) {
   return <DialogPrimitive.Trigger data-slot="sheet-trigger" {...props} />
 }
 
-function SheetClose({ ...props }: DialogPrimitive.Close.Props) {
+function SheetClose(props: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="sheet-close" {...props} />
 }
 

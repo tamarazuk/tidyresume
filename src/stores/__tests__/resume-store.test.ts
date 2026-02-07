@@ -62,11 +62,13 @@ describe('useResumeStore (margins)', () => {
       margins: { top: 10, right: 20, bottom: 12, left: 25 },
     })
     useResumeStore.getState().setResumeTheme({
-      margins: { top: 8, right: 20, bottom: 12, left: 25 },
+      margins: { top: 8 },
     })
     const state = useResumeStore.getState()
     expect(state.resumeDisplay.theme.margins?.top).toBe(8)
     expect(state.resumeDisplay.theme.margins?.right).toBe(20)
+    expect(state.resumeDisplay.theme.margins?.bottom).toBe(12)
+    expect(state.resumeDisplay.theme.margins?.left).toBe(25)
   })
 
   it('preserves margins when updating other theme properties', () => {

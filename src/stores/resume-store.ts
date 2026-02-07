@@ -32,6 +32,10 @@ export interface ResumeDisplaySettings {
   theme: ResumeThemeSettings
 }
 
+type ResumeThemeUpdate = Omit<ResumeThemeSettings, 'margins'> & {
+  margins?: Partial<NonNullable<ResumeThemeSettings['margins']>>
+}
+
 const MAX_MARKDOWN_LENGTH = 3_000_000
 const CONTENT_TOO_LARGE_WARNING = 'Content too large to store'
 const RESUME_BODY_LINE_HEIGHT_VALUE_SET: ReadonlySet<ResumeBodyLineHeight> =
@@ -141,7 +145,7 @@ interface ResumeState {
   setResumeTitle: (resumeTitle: string) => void
   setResumeThemeMode: (themeMode: ResumeThemeMode) => void
   setResumeAccent: (accent: ResumeAccent) => void
-  setResumeTheme: (theme: ResumeThemeSettings) => void
+  setResumeTheme: (theme: ResumeThemeUpdate) => void
   setMarkdown: (markdown: string) => void
   setSaveStatus: (saveStatus: SaveStatus) => void
   setSyncStatus: (
@@ -232,7 +236,10 @@ export const useResumeStore = create<ResumeState>()(
                   ...theme.typography,
                 },
                 margins: theme.margins
-                  ? { ...state.resumeDisplay.theme.margins, ...theme.margins }
+                  ? normalizeResumeMargins({
+                    ...state.resumeDisplay.theme.margins,
+                    ...theme.margins,
+                  })
                   : state.resumeDisplay.theme.margins,
               }),
             },

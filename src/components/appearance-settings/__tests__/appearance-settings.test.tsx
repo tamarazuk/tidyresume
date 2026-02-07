@@ -163,6 +163,36 @@ describe('AppearanceSettingsSheet', () => {
       screen.getByRole('button', { name: /close appearance panel/i })
     )
 
-    expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything())
+    expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
+
+  it('defers margin updates until blur and clamps values', () => {
+    render(
+      <AppearanceSettingsSheet open={true} onOpenChange={() => {}} />
+    )
+
+    const topMarginInput = screen.getByLabelText('Top')
+    fireEvent.change(topMarginInput, { target: { value: '45' } })
+
+    expect(useResumeStore.getState().resumeDisplay.theme.margins?.top).toBe(15)
+
+    fireEvent.blur(topMarginInput)
+
+    expect(useResumeStore.getState().resumeDisplay.theme.margins?.top).toBe(40)
+  })
+
+  it('commits margin updates when Enter is pressed', () => {
+    render(
+      <AppearanceSettingsSheet open={true} onOpenChange={() => {}} />
+    )
+
+    const leftMarginInput = screen.getByLabelText('Left')
+    fireEvent.change(leftMarginInput, { target: { value: '18' } })
+
+    expect(useResumeStore.getState().resumeDisplay.theme.margins?.left).toBe(15)
+
+    fireEvent.keyDown(leftMarginInput, { key: 'Enter' })
+
+    expect(useResumeStore.getState().resumeDisplay.theme.margins?.left).toBe(18)
   })
 })

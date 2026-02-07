@@ -79,7 +79,7 @@ export function AppearanceSettingsSheet({
   onOpenChange,
 }: AppearanceSettingsSheetProps) {
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={(nextOpen) => onOpenChange(nextOpen)}>
       <SheetContent>
         <SheetHeader>
           <div className="flex items-center justify-between">
