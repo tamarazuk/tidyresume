@@ -5,7 +5,10 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
 import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
-import { DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
+import {
+  DEFAULT_RESUME_THEME,
+  normalizeResumeMargins,
+} from '@/lib/resume-theme'
 import {
   RESUME_BODY_LETTER_SPACING_VALUES,
   RESUME_BODY_LINE_HEIGHT_VALUES,
@@ -27,6 +30,10 @@ export type ResumeThemeMode = 'auto' | 'light' | 'dark'
 export interface ResumeDisplaySettings {
   themeMode: ResumeThemeMode
   theme: ResumeThemeSettings
+}
+
+type ResumeThemeUpdate = Omit<ResumeThemeSettings, 'margins'> & {
+  margins?: Partial<NonNullable<ResumeThemeSettings['margins']>>
 }
 
 const MAX_MARKDOWN_LENGTH = 3_000_000
@@ -119,6 +126,7 @@ const resolveThemeDefaults = (
         typography.bodyLetterSpacing
       ),
     },
+    margins: normalizeResumeMargins(theme?.margins),
   }
 }
 
@@ -137,7 +145,7 @@ interface ResumeState {
   setResumeTitle: (resumeTitle: string) => void
   setResumeThemeMode: (themeMode: ResumeThemeMode) => void
   setResumeAccent: (accent: ResumeAccent) => void
-  setResumeTheme: (theme: ResumeThemeSettings) => void
+  setResumeTheme: (theme: ResumeThemeUpdate) => void
   setMarkdown: (markdown: string) => void
   setSaveStatus: (saveStatus: SaveStatus) => void
   setSyncStatus: (
@@ -227,6 +235,12 @@ export const useResumeStore = create<ResumeState>()(
                   ...state.resumeDisplay.theme.typography,
                   ...theme.typography,
                 },
+                margins: theme.margins
+                  ? normalizeResumeMargins({
+                    ...state.resumeDisplay.theme.margins,
+                    ...theme.margins,
+                  })
+                  : state.resumeDisplay.theme.margins,
               }),
             },
             saveStatus: 'saving',
@@ -274,7 +288,7 @@ export const useResumeStore = create<ResumeState>()(
     },
     {
       name: 'tidyresume-editor',
-      version: 7, // Bump version
+      version: 8,
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },

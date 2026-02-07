@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import {
   RESUME_BODY_LETTER_SPACING_VALUES,
   RESUME_BODY_LINE_HEIGHT_VALUES,
@@ -9,8 +10,19 @@ import type {
   ResumeBodyLetterSpacing,
   ResumeFont,
   ResumeHeadingSize,
+  ResumeMargins,
   ResumeThemeSettings,
 } from '@/types/resume'
+
+export const DEFAULT_RESUME_MARGINS: ResumeMargins = {
+  top: 15,
+  right: 15,
+  bottom: 15,
+  left: 15,
+}
+
+export const MIN_MARGIN = 5
+export const MAX_MARGIN = 40
 
 export const DEFAULT_RESUME_THEME: ResumeThemeSettings = {
   accent: 'indigo',
@@ -22,6 +34,7 @@ export const DEFAULT_RESUME_THEME: ResumeThemeSettings = {
     bodyLineHeight: '1.6',
     bodyLetterSpacing: '0',
   },
+  margins: DEFAULT_RESUME_MARGINS,
 }
 
 export const RESUME_ACCENT_OPTIONS: Array<{
@@ -335,4 +348,42 @@ export const getResumeTypographyClassNames = (
     getResumeBodyLineHeightClassName(typography?.bodyLineHeight ?? null),
     getResumeBodyLetterSpacingClassName(typography?.bodyLetterSpacing ?? null),
   ]
+}
+
+const clampMargin = (value: unknown): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return DEFAULT_RESUME_MARGINS.top
+  }
+  return Math.max(MIN_MARGIN, Math.min(MAX_MARGIN, Math.round(value)))
+}
+
+export const normalizeResumeMargins = (
+  margins?: unknown
+): ResumeMargins => {
+  if (
+    margins == null ||
+    typeof margins !== 'object' ||
+    Array.isArray(margins)
+  ) {
+    return { ...DEFAULT_RESUME_MARGINS }
+  }
+  const m = margins as Record<string, unknown>
+  return {
+    top: clampMargin(m.top),
+    right: clampMargin(m.right),
+    bottom: clampMargin(m.bottom),
+    left: clampMargin(m.left),
+  }
+}
+
+export const getResumeMarginStyle = (
+  margins?: ResumeMargins | null
+): CSSProperties => {
+  const m = margins ?? DEFAULT_RESUME_MARGINS
+  return {
+    '--preview-paper-padding-top': `${m.top}mm`,
+    '--preview-paper-padding-right': `${m.right}mm`,
+    '--preview-paper-padding-bottom': `${m.bottom}mm`,
+    '--preview-paper-padding-left': `${m.left}mm`,
+  } as CSSProperties
 }

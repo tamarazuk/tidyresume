@@ -33,6 +33,13 @@ export const RESUME_BODY_LETTER_SPACING_VALUES = [
 export type ResumeBodyLetterSpacing =
   (typeof RESUME_BODY_LETTER_SPACING_VALUES)[number]
 
+export interface ResumeMargins {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
+
 export interface ResumeThemeSettings {
   accent?: ResumeAccent
   typography?: {
@@ -43,6 +50,7 @@ export interface ResumeThemeSettings {
     bodyLineHeight?: ResumeBodyLineHeight
     bodyLetterSpacing?: ResumeBodyLetterSpacing
   }
+  margins?: ResumeMargins
   fontScale?: string
 }
 

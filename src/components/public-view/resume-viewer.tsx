@@ -36,6 +36,7 @@ import usePlatformShortcuts from '@/hooks/use-platform-shortcuts'
 import { useResumeTheme } from '@/hooks/use-resume-theme'
 import {
   getResumeAccentClassName,
+  getResumeMarginStyle,
   getResumeTypographyClassNames,
 } from '@/lib/resume-theme'
 import type { ResumeThemeSettings } from '@/types/resume'
@@ -75,6 +76,7 @@ export function ResumeViewer({
   const resumeAccentClassName = getResumeAccentClassName(resolvedTheme?.accent)
   const resumeTypographyClassNames =
     getResumeTypographyClassNames(resolvedTheme)
+  const resumeMarginStyle = getResumeMarginStyle(resolvedTheme?.margins)
   const menuItemClassName = cn(
     dropdownMenuItemClassName,
     'w-full justify-start'
@@ -240,6 +242,7 @@ export function ResumeViewer({
           editorId="resume-preview"
           modelValue={content}
           theme={resumeTheme}
+          style={resumeMarginStyle}
           className={cn(
             'resume-preview-theme resume-view font-sans',
             resumeThemeClassName,

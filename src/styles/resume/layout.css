@@ -84,7 +84,8 @@
   flex: 0 0 var(--preview-paper-width);
   margin-inline: auto;
   min-height: var(--preview-paper-height);
-  padding: var(--preview-paper-padding);
+  padding: var(--preview-paper-padding-top) var(--preview-paper-padding-right)
+    var(--preview-paper-padding-bottom) var(--preview-paper-padding-left);
   box-shadow: var(--preview-paper-shadow);
   border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
   border-radius: var(--preview-radius-md);
@@ -125,8 +126,11 @@
 .resume-view-full .md-editor-preview .resume-page-break {
   height: 4rem;
   margin-block: 0;
-  margin-inline: calc(var(--preview-paper-padding) * -1);
-  width: calc(100% + (var(--preview-paper-padding) * 2));
+  margin-left: calc(var(--preview-paper-padding-left) * -1);
+  margin-right: calc(var(--preview-paper-padding-right) * -1);
+  width: calc(
+    100% + var(--preview-paper-padding-left) + var(--preview-paper-padding-right)
+  );
   background: transparent;
   display: flex;
   align-items: center;
@@ -193,7 +197,8 @@
 }
 
 .md-editor-previewOnly .md-editor-preview {
-  padding: var(--preview-paper-padding);
+  padding: var(--preview-paper-padding-top) var(--preview-paper-padding-right)
+    var(--preview-paper-padding-bottom) var(--preview-paper-padding-left);
 }
 
 .md-editor-preview * {

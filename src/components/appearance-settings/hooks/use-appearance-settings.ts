@@ -1,7 +1,10 @@
-import { useCallback, useMemo, type KeyboardEvent } from 'react'
+import { useCallback, useMemo, useState, type KeyboardEvent } from 'react'
 import { useResumeStore } from '@/stores/resume-store'
 import {
+  DEFAULT_RESUME_MARGINS,
   DEFAULT_RESUME_THEME,
+  MIN_MARGIN,
+  MAX_MARGIN,
   RESUME_ACCENT_OPTIONS,
   RESUME_BODY_LINE_HEIGHT_OPTIONS,
   RESUME_BODY_LETTER_SPACING_OPTIONS,
@@ -16,6 +19,7 @@ import type {
   ResumeBodySize,
   ResumeFont,
   ResumeHeadingSize,
+  ResumeMargins,
 } from '@/types/resume'
 import { accentHelpText } from '../constants'
 import {
@@ -46,6 +50,11 @@ interface AppearanceSettingsState {
   headingSize: ResumeHeadingSize
   headingSizeOptions: typeof RESUME_HEADING_SIZE_OPTIONS
   resolvedAccent: ReturnType<typeof resolveResumeAccent>
+  margins: ResumeMargins
+  verticalLocked: boolean
+  horizontalLocked: boolean
+  marginMin: number
+  marginMax: number
   labels: {
     resolveFontLabel: (value: string | null) => string
     resolveHeadingSizeLabel: (value: string | null) => string
@@ -70,6 +79,9 @@ interface AppearanceSettingsState {
       event: KeyboardEvent<HTMLButtonElement>,
       index: number
     ) => void
+    setMargin: (side: keyof ResumeMargins, value: number) => void
+    toggleVerticalLock: () => void
+    toggleHorizontalLock: () => void
   }
 }
 
@@ -84,6 +96,18 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
   const typography = useMemo(
     () => resumeTheme.typography ?? {},
     [resumeTheme.typography]
+  )
+
+  const margins = useMemo(
+    () => resumeTheme.margins ?? DEFAULT_RESUME_MARGINS,
+    [resumeTheme.margins]
+  )
+
+  const [verticalLocked, setVerticalLocked] = useState(
+    () => margins.top === margins.bottom
+  )
+  const [horizontalLocked, setHorizontalLocked] = useState(
+    () => margins.left === margins.right
   )
 
   const headingFont =
@@ -212,6 +236,34 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     [accentOptions, setResumeAccent]
   )
 
+  const setMargin = useCallback(
+    (side: keyof ResumeMargins, value: number) => {
+      const clamped = Math.max(MIN_MARGIN, Math.min(MAX_MARGIN, Math.round(value)))
+      const updated = { ...margins }
+      updated[side] = clamped
+
+      if (verticalLocked) {
+        if (side === 'top') updated.bottom = clamped
+        if (side === 'bottom') updated.top = clamped
+      }
+      if (horizontalLocked) {
+        if (side === 'left') updated.right = clamped
+        if (side === 'right') updated.left = clamped
+      }
+
+      setResumeTheme({ ...resumeTheme, margins: updated })
+    },
+    [margins, resumeTheme, setResumeTheme, verticalLocked, horizontalLocked]
+  )
+
+  const toggleVerticalLock = useCallback(() => {
+    setVerticalLocked((prev) => !prev)
+  }, [])
+
+  const toggleHorizontalLock = useCallback(() => {
+    setHorizontalLocked((prev) => !prev)
+  }, [])
+
   const actions = useMemo(
     () => ({
       setResumeAccent,
@@ -222,6 +274,9 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       setBodyLineHeight,
       setBodyLetterSpacing,
       handleAccentKeyDown,
+      setMargin,
+      toggleVerticalLock,
+      toggleHorizontalLock,
     }),
     [
       handleAccentKeyDown,
@@ -231,7 +286,10 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       setBodySize,
       setHeadingFont,
       setHeadingSize,
+      setMargin,
       setResumeAccent,
+      toggleHorizontalLock,
+      toggleVerticalLock,
     ]
   )
 
@@ -250,6 +308,11 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     headingSize,
     headingSizeOptions: RESUME_HEADING_SIZE_OPTIONS,
     resolvedAccent,
+    margins,
+    verticalLocked,
+    horizontalLocked,
+    marginMin: MIN_MARGIN,
+    marginMax: MAX_MARGIN,
     labels: {
       resolveFontLabel,
       resolveHeadingSizeLabel,

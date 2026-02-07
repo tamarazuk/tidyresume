@@ -39,6 +39,7 @@ export type CustomToolbarItemId =
   | 'redo'
   | 'heading'
   | 'shortcuts'
+  | 'appearance'
   | 'fullWidth'
   | 'divider'
   | 'accentRule'
@@ -186,6 +187,8 @@ export const TOOLBAR_LAYOUT: ToolbarLayoutItem[] = [
   { type: 'custom', id: 'comment' },
   { type: 'align' },
   { type: 'custom', id: 'previewToggle' },
+  { type: 'custom', id: 'appearance' },
+  { type: 'separator' },
   { type: 'custom', id: 'fullWidth' },
   { type: 'separator' },
   { type: 'custom', id: 'viewEditor' },

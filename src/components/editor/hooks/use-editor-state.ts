@@ -26,9 +26,13 @@ export function useEditorState() {
   const contentWarning = useResumeStore((state) => state.contentWarning)
   const setText = useResumeStore((state) => state.setMarkdown)
   const [isFullWidth, setIsFullWidth] = useState(true)
+  const [isAppearanceOpen, setIsAppearanceOpen] = useState(false)
   const editorTheme = useTheme()
   const toggleFullWidth = useCallback(() => {
     setIsFullWidth((prev) => !prev)
+  }, [])
+  const toggleAppearance = useCallback(() => {
+    setIsAppearanceOpen((prev) => !prev)
   }, [])
 
   const isSyncScrollEnabled = useEditorViewStore(
@@ -48,6 +52,8 @@ export function useEditorState() {
     editorRef,
     isFullWidth,
     onToggleFullWidth: toggleFullWidth,
+    isAppearanceOpen,
+    onToggleAppearance: toggleAppearance,
   })
   const { footers, defFooters } = useEditorFooters({
     value: text,
@@ -63,6 +69,8 @@ export function useEditorState() {
     text,
     setText,
     isFullWidth,
+    isAppearanceOpen,
+    setIsAppearanceOpen,
     editorTheme,
     toolbars,
     defToolbars,

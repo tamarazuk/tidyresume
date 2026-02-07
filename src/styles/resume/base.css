@@ -16,8 +16,13 @@
   .md-editor-preview .page-break {
     position: relative;
     height: calc(var(--preview-page-gap) + (var(--preview-page-margin) * 2));
-    margin: 24px calc(var(--preview-paper-padding) * -1);
-    width: calc(100% + (var(--preview-paper-padding) * 2));
+    margin: 24px 0;
+    margin-left: calc(var(--preview-paper-padding-left) * -1);
+    margin-right: calc(var(--preview-paper-padding-right) * -1);
+    width: calc(
+      100% + var(--preview-paper-padding-left) +
+        var(--preview-paper-padding-right)
+    );
     background: linear-gradient(
       to bottom,
       var(--card) 0,
