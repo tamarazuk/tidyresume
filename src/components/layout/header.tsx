@@ -12,7 +12,6 @@ import {
 } from '@phosphor-icons/react/dist/ssr'
 
 import AppIcon from '@/icons/app-icon'
-import AppearanceSettings from '@/components/appearance-settings'
 import ResumeTitleInput from '@/components/layout/resume-title-input'
 import { SlugSettings } from '@/components/layout/slug-settings'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -114,16 +113,6 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
               )}
               <span>Download PDF</span>
             </DropdownMenuItem>
-            <AppearanceSettings
-              label="Appearance"
-              labelClassName="inline"
-              triggerVariant="ghost"
-              triggerSize="sm"
-              triggerClassName={cn(
-                dropdownMenuItemClassName,
-                'w-full justify-start focus:bg-transparent focus:text-foreground data-[highlighted]:bg-transparent data-[highlighted]:text-foreground'
-              )}
-            />
             <SlugSettings
               label="Edit link"
               labelClassName="inline"

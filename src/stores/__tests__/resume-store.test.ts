@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useResumeStore } from '../resume-store'
-import { DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
+import { DEFAULT_RESUME_MARGINS, DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
 
 describe('useResumeStore (theme)', () => {
   beforeEach(() => {
@@ -36,5 +36,64 @@ describe('useResumeStore (theme)', () => {
       DEFAULT_RESUME_THEME.typography?.heading
     )
     expect(state.resumeDisplay.theme.typography?.headingSize).toBe('lg')
+  })
+})
+
+describe('useResumeStore (margins)', () => {
+  beforeEach(() => {
+    useResumeStore.persist?.clearStorage?.()
+    useResumeStore.getState().resetResume()
+  })
+
+  it('initializes with default margins', () => {
+    const state = useResumeStore.getState()
+    expect(state.resumeDisplay.theme.margins).toEqual(DEFAULT_RESUME_MARGINS)
+  })
+
+  it('persists custom margin values', () => {
+    const customMargins = { top: 10, right: 20, bottom: 12, left: 25 }
+    useResumeStore.getState().setResumeTheme({ margins: customMargins })
+    const state = useResumeStore.getState()
+    expect(state.resumeDisplay.theme.margins).toEqual(customMargins)
+  })
+
+  it('merges partial margin updates with existing values', () => {
+    useResumeStore.getState().setResumeTheme({
+      margins: { top: 10, right: 20, bottom: 12, left: 25 },
+    })
+    useResumeStore.getState().setResumeTheme({
+      margins: { top: 8, right: 20, bottom: 12, left: 25 },
+    })
+    const state = useResumeStore.getState()
+    expect(state.resumeDisplay.theme.margins?.top).toBe(8)
+    expect(state.resumeDisplay.theme.margins?.right).toBe(20)
+  })
+
+  it('preserves margins when updating other theme properties', () => {
+    const customMargins = { top: 10, right: 20, bottom: 12, left: 25 }
+    useResumeStore.getState().setResumeTheme({ margins: customMargins })
+    useResumeStore.getState().setResumeAccent('teal')
+    const state = useResumeStore.getState()
+    expect(state.resumeDisplay.theme.margins).toEqual(customMargins)
+  })
+
+  it('restores default margins on reset', () => {
+    useResumeStore.getState().setResumeTheme({
+      margins: { top: 10, right: 20, bottom: 12, left: 25 },
+    })
+    useResumeStore.getState().resetResume()
+    const state = useResumeStore.getState()
+    expect(state.resumeDisplay.theme.margins).toEqual(DEFAULT_RESUME_MARGINS)
+  })
+
+  it('clamps out-of-range margin values', () => {
+    useResumeStore.getState().setResumeTheme({
+      margins: { top: 1, right: 99, bottom: -5, left: 200 },
+    })
+    const state = useResumeStore.getState()
+    expect(state.resumeDisplay.theme.margins?.top).toBe(5)
+    expect(state.resumeDisplay.theme.margins?.right).toBe(40)
+    expect(state.resumeDisplay.theme.margins?.bottom).toBe(5)
+    expect(state.resumeDisplay.theme.margins?.left).toBe(40)
   })
 })

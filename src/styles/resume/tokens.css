@@ -18,9 +18,13 @@
   --preview-paper-width: 210mm;
   --preview-paper-height: 297mm;
   --preview-paper-padding: 15mm;
+  --preview-paper-padding-top: var(--preview-paper-padding);
+  --preview-paper-padding-right: var(--preview-paper-padding);
+  --preview-paper-padding-bottom: var(--preview-paper-padding);
+  --preview-paper-padding-left: var(--preview-paper-padding);
   --preview-paper-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.45);
   --preview-page-gap: 28px;
-  --preview-page-margin: var(--preview-paper-padding);
+  --preview-page-margin: var(--preview-paper-padding-top);
   --preview-page-outline: color-mix(in oklch, var(--resume-preview-border) 70%, transparent);
 
   --preview-link-color: var(--resume-preview-primary);

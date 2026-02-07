@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, cleanup, act } from '@testing-library/react'
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import AppearanceSettings from '..'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import AppearanceSettings, { AppearanceSettingsSheet } from '..'
 import { useResumeStore } from '@/stores/resume-store'
 
 describe('AppearanceSettings', () => {
@@ -114,5 +114,55 @@ describe('AppearanceSettings', () => {
     expect(screen.getAllByText('Tight').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Normal').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Wide').length).toBeGreaterThan(0)
+  })
+})
+
+describe('AppearanceSettingsSheet', () => {
+  beforeEach(() => {
+    useResumeStore.persist?.clearStorage?.()
+    useResumeStore.setState((state) => ({
+      resumeDisplay: {
+        ...state.resumeDisplay,
+        theme: {
+          ...state.resumeDisplay.theme,
+          accent: 'indigo',
+        },
+      },
+    }))
+  })
+
+  afterEach(() => {
+    cleanup()
+  })
+
+  it('renders settings content when open', () => {
+    render(
+      <AppearanceSettingsSheet open={true} onOpenChange={() => {}} />
+    )
+
+    expect(screen.getByText('Appearance')).toBeInTheDocument()
+    expect(screen.getByText('Typography')).toBeInTheDocument()
+    expect(screen.getByText('Page margins')).toBeInTheDocument()
+  })
+
+  it('does not render content when closed', () => {
+    render(
+      <AppearanceSettingsSheet open={false} onOpenChange={() => {}} />
+    )
+
+    expect(screen.queryByText('Typography')).not.toBeInTheDocument()
+  })
+
+  it('calls onOpenChange when close button is clicked', () => {
+    const onOpenChange = vi.fn()
+    render(
+      <AppearanceSettingsSheet open={true} onOpenChange={onOpenChange} />
+    )
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /close appearance panel/i })
+    )
+
+    expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything())
   })
 })

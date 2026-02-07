@@ -1,13 +1,16 @@
+import type { CSSProperties } from 'react'
 import { useMemo } from 'react'
 import { useResumeStore } from '@/stores/resume-store'
 import {
   getResumeAccentClassName,
+  getResumeMarginStyle,
   getResumeTypographyClassNames,
 } from '@/lib/resume-theme'
 
 interface ResumeAppearanceClasses {
   accentClassName: string
   typographyClassNames: string[]
+  marginStyle: CSSProperties
 }
 
 export const useResumeAppearanceClasses = (): ResumeAppearanceClasses => {
@@ -23,5 +26,10 @@ export const useResumeAppearanceClasses = (): ResumeAppearanceClasses => {
     [resumeTheme]
   )
 
-  return { accentClassName, typographyClassNames }
+  const marginStyle = useMemo(
+    () => getResumeMarginStyle(resumeTheme?.margins),
+    [resumeTheme?.margins]
+  )
+
+  return { accentClassName, typographyClassNames, marginStyle }
 }

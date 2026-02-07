@@ -5,7 +5,10 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
 import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
-import { DEFAULT_RESUME_THEME } from '@/lib/resume-theme'
+import {
+  DEFAULT_RESUME_THEME,
+  normalizeResumeMargins,
+} from '@/lib/resume-theme'
 import {
   RESUME_BODY_LETTER_SPACING_VALUES,
   RESUME_BODY_LINE_HEIGHT_VALUES,
@@ -119,6 +122,7 @@ const resolveThemeDefaults = (
         typography.bodyLetterSpacing
       ),
     },
+    margins: normalizeResumeMargins(theme?.margins),
   }
 }
 
@@ -227,6 +231,9 @@ export const useResumeStore = create<ResumeState>()(
                   ...state.resumeDisplay.theme.typography,
                   ...theme.typography,
                 },
+                margins: theme.margins
+                  ? { ...state.resumeDisplay.theme.margins, ...theme.margins }
+                  : state.resumeDisplay.theme.margins,
               }),
             },
             saveStatus: 'saving',
@@ -274,7 +281,7 @@ export const useResumeStore = create<ResumeState>()(
     },
     {
       name: 'tidyresume-editor',
-      version: 7, // Bump version
+      version: 8,
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },

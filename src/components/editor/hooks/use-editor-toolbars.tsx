@@ -29,6 +29,7 @@ import {
   ImageIcon,
   KeyboardIcon,
   MinusIcon,
+  PaletteIcon,
   TextHIcon,
 } from '@phosphor-icons/react'
 import { PageBreakIcon } from '@/icons/page-break'
@@ -55,6 +56,8 @@ interface UseEditorToolbarsOptions {
   editorRef: RefObject<ExposeParam | null>
   isFullWidth?: boolean
   onToggleFullWidth?: () => void
+  isAppearanceOpen?: boolean
+  onToggleAppearance?: () => void
 }
 
 interface UseEditorToolbarsReturn {
@@ -70,6 +73,8 @@ function useEditorToolbars({
   editorRef,
   isFullWidth = false,
   onToggleFullWidth,
+  isAppearanceOpen = false,
+  onToggleAppearance,
 }: UseEditorToolbarsOptions): UseEditorToolbarsReturn {
   const [headingOpen, setHeadingOpen] = useState(false)
   const [imageMenuOpen, setImageMenuOpen] = useState(false)
@@ -549,6 +554,17 @@ function useEditorToolbars({
               </DropdownToolbar>
             </ToolbarTooltip>
           )
+        case 'appearance':
+          return (
+            <ToolbarTooltipButton
+              key="custom-appearance"
+              label="Appearance"
+              icon={<PaletteIcon size={16} aria-hidden />}
+              onClick={() => onToggleAppearance?.()}
+              disabled={!onToggleAppearance}
+              className={isAppearanceOpen ? 'md-editor-toolbar-active' : undefined}
+            />
+          )
         case 'fullWidth': {
           const widthLabel = isFullWidth ? 'Page width' : 'Full width'
           const widthIcon = isFullWidth ? (
@@ -696,6 +712,8 @@ function useEditorToolbars({
       setEditorView,
       setPreviewView,
       setSplitView,
+      isAppearanceOpen,
+      onToggleAppearance,
       isFullWidth,
       onToggleFullWidth,
       viewMode,
