@@ -12,4 +12,10 @@ export const STORY_VISITOR_RESUME_TITLE = 'Jordan Lee Resume'
 
 export const STORY_RESUME_THEME: ResumeThemeSettings = {
   ...DEFAULT_RESUME_THEME,
+  typography: DEFAULT_RESUME_THEME.typography
+    ? { ...DEFAULT_RESUME_THEME.typography }
+    : undefined,
+  margins: DEFAULT_RESUME_THEME.margins
+    ? { ...DEFAULT_RESUME_THEME.margins }
+    : undefined,
 }
