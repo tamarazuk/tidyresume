@@ -10,6 +10,7 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
 } from '@phosphor-icons/react/dist/ssr'
+import { formatUpdatedAt } from '@/components/resumes/format-updated-at'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Dialog,
@@ -147,8 +148,7 @@ function SwitcherList({
                     </span>
                   </div>
                   <p className="text-muted-foreground mt-1 text-xs">
-                    Updated{' '}
-                    {new Date(draft.updatedAt).toLocaleDateString('en-US')}
+                    Updated {formatUpdatedAt(draft.updatedAt)}
                   </p>
                 </button>
                 <div className="mt-2 flex items-center gap-1">

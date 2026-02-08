@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { formatUpdatedAt } from '@/components/resumes/format-updated-at'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { ResumeDraft } from '@/stores/resume-store'
@@ -18,14 +19,6 @@ interface ResumeCardProps {
   onOpen: () => void
   onDuplicate: () => void
   onDelete: () => void
-}
-
-const formatUpdatedAt = (timestamp: number) => {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(timestamp))
 }
 
 export default function ResumeCard({
