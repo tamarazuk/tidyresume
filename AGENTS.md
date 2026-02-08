@@ -14,7 +14,7 @@ Guidelines for AI assistants working on this codebase.
 - **Context is Key:** Always include enough context in your `old_string` to ensure uniqueness, but verify that your `new_string` contains the *complete* replacement logic, including any closing braces or return statements that were part of the original block.
 - **Read First:** Always read the file content immediately before modifying it to ensure you are working with the latest version.
 - **Verify:** After any modification, read the file again to ensure integrity.
-- **Final Validation (MANDATORY):** Before wrapping up any task or completing a track, you **MUST** run `pnpm cf-typegen`, followed by `pnpm lint`, and finally `pnpm build`. This ensures that Cloudflare environment types are up to date, and that no linting errors, TypeScript type mismatches, or production build failures were introduced during implementation. Never assume your changes are error-free without running these commands.
+- **Final Validation (MANDATORY for code changes):** After every code change (including TypeScript, JavaScript, CSS, config, build/runtime behavior, tests, or generated type files), you **MUST** run `pnpm cf-typegen`, followed by `pnpm lint`, and finally `pnpm build` before wrapping up. For docs-only changes (`*.md`) with no code/config impact, full validation is not required unless explicitly requested.
 
 ## Project Overview
 
