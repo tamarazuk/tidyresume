@@ -49,3 +49,9 @@ next-env.d.ts
 .dev.vars*
 .gemini-clipboard/
 /conductor/archive/
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
