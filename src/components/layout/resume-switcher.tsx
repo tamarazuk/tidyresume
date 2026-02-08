@@ -219,6 +219,7 @@ export default function ResumeSwitcher() {
 
   const handleCreateDraft = () => {
     const draftId = createDraft()
+    setActiveDraft(draftId)
     router.push(`/edit/${draftId}`)
     closeMenus()
   }
@@ -226,6 +227,7 @@ export default function ResumeSwitcher() {
   const handleDuplicateDraft = (draftId: string) => {
     const nextDraftId = duplicateDraft(draftId)
     if (!nextDraftId) return
+    setActiveDraft(nextDraftId)
     router.push(`/edit/${nextDraftId}`)
     closeMenus()
   }
