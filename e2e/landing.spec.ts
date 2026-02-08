@@ -11,15 +11,15 @@ test.describe('Landing page', () => {
     ).toBeVisible()
   })
 
-  test('CTA links to /edit', async ({ page }) => {
+  test('CTA links to /resumes', async ({ page }) => {
     const cta = page.getByRole('link', { name: 'Start Writing Now' })
     await expect(cta).toBeVisible()
-    await expect(cta).toHaveAttribute('href', '/edit')
+    await expect(cta).toHaveAttribute('href', '/resumes')
   })
 
-  test('clicking CTA navigates to /edit', async ({ page }) => {
+  test('clicking CTA navigates to /resumes', async ({ page }) => {
     await page.getByRole('link', { name: 'Start Writing Now' }).click()
-    await expect(page).toHaveURL('/edit')
+    await expect(page).toHaveURL('/resumes')
   })
 
   test('feature grid renders', async ({ page }) => {
@@ -50,9 +50,9 @@ test.describe('Landing page', () => {
     await expect(page.getByRole('link', { name: 'Github' })).toBeVisible()
   })
 
-  test('header CTA links to /edit', async ({ page }) => {
+  test('header CTA links to /resumes', async ({ page }) => {
     const headerCta = page.getByRole('link', { name: 'Start Writing' })
     await expect(headerCta).toBeVisible()
-    await expect(headerCta).toHaveAttribute('href', '/edit')
+    await expect(headerCta).toHaveAttribute('href', '/resumes')
   })
 })

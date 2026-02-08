@@ -1,15 +1,18 @@
 import { test, expect } from '@playwright/test'
+import type { Page } from '@playwright/test'
+
+async function waitForEditorReady(page: Page) {
+  await expect(page).toHaveURL(/\/edit\/[^/?]+$/)
+  await expect(page.getByTestId('markdown-editor')).toBeVisible()
+}
 
 test.describe('Editor content and views', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/edit')
+    await waitForEditorReady(page)
   })
 
   test('markdown content persists across reload', async ({ page }) => {
-    // Wait for editor to load
-    const editor = page.getByTestId('markdown-editor')
-    await expect(editor).toBeVisible()
-
     // Type in the CodeMirror editor (textarea within .cm-content)
     const cmContent = page.locator('.cm-content')
     await cmContent.click()
@@ -17,15 +20,13 @@ test.describe('Editor content and views', () => {
 
     // Reload and verify content survives
     await page.reload()
-    await expect(page.getByTestId('markdown-editor')).toBeVisible()
+    await waitForEditorReady(page)
     await expect(page.locator('.cm-content')).toContainText(
       '# Persistent Heading'
     )
   })
 
   test('appearance settings sheet opens', async ({ page }) => {
-    await expect(page.getByTestId('markdown-editor')).toBeVisible()
-
     // Click "Appearance" toolbar button
     await page.getByRole('button', { name: 'Appearance' }).click()
 
@@ -36,8 +37,6 @@ test.describe('Editor content and views', () => {
   })
 
   test('accent color selection persists after reload', async ({ page }) => {
-    await expect(page.getByTestId('markdown-editor')).toBeVisible()
-
     // Open appearance
     await page.getByRole('button', { name: 'Appearance' }).click()
     await expect(
@@ -56,7 +55,7 @@ test.describe('Editor content and views', () => {
     await page.reload()
 
     // Reopen and verify Blue is still selected
-    await expect(page.getByTestId('markdown-editor')).toBeVisible()
+    await waitForEditorReady(page)
     await page.getByRole('button', { name: 'Appearance' }).click()
     await expect(page.getByRole('radio', { name: 'Blue' })).toHaveAttribute(
       'aria-checked',
@@ -65,8 +64,6 @@ test.describe('Editor content and views', () => {
   })
 
   test('typography settings can be changed', async ({ page }) => {
-    await expect(page.getByTestId('markdown-editor')).toBeVisible()
-
     // Open appearance
     await page.getByRole('button', { name: 'Appearance' }).click()
 
