@@ -1,3 +1,4 @@
+import { useEffect, useRef, type ReactNode } from 'react'
 import type { Decorator } from '@storybook/react'
 import {
   DEFAULT_RESUME_MARGINS,
@@ -66,16 +67,41 @@ const buildPublicViewSeed = (seed?: StorybookPublicViewSeed) => {
   }
 }
 
+interface StorybookStoreSeeds {
+  resume?: StorybookResumeSeed
+  editorView?: StorybookEditorViewSeed
+  publicView?: StorybookPublicViewSeed
+}
+
+interface StoryStoreSeederProps {
+  stores?: StorybookStoreSeeds
+  children: ReactNode
+}
+
+function StoryStoreSeeder({ stores, children }: StoryStoreSeederProps) {
+  const initialStoresRef = useRef(stores)
+
+  useEffect(() => {
+    const initialStores = initialStoresRef.current
+
+    useResumeStore.persist?.clearStorage?.()
+    useEditorViewStore.persist?.clearStorage?.()
+
+    useResumeStore.setState(buildResumeSeed(initialStores?.resume))
+    useEditorViewStore.setState(buildEditorViewSeed(initialStores?.editorView))
+    usePublicViewStore.setState(buildPublicViewSeed(initialStores?.publicView))
+  }, [])
+
+  return <>{children}</>
+}
+
 export const withStores: Decorator = (Story, context) => {
   const parameters = context.parameters as StorybookParameters
   const stores = parameters.tidyresume?.stores
 
-  useResumeStore.persist?.clearStorage?.()
-  useEditorViewStore.persist?.clearStorage?.()
-
-  useResumeStore.setState(buildResumeSeed(stores?.resume))
-  useEditorViewStore.setState(buildEditorViewSeed(stores?.editorView))
-  usePublicViewStore.setState(buildPublicViewSeed(stores?.publicView))
-
-  return <Story />
+  return (
+    <StoryStoreSeeder key={context.id} stores={stores}>
+      <Story />
+    </StoryStoreSeeder>
+  )
 }
