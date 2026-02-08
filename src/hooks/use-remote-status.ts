@@ -1,13 +1,20 @@
 'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
-import { useResumeStore } from '@/stores/resume-store'
+import { useResumeStore, type ResumeDraftId } from '@/stores/resume-store'
 import { useMounted } from '@/hooks/use-mounted'
 
-export function useRemoteStatus() {
-  const id = useResumeStore((state) => state.id)
-  const isPublished = useResumeStore((state) => state.isPublished)
-  const unpublish = useResumeStore((state) => state.unpublish)
+export function useRemoteStatus(draftId?: ResumeDraftId) {
+  const draft = useResumeStore((state) => {
+    if (draftId && state.draftsById[draftId]) {
+      return state.draftsById[draftId]
+    }
+    return state.getActiveDraft()
+  })
+  const id = draft.id
+  const isPublished = draft.isPublished
+  const targetDraftId = draftId ?? draft.draftId
+  const updateDraft = useResumeStore((state) => state.updateDraft)
   const isMounted = useMounted()
   const lastCheckedId = useRef<string | null>(null)
 
@@ -22,13 +29,15 @@ export function useRemoteStatus() {
       })
 
       if (response.status === 404) {
-        // Resume was deleted/unpublished from another device
-        unpublish()
+        // Never auto-unpublish from passive checks.
+        // Mark the draft as needing user attention instead.
+        updateDraft(targetDraftId, { syncStatus: 'error' })
+        return
       }
     } catch (error) {
       console.error('Failed to check remote status:', error)
     }
-  }, [id, isPublished, unpublish])
+  }, [id, isPublished, targetDraftId, updateDraft])
 
   useEffect(() => {
     if (!isMounted) return
@@ -47,18 +56,19 @@ export function useRemoteStatus() {
     const handleFocus = () => {
       checkStatus()
     }
-
-    window.addEventListener('focus', handleFocus)
-    // Also check on visibility change (more robust for some browsers)
-    window.addEventListener('visibilitychange', () => {
+    const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         checkStatus()
       }
-    })
+    }
+
+    window.addEventListener('focus', handleFocus)
+    // Also check on visibility change (more robust for some browsers)
+    window.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
       window.removeEventListener('focus', handleFocus)
-      window.removeEventListener('visibilitychange', handleFocus)
+      window.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [id, isPublished, isMounted, checkStatus])
 

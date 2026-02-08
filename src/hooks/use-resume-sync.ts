@@ -2,20 +2,20 @@ import { useEffect, useRef, useState } from 'react'
 import {
   publishResume,
   type PublishResumePayload,
-  isResumeApiError,
 } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
 const CLOUD_SYNC_DEBOUNCE_MS = 2500
 
 export function useResumeSync() {
-  const id = useResumeStore((state) => state.id)
-  const title = useResumeStore((state) => state.resumeTitle)
-  const content = useResumeStore((state) => state.markdown)
-  const slug = useResumeStore((state) => state.slug)
-  const theme = useResumeStore((state) => state.resumeDisplay.theme)
-  const isPublished = useResumeStore((state) => state.isPublished)
-  const editSecret = useResumeStore((state) => state.editSecret)
+  const draft = useResumeStore((state) => state.getActiveDraft())
+  const id = draft.id
+  const title = draft.resumeTitle
+  const content = draft.markdown
+  const slug = draft.slug
+  const theme = draft.resumeDisplay.theme
+  const isPublished = draft.isPublished
+  const editSecret = draft.editSecret
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const [retryTrigger, setRetryTrigger] = useState(0)
 
@@ -97,12 +97,6 @@ export function useResumeSync() {
           success = true
         } catch (error) {
           if ((error as Error).name === 'AbortError') return
-
-          // If the resume no longer exists on the server (404), stop syncing and unpublish
-          if (isResumeApiError(error) && error.status === 404) {
-            useResumeStore.getState().unpublish()
-            return
-          }
 
           attempt++
           if (attempt >= maxRetries) {

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { updateResumeTheme, isResumeApiError } from '@/lib/resume-api'
-import { useResumeStore } from '@/stores/resume-store'
+import { updateResumeTheme } from '@/lib/resume-api'
+import { useResumeStore, type ResumeDraftId } from '@/stores/resume-store'
 import type { ResumeThemeSettings } from '@/types/resume'
 
 const PUBLIC_THEME_SYNC_DEBOUNCE_MS = 2500
@@ -8,16 +8,22 @@ const PUBLIC_THEME_SYNC_DEBOUNCE_MS = 2500
 interface UsePublicResumeThemeSyncOptions {
   id: string
   isOwner: boolean
+  draftId?: ResumeDraftId
   serverTheme?: ResumeThemeSettings | null
 }
 
 export function usePublicResumeThemeSync({
   id,
   isOwner,
+  draftId,
   serverTheme,
 }: UsePublicResumeThemeSyncOptions) {
-  const resumeTheme = useResumeStore((state) => state.resumeDisplay.theme)
-  const editSecret = useResumeStore((state) => state.editSecret)
+  const resumeTheme = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId]?.resumeDisplay.theme : undefined
+  )
+  const editSecret = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId]?.editSecret ?? null : null
+  )
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
 
   const mountedRef = useRef(false)
@@ -25,7 +31,7 @@ export function usePublicResumeThemeSync({
   const lastSyncedKeyRef = useRef<string | null>(null)
 
   useEffect(() => {
-    if (!isOwner) return
+    if (!isOwner || !draftId || !resumeTheme) return
 
     if (!mountedRef.current) {
       mountedRef.current = true
@@ -53,10 +59,6 @@ export function usePublicResumeThemeSync({
         lastSyncedKeyRef.current = nextKey
         setSyncStatus('synced')
       } catch (error) {
-        if (isResumeApiError(error) && error.status === 404) {
-          useResumeStore.getState().unpublish()
-          return
-        }
         console.error('Public theme sync error:', error)
         setSyncStatus('error')
       }
@@ -71,6 +73,7 @@ export function usePublicResumeThemeSync({
     editSecret,
     id,
     isOwner,
+    draftId,
     resumeTheme,
     serverTheme,
     setSyncStatus,

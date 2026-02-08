@@ -14,12 +14,13 @@ export function usePublish() {
   const router = useRouter()
   const [isPublishing, setIsPublishing] = useState(false)
   const [isUnpublishing, setIsUnpublishing] = useState(false)
-  const resumeId = useResumeStore((state) => state.id)
-  const editSecret = useResumeStore((state) => state.editSecret)
-  const resumeTitle = useResumeStore((state) => state.resumeTitle)
-  const resumeContent = useResumeStore((state) => state.markdown)
-  const resumeSlug = useResumeStore((state) => state.slug)
-  const resumeTheme = useResumeStore((state) => state.resumeDisplay.theme)
+  const draft = useResumeStore((state) => state.getActiveDraft())
+  const resumeId = draft.id
+  const editSecret = draft.editSecret
+  const resumeTitle = draft.resumeTitle
+  const resumeContent = draft.markdown
+  const resumeSlug = draft.slug
+  const resumeTheme = draft.resumeDisplay.theme
   const setResumeId = useResumeStore((state) => state.setId)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const setIsPublished = useResumeStore((state) => state.setIsPublished)

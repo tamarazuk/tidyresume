@@ -7,11 +7,12 @@ interface UseSlugSettingsOptions {
 }
 
 export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
-  const id = useResumeStore((state) => state.id)
-  const slug = useResumeStore((state) => state.slug)
+  const draft = useResumeStore((state) => state.getActiveDraft())
+  const id = draft.id
+  const slug = draft.slug
   const setSlug = useResumeStore((state) => state.setSlug)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
-  const editSecret = useResumeStore((state) => state.editSecret)
+  const editSecret = draft.editSecret
 
   const [isOpen, setIsOpen] = useState(false)
   const [inputValue, setInputValue] = useState<string>(slug ?? id ?? '')

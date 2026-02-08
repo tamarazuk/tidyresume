@@ -100,9 +100,10 @@ export function OwnerFloatingToolbar({
   isFullWidth,
   onToggleWidth,
 }: OwnerFloatingToolbarProps) {
-  const { isOwner, handleShare, handleUrlUpdated } = useOwnerFloatingToolbar({
-    id,
-  })
+  const { isOwner, editHref, handleShare, handleUrlUpdated, handleEdit } =
+    useOwnerFloatingToolbar({
+      id,
+    })
   const isPreviewMode = usePublicViewStore(
     (state) => state.publicViewState.isPreviewMode
   )
@@ -132,16 +133,20 @@ export function OwnerFloatingToolbar({
         <Tooltip>
           <TooltipTrigger
             render={(props) => {
-              const { className: triggerClassName, ...rest } = props
+              const { className: triggerClassName, onClick, ...rest } = props
               return (
                 <Link
                   {...rest}
-                  href={`/edit`} // Since it's local storage based, /edit implies editing 'current'
+                  href={editHref}
                   className={cn(
                     buttonVariants({ variant: 'default', size: 'sm' }),
                     'gap-1.5',
                     triggerClassName
                   )}
+                  onClick={(event) => {
+                    onClick?.(event)
+                    handleEdit()
+                  }}
                   aria-label="Edit resume"
                 >
                   <PencilSimpleIcon size={16} />

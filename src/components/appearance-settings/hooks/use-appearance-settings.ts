@@ -86,8 +86,12 @@ interface AppearanceSettingsState {
 }
 
 export const useAppearanceSettings = (): AppearanceSettingsState => {
-  const accent = useResumeStore((state) => state.resumeDisplay.theme?.accent)
-  const resumeTheme = useResumeStore((state) => state.resumeDisplay.theme)
+  const accent = useResumeStore(
+    (state) => state.getActiveDraft().resumeDisplay.theme?.accent
+  )
+  const resumeTheme = useResumeStore(
+    (state) => state.getActiveDraft().resumeDisplay.theme
+  )
   const setResumeTheme = useResumeStore((state) => state.setResumeTheme)
   const setResumeAccent = useResumeStore((state) => state.setResumeAccent)
 

@@ -32,10 +32,13 @@ export function UnpublishButton({
   labelClassName = 'hidden sm:inline',
   showTooltip = true,
 }: UnpublishButtonProps) {
-  const isOwner = useOwnerCheck(id)
+  const { isOwner, draftId } = useOwnerCheck(id)
   const router = useRouter()
   const unpublish = useResumeStore((state) => state.unpublish)
-  const editSecret = useResumeStore((state) => state.editSecret)
+  const setActiveDraft = useResumeStore((state) => state.setActiveDraft)
+  const editSecret = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId]?.editSecret ?? null : null
+  )
   const [isUnpublishing, setIsUnpublishing] = useState(false)
 
   if (!isOwner) return null
@@ -49,9 +52,12 @@ export function UnpublishButton({
     setIsUnpublishing(true)
     try {
       await deleteResume(id, { editSecret })
-      unpublish()
+      if (draftId) {
+        unpublish(draftId)
+        setActiveDraft(draftId)
+      }
       toast.success('Resume unpublished successfully')
-      router.push('/edit')
+      router.push(draftId ? `/edit/${draftId}` : '/edit')
     } catch (error) {
       console.error(error)
       toast.error('Failed to unpublish resume')

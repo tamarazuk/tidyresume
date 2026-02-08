@@ -8,7 +8,10 @@ export default function HeaderCta() {
   const ctaLabel = hasStoredDraft ? 'Continue Writing' : 'Start Writing'
 
   return (
-    <ButtonLink href="/edit" className="shadow-primary/20 h-10 px-4 shadow-lg">
+    <ButtonLink
+      href="/resumes"
+      className="shadow-primary/20 h-10 px-4 shadow-lg"
+    >
       {ctaLabel}
     </ButtonLink>
   )

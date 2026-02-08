@@ -14,7 +14,9 @@ interface ResumeAppearanceClasses {
 }
 
 export const useResumeAppearanceClasses = (): ResumeAppearanceClasses => {
-  const resumeTheme = useResumeStore((state) => state.resumeDisplay.theme)
+  const resumeTheme = useResumeStore(
+    (state) => state.getActiveDraft().resumeDisplay.theme
+  )
 
   const accentClassName = useMemo(
     () => getResumeAccentClassName(resumeTheme?.accent),

@@ -102,18 +102,20 @@ vi.mock('@/lib/resume-api', () => ({
 describe('ResumeViewer', () => {
   beforeEach(() => {
     useResumeStore.persist?.clearStorage?.()
-    useResumeStore.setState((state) => ({
-      ...state,
+    useResumeStore.getState().resetResume()
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
       id: 'resume-123',
+      isPublished: true,
       editSecret: 'secret-123',
       resumeDisplay: {
-        ...state.resumeDisplay,
+        ...draft.resumeDisplay,
         theme: {
-          ...state.resumeDisplay.theme,
+          ...draft.resumeDisplay.theme,
           accent: 'indigo',
         },
       },
-    }))
+    })
   })
 
   afterEach(() => {
@@ -146,17 +148,46 @@ describe('ResumeViewer', () => {
   })
 
   it('uses the server theme for visitors', () => {
-    useResumeStore.setState((state) => ({
-      ...state,
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
       id: 'other-id',
       resumeDisplay: {
-        ...state.resumeDisplay,
+        ...draft.resumeDisplay,
         theme: {
-          ...state.resumeDisplay.theme,
+          ...draft.resumeDisplay.theme,
           accent: 'indigo',
         },
       },
-    }))
+    })
+
+    render(
+      <ResumeViewer
+        id="resume-123"
+        title="Resume"
+        content="Content"
+        isFullWidth={false}
+        theme={{ accent: 'rose' }}
+      />
+    )
+
+    const preview = screen.getByTestId('preview')
+    expect(preview.className).toContain('resume-accent-rose')
+  })
+
+  it('treats matching drafts without edit secret as visitors', () => {
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
+      id: 'resume-123',
+      isPublished: true,
+      editSecret: null,
+      resumeDisplay: {
+        ...draft.resumeDisplay,
+        theme: {
+          ...draft.resumeDisplay.theme,
+          accent: 'indigo',
+        },
+      },
+    })
 
     render(
       <ResumeViewer
@@ -201,7 +232,10 @@ describe('ResumeViewer', () => {
 
   it('does not publish on mount when the theme matches the server', async () => {
     vi.useFakeTimers()
-    const matchingTheme = useResumeStore.getState().resumeDisplay.theme
+    const matchingTheme = useResumeStore
+      .getState()
+      .getActiveDraft()
+      .resumeDisplay.theme
     render(
       <ResumeViewer
         id="resume-123"

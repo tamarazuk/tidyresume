@@ -15,7 +15,7 @@ export function StartButton() {
   if (hasStoredDraft) {
     return (
       <Link
-        href="/edit"
+        href="/resumes"
         className={cn(buttonVariants({ size: 'lg' }), 'gap-2 px-8')}
       >
         <PencilSimpleIcon size={20} />
@@ -26,7 +26,7 @@ export function StartButton() {
 
   return (
     <Link
-      href="/edit"
+      href="/resumes"
       className={cn(buttonVariants({ size: 'lg' }), 'gap-2 px-8')}
     >
       Start Writing Now

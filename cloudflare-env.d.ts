@@ -3,7 +3,6 @@
 // Runtime types generated with workerd@1.20260114.0 2025-12-31 global_fetch_strictly_public,nodejs_compat
 declare namespace Cloudflare {
 	interface Env {
-		RESEND_API_KEY: string;
 		DB: D1Database;
 		RATE_LIMITER: RateLimit;
 		WORKER_SELF_REFERENCE: Fetcher /* tidyresume */;
@@ -12,12 +11,6 @@ declare namespace Cloudflare {
 	}
 }
 interface CloudflareEnv extends Cloudflare.Env {}
-type StringifyValues<EnvType extends Record<string, unknown>> = {
-	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
-};
-declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "RESEND_API_KEY">> {}
-}
 
 // Begin runtime types
 /*! *****************************************************************************

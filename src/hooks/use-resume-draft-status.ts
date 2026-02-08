@@ -25,25 +25,52 @@ function getResumeDraftSnapshot() {
   try {
     const parsed = JSON.parse(stored) as {
       state?: {
+        draftsById?: Record<
+          string,
+          {
+            id?: string | null
+            markdown?: string | null
+            resumeTitle?: string | null
+          }
+        >
         id?: string | null
         markdown?: string | null
         resumeTitle?: string | null
       }
+      draftsById?: Record<
+        string,
+        {
+          id?: string | null
+          markdown?: string | null
+          resumeTitle?: string | null
+        }
+      >
       id?: string | null
       markdown?: string | null
       resumeTitle?: string | null
     }
     const state = parsed.state ?? parsed
-    const hasTitle =
-      typeof state.resumeTitle === 'string' &&
-      state.resumeTitle.trim().length > 0 &&
-      state.resumeTitle !== DEFAULT_RESUME_TITLE
-    const storedMarkdown =
-      typeof state.markdown === 'string' ? state.markdown.trim() : ''
-    const hasMarkdown =
-      storedMarkdown.length > 0 && storedMarkdown !== DEFAULT_RESUME.trim()
+    const drafts = state.draftsById
+      ? Object.values(state.draftsById)
+      : [
+          {
+            id: state.id,
+            markdown: state.markdown,
+            resumeTitle: state.resumeTitle,
+          },
+        ]
 
-    return Boolean(state.id || hasTitle || hasMarkdown)
+    return drafts.some((draft) => {
+      const hasTitle =
+        typeof draft.resumeTitle === 'string' &&
+        draft.resumeTitle.trim().length > 0 &&
+        draft.resumeTitle !== DEFAULT_RESUME_TITLE
+      const storedMarkdown =
+        typeof draft.markdown === 'string' ? draft.markdown.trim() : ''
+      const hasMarkdown =
+        storedMarkdown.length > 0 && storedMarkdown !== DEFAULT_RESUME.trim()
+      return Boolean(draft.id || hasTitle || hasMarkdown)
+    })
   } catch {
     return false
   }

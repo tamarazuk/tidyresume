@@ -16,7 +16,9 @@ interface UseResumeThemeResult {
 export const useResumeTheme = (): UseResumeThemeResult => {
   const mounted = useMounted()
   const uiTheme = useTheme()
-  const themeMode = useResumeStore((state) => state.resumeDisplay.themeMode)
+  const themeMode = useResumeStore(
+    (state) => state.getActiveDraft().resumeDisplay.themeMode
+  )
   const resolvedThemeMode = mounted ? themeMode : 'auto'
   const resolvedUiTheme = mounted ? uiTheme : 'light'
 

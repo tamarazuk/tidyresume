@@ -6,15 +6,17 @@ import { useResumeStore } from '@/stores/resume-store'
 describe('AppearanceSettings', () => {
   beforeEach(() => {
     useResumeStore.persist?.clearStorage?.()
-    useResumeStore.setState((state) => ({
+    useResumeStore.getState().resetResume()
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
       resumeDisplay: {
-        ...state.resumeDisplay,
+        ...draft.resumeDisplay,
         theme: {
-          ...state.resumeDisplay.theme,
+          ...draft.resumeDisplay.theme,
           accent: 'indigo',
         },
       },
-    }))
+    })
   })
 
   afterEach(() => {
@@ -44,7 +46,9 @@ describe('AppearanceSettings', () => {
 
     fireEvent.click(screen.getByRole('radio', { name: 'Teal' }))
 
-    expect(useResumeStore.getState().resumeDisplay.theme.accent).toBe('teal')
+    expect(
+      useResumeStore.getState().getActiveDraft().resumeDisplay.theme.accent
+    ).toBe('teal')
   })
 
   it('shows a tooltip on hover', () => {
@@ -120,15 +124,17 @@ describe('AppearanceSettings', () => {
 describe('AppearanceSettingsSheet', () => {
   beforeEach(() => {
     useResumeStore.persist?.clearStorage?.()
-    useResumeStore.setState((state) => ({
+    useResumeStore.getState().resetResume()
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
       resumeDisplay: {
-        ...state.resumeDisplay,
+        ...draft.resumeDisplay,
         theme: {
-          ...state.resumeDisplay.theme,
+          ...draft.resumeDisplay.theme,
           accent: 'indigo',
         },
       },
-    }))
+    })
   })
 
   afterEach(() => {
@@ -174,11 +180,15 @@ describe('AppearanceSettingsSheet', () => {
     const topMarginInput = screen.getByLabelText('Top')
     fireEvent.change(topMarginInput, { target: { value: '45' } })
 
-    expect(useResumeStore.getState().resumeDisplay.theme.margins?.top).toBe(15)
+    expect(
+      useResumeStore.getState().getActiveDraft().resumeDisplay.theme.margins?.top
+    ).toBe(15)
 
     fireEvent.blur(topMarginInput)
 
-    expect(useResumeStore.getState().resumeDisplay.theme.margins?.top).toBe(40)
+    expect(
+      useResumeStore.getState().getActiveDraft().resumeDisplay.theme.margins?.top
+    ).toBe(40)
   })
 
   it('commits margin updates when Enter is pressed', () => {
@@ -189,10 +199,14 @@ describe('AppearanceSettingsSheet', () => {
     const leftMarginInput = screen.getByLabelText('Left')
     fireEvent.change(leftMarginInput, { target: { value: '18' } })
 
-    expect(useResumeStore.getState().resumeDisplay.theme.margins?.left).toBe(15)
+    expect(
+      useResumeStore.getState().getActiveDraft().resumeDisplay.theme.margins?.left
+    ).toBe(15)
 
     fireEvent.keyDown(leftMarginInput, { key: 'Enter' })
 
-    expect(useResumeStore.getState().resumeDisplay.theme.margins?.left).toBe(18)
+    expect(
+      useResumeStore.getState().getActiveDraft().resumeDisplay.theme.margins?.left
+    ).toBe(18)
   })
 })

@@ -2,7 +2,9 @@ import { useEffect, useRef } from 'react'
 import { useResumeStore } from '@/stores/resume-store'
 
 export function usePrintTitle() {
-  const resumeTitle = useResumeStore((state) => state.resumeTitle)
+  const resumeTitle = useResumeStore(
+    (state) => state.getActiveDraft().resumeTitle
+  )
   const originalTitle = useRef<string | null>(null)
 
   useEffect(() => {

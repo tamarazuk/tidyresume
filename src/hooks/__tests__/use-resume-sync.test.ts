@@ -11,22 +11,25 @@ vi.mock('@/lib/resume-api', () => ({
 
 const setSyncStatus = vi.fn()
 let storeState = {
-  id: 'test-id',
-  resumeTitle: 'Title',
-  markdown: 'Content',
-  slug: 'slug',
-  resumeDisplay: {
-    theme: {
-      accent: 'indigo',
-      typography: {
-        heading: 'geologica',
-        body: 'noto-sans',
-        headingSize: 'md',
-        bodySize: '15',
+  getActiveDraft: () => ({
+    id: 'test-id',
+    resumeTitle: 'Title',
+    markdown: 'Content',
+    slug: 'slug',
+    resumeDisplay: {
+      theme: {
+        accent: 'indigo',
+        typography: {
+          heading: 'geologica',
+          body: 'noto-sans',
+          headingSize: 'md',
+          bodySize: '15',
+        },
       },
     },
-  },
-  isPublished: true,
+    isPublished: true,
+    editSecret: null,
+  }),
   setSyncStatus,
 }
 
@@ -39,22 +42,25 @@ describe('useResumeSync', () => {
     vi.clearAllMocks()
     vi.useFakeTimers()
     storeState = {
-      id: 'test-id',
-      resumeTitle: 'Title',
-      markdown: 'Content',
-      slug: 'slug',
-      resumeDisplay: {
-        theme: {
-          accent: 'indigo',
-          typography: {
-            heading: 'geologica',
-            body: 'noto-sans',
-            headingSize: 'md',
-            bodySize: '15',
+      getActiveDraft: () => ({
+        id: 'test-id',
+        resumeTitle: 'Title',
+        markdown: 'Content',
+        slug: 'slug',
+        resumeDisplay: {
+          theme: {
+            accent: 'indigo',
+            typography: {
+              heading: 'geologica',
+              body: 'noto-sans',
+              headingSize: 'md',
+              bodySize: '15',
+            },
           },
         },
-      },
-      isPublished: true,
+        isPublished: true,
+        editSecret: null,
+      }),
       setSyncStatus,
     }
   })
@@ -75,7 +81,28 @@ describe('useResumeSync', () => {
     // First render sets mounted=true.
     // We need to trigger the effect.
     // Change state to trigger re-render and effect
-    storeState = { ...storeState, markdown: 'Updated Content' }
+    storeState = {
+      ...storeState,
+      getActiveDraft: () => ({
+        id: 'test-id',
+        resumeTitle: 'Title',
+        markdown: 'Updated Content',
+        slug: 'slug',
+        resumeDisplay: {
+          theme: {
+            accent: 'indigo',
+            typography: {
+              heading: 'geologica',
+              body: 'noto-sans',
+              headingSize: 'md',
+              bodySize: '15',
+            },
+          },
+        },
+        isPublished: true,
+        editSecret: null,
+      }),
+    }
     rerender()
 
     // Fast-forward debounce time (2500ms)
@@ -102,18 +129,25 @@ describe('useResumeSync', () => {
 
     storeState = {
       ...storeState,
-      markdown: 'Updated Content',
-      resumeDisplay: {
-        theme: {
-          accent: 'teal',
-          typography: {
-            heading: 'ibm-plex-serif',
-            body: 'ibm-plex-sans',
-            headingSize: 'lg',
-            bodySize: '16',
+      getActiveDraft: () => ({
+        id: 'test-id',
+        resumeTitle: 'Title',
+        markdown: 'Updated Content',
+        slug: 'slug',
+        resumeDisplay: {
+          theme: {
+            accent: 'teal',
+            typography: {
+              heading: 'ibm-plex-serif',
+              body: 'ibm-plex-sans',
+              headingSize: 'lg',
+              bodySize: '16',
+            },
           },
         },
-      },
+        isPublished: true,
+        editSecret: null,
+      }),
     }
     rerender()
 
