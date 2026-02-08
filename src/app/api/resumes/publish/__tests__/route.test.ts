@@ -36,6 +36,7 @@ describe('POST /api/resumes/publish', () => {
       id: 'new-uuid',
       slug: null,
       editSecret: 'new-secret',
+      created: true,
     })
 
     const request = new Request('http://localhost/api/resumes/publish', {
@@ -45,8 +46,9 @@ describe('POST /api/resumes/publish', () => {
 
     const response = await POST(request)
     expect(response.status).toBe(200)
-    const data = (await response.json()) as { id?: string }
+    const data = (await response.json()) as { id?: string; created?: boolean }
     expect(data.id).toBe('new-uuid')
+    expect(data.created).toBe(true)
   })
 
   it('should return 401 if updating existing resume without secret', async () => {
@@ -77,6 +79,7 @@ describe('POST /api/resumes/publish', () => {
       id: 'existing-id',
       slug: null,
       editSecret: 'correct-secret',
+      created: false,
     })
 
     const request = new Request('http://localhost/api/resumes/publish', {
@@ -100,9 +103,10 @@ describe('POST /api/resumes/publish', () => {
     // getResume returns undefined (doesn't exist in DB)
     vi.mocked(resumeService.getResume).mockResolvedValue(undefined)
     vi.mocked(resumeService.publishResume).mockResolvedValue({
-      id: 'unpublished-id',
+      id: 'new-id',
       slug: null,
       editSecret: 'new-secret',
+      created: true,
     })
 
     const request = new Request('http://localhost/api/resumes/publish', {
@@ -116,6 +120,9 @@ describe('POST /api/resumes/publish', () => {
 
     const response = await POST(request)
     expect(response.status).toBe(200)
+    const data = (await response.json()) as { id?: string; created?: boolean }
+    expect(data.id).toBe('new-id')
+    expect(data.created).toBe(true)
     expect(resumeService.publishResume).toHaveBeenCalled()
   })
 
@@ -124,6 +131,7 @@ describe('POST /api/resumes/publish', () => {
       id: 'new-uuid',
       slug: null,
       editSecret: 'new-secret',
+      created: true,
     })
 
     const request = new Request('http://localhost/api/resumes/publish', {

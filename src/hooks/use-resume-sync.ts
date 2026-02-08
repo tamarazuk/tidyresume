@@ -16,6 +16,9 @@ export function useResumeSync() {
   const theme = draft.resumeDisplay.theme
   const isPublished = draft.isPublished
   const editSecret = draft.editSecret
+  const setResumeId = useResumeStore((state) => state.setId)
+  const setResumeSlug = useResumeStore((state) => state.setSlug)
+  const setEditSecret = useResumeStore((state) => state.setEditSecret)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const [retryTrigger, setRetryTrigger] = useState(0)
 
@@ -90,10 +93,33 @@ export function useResumeSync() {
         if (controller.signal.aborted) return
 
         try {
-          await publishResume(pending.payload, {
+          const response = await publishResume(pending.payload, {
             signal: controller.signal,
             editSecret: editSecret ?? undefined,
           })
+          if (response.id !== id) {
+            setResumeId(response.id)
+          }
+          if (response.slug !== slug) {
+            setResumeSlug(response.slug ?? null)
+          }
+          if (response.editSecret) {
+            setEditSecret(response.editSecret)
+          }
+
+          const syncedPayload: PublishResumePayload = {
+            ...pending.payload,
+            id: response.id,
+          }
+          if (response.slug !== null) {
+            syncedPayload.slug = response.slug
+          } else {
+            delete syncedPayload.slug
+          }
+          pendingRef.current = {
+            key: JSON.stringify(syncedPayload),
+            payload: syncedPayload,
+          }
           success = true
         } catch (error) {
           if ((error as Error).name === 'AbortError') return
@@ -128,6 +154,9 @@ export function useResumeSync() {
     theme,
     isPublished,
     editSecret,
+    setEditSecret,
+    setResumeId,
+    setResumeSlug,
     setSyncStatus,
     retryTrigger,
   ])

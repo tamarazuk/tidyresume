@@ -18,6 +18,7 @@ export interface PublishResumeResponse {
   slug: ResumeSlug
   url?: string
   editSecret?: string
+  created: boolean
 }
 
 export interface UpdateResumeSlugResponse {

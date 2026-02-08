@@ -10,6 +10,9 @@ vi.mock('@/lib/resume-api', () => ({
 }))
 
 const setSyncStatus = vi.fn()
+const setResumeId = vi.fn()
+const setResumeSlug = vi.fn()
+const setEditSecret = vi.fn()
 let storeState = {
   getActiveDraft: () => ({
     id: 'test-id',
@@ -30,6 +33,9 @@ let storeState = {
     isPublished: true,
     editSecret: null,
   }),
+  setId: setResumeId,
+  setSlug: setResumeSlug,
+  setEditSecret,
   setSyncStatus,
 }
 
@@ -41,6 +47,9 @@ describe('useResumeSync', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers()
+    setResumeId.mockClear()
+    setResumeSlug.mockClear()
+    setEditSecret.mockClear()
     storeState = {
       getActiveDraft: () => ({
         id: 'test-id',
@@ -61,6 +70,9 @@ describe('useResumeSync', () => {
         isPublished: true,
         editSecret: null,
       }),
+      setId: setResumeId,
+      setSlug: setResumeSlug,
+      setEditSecret,
       setSyncStatus,
     }
   })
@@ -74,7 +86,11 @@ describe('useResumeSync', () => {
     vi.mocked(publishResume)
       .mockRejectedValueOnce(error) // 1st attempt fails
       .mockRejectedValueOnce(error) // 2nd attempt fails
-      .mockResolvedValueOnce({ id: 'test-id', slug: 'slug' }) // 3rd attempt succeeds
+      .mockResolvedValueOnce({
+        id: 'test-id',
+        slug: 'slug',
+        created: false,
+      }) // 3rd attempt succeeds
 
     const { rerender } = renderHook(() => useResumeSync())
 
@@ -123,7 +139,11 @@ describe('useResumeSync', () => {
   })
 
   it('should include theme settings in payload', async () => {
-    vi.mocked(publishResume).mockResolvedValue({ id: 'test-id', slug: 'slug' })
+    vi.mocked(publishResume).mockResolvedValue({
+      id: 'test-id',
+      slug: 'slug',
+      created: false,
+    })
 
     const { rerender } = renderHook(() => useResumeSync())
 
@@ -167,5 +187,46 @@ describe('useResumeSync', () => {
       }),
       expect.anything()
     )
+  })
+
+  it('rotates local remote identifiers when publish returns a new id', async () => {
+    vi.mocked(publishResume).mockResolvedValue({
+      id: 'new-id',
+      slug: 'new-slug',
+      editSecret: 'new-secret',
+      created: true,
+    })
+
+    const { rerender } = renderHook(() => useResumeSync())
+
+    storeState = {
+      ...storeState,
+      getActiveDraft: () => ({
+        id: 'stale-id',
+        resumeTitle: 'Title',
+        markdown: 'Updated Content',
+        slug: 'stale-slug',
+        resumeDisplay: {
+          theme: {
+            accent: 'indigo',
+            typography: {
+              heading: 'geologica',
+              body: 'noto-sans',
+              headingSize: 'md',
+              bodySize: '15',
+            },
+          },
+        },
+        isPublished: true,
+        editSecret: 'old-secret',
+      }),
+    }
+    rerender()
+
+    await vi.advanceTimersByTimeAsync(2500)
+
+    expect(setResumeId).toHaveBeenCalledWith('new-id')
+    expect(setResumeSlug).toHaveBeenCalledWith('new-slug')
+    expect(setEditSecret).toHaveBeenCalledWith('new-secret')
   })
 })

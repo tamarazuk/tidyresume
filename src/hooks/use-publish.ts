@@ -22,6 +22,7 @@ export function usePublish() {
   const resumeSlug = draft.slug
   const resumeTheme = draft.resumeDisplay.theme
   const setResumeId = useResumeStore((state) => state.setId)
+  const setSlug = useResumeStore((state) => state.setSlug)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const setIsPublished = useResumeStore((state) => state.setIsPublished)
   const setEditSecret = useResumeStore((state) => state.setEditSecret)
@@ -43,9 +44,8 @@ export function usePublish() {
         }
       )
 
-      if (data.id) {
-        setResumeId(data.id)
-      }
+      setResumeId(data.id)
+      setSlug(data.slug ?? null)
       if (data.editSecret) {
         setEditSecret(data.editSecret)
       }

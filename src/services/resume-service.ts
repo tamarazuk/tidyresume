@@ -136,6 +136,36 @@ export async function publishResume(
   const themeValue =
     data.theme !== undefined ? serializeTheme(data.theme) : undefined
 
+  const createResumeRecord = async () => {
+    const resumeId = crypto.randomUUID()
+    const editSecret = crypto.randomUUID()
+    const insertThemeValue = serializeTheme(data.theme ?? null)
+
+    const values: typeof resumes.$inferInsert = {
+      id: resumeId,
+      title: data.title,
+      content: data.content,
+      slug: slugVal,
+      theme: insertThemeValue,
+      editSecret: editSecret,
+    }
+
+    try {
+      const results = await db.insert(resumes).values(values).returning({
+        id: resumes.id,
+        slug: resumes.slug,
+        editSecret: resumes.editSecret,
+      })
+
+      return results[0]
+    } catch (error) {
+      if (isUniqueConstraintViolation(error)) {
+        throw new Error('Slug already taken')
+      }
+      throw error
+    }
+  }
+
   // CASE 1: Update existing resume
   if (data.id) {
     try {
@@ -159,13 +189,19 @@ export async function publishResume(
           editSecret: resumes.editSecret,
         })
 
-      if (results.length === 0) {
-        // Client provided an ID, but it doesn't exist.
-        // We do NOT create it. We consider this an invalid update attempt.
-        throw new Error('Resume not found')
+      if (results.length > 0) {
+        return {
+          ...results[0],
+          created: false,
+        }
       }
 
-      return results[0]
+      // Stale client ID: create a new remote record and let the client rotate.
+      const createdResume = await createResumeRecord()
+      return {
+        ...createdResume,
+        created: true,
+      }
     } catch (error) {
       if (isUniqueConstraintViolation(error)) {
         throw new Error('Slug already taken')
@@ -175,31 +211,9 @@ export async function publishResume(
   }
 
   // CASE 2: Create new resume
-  const resumeId = crypto.randomUUID()
-  const editSecret = crypto.randomUUID()
-  const insertThemeValue = serializeTheme(data.theme ?? null)
-
-  const values: typeof resumes.$inferInsert = {
-    id: resumeId,
-    title: data.title,
-    content: data.content,
-    slug: slugVal,
-    theme: insertThemeValue,
-    editSecret: editSecret,
-  }
-
-  try {
-    const results = await db.insert(resumes).values(values).returning({
-      id: resumes.id,
-      slug: resumes.slug,
-      editSecret: resumes.editSecret,
-    })
-
-    return results[0]
-  } catch (error) {
-    if (isUniqueConstraintViolation(error)) {
-      throw new Error('Slug already taken')
-    }
-    throw error
+  const createdResume = await createResumeRecord()
+  return {
+    ...createdResume,
+    created: true,
   }
 }
