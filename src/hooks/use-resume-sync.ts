@@ -138,7 +138,7 @@ export function useResumeSync() {
       }
 
       if (success) {
-        lastSyncedKeyRef.current = pending.key
+        lastSyncedKeyRef.current = pendingRef.current?.key ?? pending.key
         setSyncStatus('synced')
       }
     }, CLOUD_SYNC_DEBOUNCE_MS)
