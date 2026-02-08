@@ -1,4 +1,5 @@
 import type { ResumeThemeSettings } from '@/types/resume'
+import type { ResumeSyncStatus, SaveStatus } from '@/stores/resume-store'
 
 export interface StorybookResumeSeed {
   id?: string | null
@@ -6,8 +7,8 @@ export interface StorybookResumeSeed {
   editSecret?: string | null
   resumeTitle?: string
   markdown?: string
-  saveStatus?: 'saved' | 'saving' | 'unsaved'
-  syncStatus?: 'synced' | 'syncing' | 'error' | 'unsaved'
+  saveStatus?: SaveStatus
+  syncStatus?: ResumeSyncStatus
   isPublished?: boolean
   imageWarning?: string | null
   contentWarning?: string | null

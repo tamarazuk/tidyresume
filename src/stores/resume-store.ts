@@ -24,7 +24,8 @@ import type {
   ResumeThemeSettings,
 } from '@/types/resume'
 
-type SaveStatus = 'saved' | 'saving' | 'unsaved'
+export type SaveStatus = 'saved' | 'saving' | 'unsaved'
+export type ResumeSyncStatus = 'synced' | 'syncing' | 'error' | 'unsaved'
 export type ResumeThemeMode = 'auto' | 'light' | 'dark'
 
 export interface ResumeDisplaySettings {
@@ -137,7 +138,7 @@ interface ResumeState {
   resumeTitle: string
   markdown: string
   saveStatus: SaveStatus
-  syncStatus: 'synced' | 'syncing' | 'error' | 'unsaved'
+  syncStatus: ResumeSyncStatus
   isPublished: boolean
   imageWarning: string | null
   contentWarning: string | null
@@ -148,9 +149,7 @@ interface ResumeState {
   setResumeTheme: (theme: ResumeThemeUpdate) => void
   setMarkdown: (markdown: string) => void
   setSaveStatus: (saveStatus: SaveStatus) => void
-  setSyncStatus: (
-    syncStatus: 'synced' | 'syncing' | 'error' | 'unsaved'
-  ) => void
+  setSyncStatus: (syncStatus: ResumeSyncStatus) => void
   setId: (id: ResumeId | null) => void
   setSlug: (slug: ResumeSlug) => void
   setEditSecret: (editSecret: string | null) => void
