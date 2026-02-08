@@ -21,8 +21,8 @@ import {
 } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
-import { AppearanceSettingsContent } from './appearance-settings-content'
 import type { ResumeDraftId } from '@/stores/resume-store'
+import { AppearanceSettingsContent } from './appearance-settings-content'
 
 interface AppearanceSettingsProps {
   label?: string
