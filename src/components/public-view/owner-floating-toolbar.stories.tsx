@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from 'storybook/test'
 import {
   OwnerFloatingToolbar,
   OwnerViewInfo,
@@ -12,7 +13,7 @@ const meta = {
   args: {
     id: STORY_RESUME_ID,
     isFullWidth: false,
-    onToggleWidth: () => undefined,
+    onToggleWidth: fn(),
   },
 } satisfies Meta<typeof OwnerFloatingToolbar>
 

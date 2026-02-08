@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from 'storybook/test'
 import ToolbarHeadingMenu from '@/components/editor/components/toolbar-heading-menu'
 
 const meta = {
@@ -12,6 +13,6 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    onSelect: () => undefined,
+    onSelect: fn(),
   },
 }
