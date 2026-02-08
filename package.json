@@ -84,5 +84,10 @@
     "vite-tsconfig-paths": "^6.0.4",
     "vitest": "^4.0.17",
     "wrangler": "^4.59.2"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
