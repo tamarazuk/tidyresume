@@ -15,6 +15,16 @@ import { deleteResume, isResumeApiError } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 import { cn } from '@/lib/utils'
 
+function resolveUnpublishErrorMessage(error: unknown) {
+  if (!isResumeApiError(error)) {
+    return 'Failed to unpublish resume'
+  }
+  if (error.status === 401 || error.status === 403) {
+    return 'You do not have permission to unpublish this resume'
+  }
+  return 'Failed to unpublish resume'
+}
+
 interface UnpublishButtonProps {
   id: string
   buttonProps?: ComponentProps<typeof Button>
@@ -42,16 +52,6 @@ export function UnpublishButton({
   const [isUnpublishing, setIsUnpublishing] = useState(false)
 
   if (!isOwner) return null
-
-  const resolveUnpublishErrorMessage = (error: unknown) => {
-    if (!isResumeApiError(error)) {
-      return 'Failed to unpublish resume'
-    }
-    if (error.status === 401 || error.status === 403) {
-      return 'You do not have permission to unpublish this resume'
-    }
-    return 'Failed to unpublish resume'
-  }
 
   const handleUnpublish = async () => {
     if (
