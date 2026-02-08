@@ -21,9 +21,6 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
-      <Button onClick={() => toast.success('Resume published')}>Show Toast</Button>
-      <Toaster />
-    </div>
+    <Button onClick={() => toast.success('Resume published')}>Show Toast</Button>
   ),
 }
