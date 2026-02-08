@@ -47,9 +47,6 @@ describe('useResumeSync', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers()
-    setResumeId.mockClear()
-    setResumeSlug.mockClear()
-    setEditSecret.mockClear()
     storeState = {
       getActiveDraft: () => ({
         id: 'test-id',
