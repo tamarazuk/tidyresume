@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { expect, within } from 'storybook/test'
 import { ViralLoopCTA } from '@/components/public-view/viral-loop-cta'
 import { STORY_RESUME_ID } from '@/storybook/fixtures/resume-fixtures'
 
@@ -37,5 +38,11 @@ export const Owner: Story = {
         },
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(
+      canvas.queryByRole('link', { name: /tidy up your resume/i })
+    ).not.toBeInTheDocument()
   },
 }
