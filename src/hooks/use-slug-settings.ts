@@ -90,6 +90,16 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
           setErrorMessage('You do not have permission to edit this slug')
           return
         }
+        if (error.status === 404) {
+          setStatus('error')
+          setErrorMessage('Resume not found. Publish again and retry.')
+          return
+        }
+        if (error.status >= 500) {
+          setStatus('error')
+          setErrorMessage('Server error while saving link')
+          return
+        }
       }
       setStatus('error')
       setErrorMessage('Something went wrong')

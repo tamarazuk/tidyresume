@@ -7,6 +7,7 @@ import { useResumeStore } from '@/stores/resume-store'
 import {
   publishResume as publishResumeRequest,
   deleteResume as deleteResumeRequest,
+  isResumeApiError,
 } from '@/lib/resume-api'
 import { getResumeUrl } from '@/lib/utils'
 
@@ -26,6 +27,32 @@ export function usePublish() {
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const setIsPublished = useResumeStore((state) => state.setIsPublished)
   const setEditSecret = useResumeStore((state) => state.setEditSecret)
+
+  const resolvePublishErrorMessage = (error: unknown) => {
+    if (!isResumeApiError(error)) {
+      return 'Failed to publish resume'
+    }
+    if (error.status === 409) {
+      return 'Custom link is already taken'
+    }
+    if (error.status === 401 || error.status === 403) {
+      return 'You do not have permission to publish this resume'
+    }
+    if (error.status === 404) {
+      return 'Resume not found. Try publishing again.'
+    }
+    return 'Failed to publish resume'
+  }
+
+  const resolveUnpublishErrorMessage = (error: unknown) => {
+    if (!isResumeApiError(error)) {
+      return 'Failed to unpublish resume'
+    }
+    if (error.status === 401 || error.status === 403) {
+      return 'You do not have permission to unpublish this resume'
+    }
+    return 'Failed to unpublish resume'
+  }
 
   const publishResume = async () => {
     setIsPublishing(true)
@@ -62,7 +89,7 @@ export function usePublish() {
       })
     } catch (error) {
       console.error(error)
-      toast.error('Failed to publish resume')
+      toast.error(resolvePublishErrorMessage(error))
     } finally {
       setIsPublishing(false)
     }
@@ -77,14 +104,27 @@ export function usePublish() {
 
     setIsUnpublishing(true)
     try {
-      await deleteResumeRequest(resumeId, {
-        editSecret: editSecret ?? undefined,
-      })
+      let wasAlreadyUnpublished = false
+      try {
+        await deleteResumeRequest(resumeId, {
+          editSecret: editSecret ?? undefined,
+        })
+      } catch (error) {
+        if (isResumeApiError(error) && error.status === 404) {
+          wasAlreadyUnpublished = true
+        } else {
+          throw error
+        }
+      }
       useResumeStore.getState().unpublish()
-      toast.success('Resume unpublished successfully')
+      toast.success(
+        wasAlreadyUnpublished
+          ? 'Resume was already unpublished'
+          : 'Resume unpublished successfully'
+      )
     } catch (error) {
       console.error(error)
-      toast.error('Failed to unpublish resume')
+      toast.error(resolveUnpublishErrorMessage(error))
     } finally {
       setIsUnpublishing(false)
     }

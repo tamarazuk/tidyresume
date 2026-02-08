@@ -11,7 +11,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useOwnerCheck } from '@/hooks/use-owner-check'
-import { deleteResume } from '@/lib/resume-api'
+import { deleteResume, isResumeApiError } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 import { cn } from '@/lib/utils'
 
@@ -43,6 +43,16 @@ export function UnpublishButton({
 
   if (!isOwner) return null
 
+  const resolveUnpublishErrorMessage = (error: unknown) => {
+    if (!isResumeApiError(error)) {
+      return 'Failed to unpublish resume'
+    }
+    if (error.status === 401 || error.status === 403) {
+      return 'You do not have permission to unpublish this resume'
+    }
+    return 'Failed to unpublish resume'
+  }
+
   const handleUnpublish = async () => {
     if (
       !confirm('Are you sure? Your public link will stop working immediately.')
@@ -51,16 +61,30 @@ export function UnpublishButton({
 
     setIsUnpublishing(true)
     try {
-      await deleteResume(id, { editSecret })
+      let wasAlreadyUnpublished = false
+      try {
+        await deleteResume(id, { editSecret })
+      } catch (error) {
+        if (isResumeApiError(error) && error.status === 404) {
+          wasAlreadyUnpublished = true
+        } else {
+          throw error
+        }
+      }
       if (draftId) {
         unpublish(draftId)
         setActiveDraft(draftId)
       }
-      toast.success('Resume unpublished successfully')
+      toast.success(
+        wasAlreadyUnpublished
+          ? 'Resume was already unpublished'
+          : 'Resume unpublished successfully'
+      )
+      setIsUnpublishing(false)
       router.push(draftId ? `/edit/${draftId}` : '/edit')
     } catch (error) {
       console.error(error)
-      toast.error('Failed to unpublish resume')
+      toast.error(resolveUnpublishErrorMessage(error))
       setIsUnpublishing(false)
     }
   }
