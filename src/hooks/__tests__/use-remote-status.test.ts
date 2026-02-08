@@ -15,7 +15,9 @@ describe('useRemoteStatus', () => {
     const draftIdsToDelete = state.draftOrder.filter(
       (draftId) => draftId !== state.activeDraftId
     )
-    draftIdsToDelete.forEach((draftId) => state.deleteDraft(draftId))
+    draftIdsToDelete.forEach((draftId) => {
+      state.deleteDraft(draftId)
+    })
   })
 
   afterEach(() => {
