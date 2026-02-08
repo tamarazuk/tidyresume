@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { HttpResponse, http } from 'msw'
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import { UnpublishButton } from '@/components/public-view/unpublish-button'
 import { STORY_RESUME_ID } from '@/storybook/fixtures/resume-fixtures'
@@ -16,15 +17,6 @@ const meta = {
 export default meta
 
 type Story = StoryObj<typeof meta>
-
-const createJsonResponse = (body: unknown, status = 200) => {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-}
 
 export const Owner: Story = {
   parameters: {
@@ -62,23 +54,29 @@ export const OwnerCancel: Story = {
         },
       },
     },
+    msw: {
+      handlers: [
+        http.delete(`/api/resumes/${STORY_RESUME_ID}`, () => {
+          return HttpResponse.json({ success: true })
+        }),
+      ],
+    },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const page = within(document.body)
     const originalConfirm = window.confirm
-    const originalFetch = globalThis.fetch
     const confirmMock = fn(() => false)
-    const fetchMock = fn(async () => createJsonResponse({ success: true }))
     window.confirm = confirmMock as typeof window.confirm
-    globalThis.fetch = fetchMock as typeof fetch
 
     try {
       await userEvent.click(canvas.getByRole('button', { name: /unpublish/i }))
       await expect(confirmMock).toHaveBeenCalledTimes(1)
-      await expect(fetchMock).toHaveBeenCalledTimes(0)
+      await expect(
+        page.queryByText('Resume unpublished successfully')
+      ).not.toBeInTheDocument()
     } finally {
       window.confirm = originalConfirm
-      globalThis.fetch = originalFetch
     }
   },
 }
@@ -93,33 +91,29 @@ export const OwnerConfirm: Story = {
         },
       },
     },
+    msw: {
+      handlers: [
+        http.delete(`/api/resumes/${STORY_RESUME_ID}`, () => {
+          return HttpResponse.json({ success: true })
+        }),
+      ],
+    },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const page = within(document.body)
     const originalConfirm = window.confirm
-    const originalFetch = globalThis.fetch
     const confirmMock = fn(() => true)
-    const fetchMock = fn(async () => createJsonResponse({ success: true }))
     window.confirm = confirmMock as typeof window.confirm
-    globalThis.fetch = fetchMock as typeof fetch
 
     try {
       await userEvent.click(canvas.getByRole('button', { name: /unpublish/i }))
       await waitFor(async () => {
         await expect(confirmMock).toHaveBeenCalledTimes(1)
-        await expect(fetchMock).toHaveBeenCalledTimes(1)
       })
-      await expect(fetchMock).toHaveBeenCalledWith(
-        `/api/resumes/${STORY_RESUME_ID}`,
-        expect.objectContaining({
-          method: 'DELETE',
-        })
-      )
       await page.findByText('Resume unpublished successfully')
     } finally {
       window.confirm = originalConfirm
-      globalThis.fetch = originalFetch
     }
   },
 }

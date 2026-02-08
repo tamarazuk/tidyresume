@@ -1,7 +1,10 @@
 import type { Preview } from '@storybook/react'
+import { initialize, mswLoader } from 'msw-storybook-addon'
 import { withAppProviders } from '@/storybook/decorators/with-app-providers'
 import { withStores } from '@/storybook/decorators/with-stores'
 import '@/styles/globals.css'
+
+initialize({ onUnhandledRequest: 'bypass' })
 
 const applyBrowserShims = () => {
   if (typeof window === 'undefined') {
@@ -48,6 +51,7 @@ const applyBrowserShims = () => {
 applyBrowserShims()
 
 const preview: Preview = {
+  loaders: [mswLoader],
   parameters: {
     actions: {
       argTypesRegex: '^on[A-Z].*',
