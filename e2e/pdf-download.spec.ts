@@ -34,12 +34,17 @@ test.describe('PDF download', () => {
       page.getByRole('link', { name: 'View resume' })
     ).toBeVisible()
 
+    // Set up response listener BEFORE the click
+    const responsePromise = page.waitForResponse((resp) =>
+      resp.url().includes('/api/resumes/test-resume-id/pdf')
+    )
+
     // Open actions menu and click Download PDF
     await page.getByRole('button', { name: 'Open actions menu' }).click()
     await page.getByRole('menuitem', { name: 'Download PDF' }).click()
 
     // Wait for API call
-    await page.waitForResponse('**/api/resumes/test-resume-id/pdf')
+    await responsePromise
     expect(pdfApiCalled).toBe(true)
   })
 })
