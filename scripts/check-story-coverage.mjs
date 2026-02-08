@@ -48,6 +48,8 @@ if (missingStories.length > 0) {
   process.exit(1)
 }
 
+const storyCount = componentFiles.length - missingStories.length
+
 console.log(
-  `Story coverage check passed (${componentFiles.length}/${componentFiles.length})`
+  `Story coverage check passed (${storyCount} stories for ${componentFiles.length} components)`
 )
