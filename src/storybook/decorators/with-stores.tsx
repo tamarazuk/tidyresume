@@ -6,7 +6,7 @@ import {
 } from '@/lib/resume-theme'
 import { DEFAULT_RESUME_TITLE } from '@/lib/constants'
 import { DEFAULT_RESUME } from '@/components/editor/constants'
-import { useResumeStore } from '@/stores/resume-store'
+import { useResumeStore, type ResumeDraft } from '@/stores/resume-store'
 import { useEditorViewStore } from '@/stores/editor-view-store'
 import { usePublicViewStore } from '@/stores/public-view-store'
 import type {
@@ -30,7 +30,10 @@ const buildResumeSeed = (seed?: StorybookResumeSeed) => {
     },
   }
 
-  return {
+  const draftId = seed?.draftId ?? 'storybook-draft'
+  const now = Date.now()
+  const draft: ResumeDraft = {
+    draftId,
     id: seed?.id ?? null,
     slug: seed?.slug ?? null,
     editSecret: seed?.editSecret ?? 'storybook-secret',
@@ -44,6 +47,16 @@ const buildResumeSeed = (seed?: StorybookResumeSeed) => {
     resumeDisplay: {
       themeMode: seed?.resumeDisplay?.themeMode ?? 'auto',
       theme: resumeDisplayTheme,
+    },
+    createdAt: now,
+    updatedAt: now,
+  }
+
+  return {
+    activeDraftId: draftId,
+    draftOrder: [draftId],
+    draftsById: {
+      [draftId]: draft,
     },
   }
 }

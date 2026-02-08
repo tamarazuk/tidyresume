@@ -2,6 +2,7 @@ import type { ResumeThemeSettings } from '@/types/resume'
 import type { ResumeSyncStatus, SaveStatus } from '@/stores/resume-store'
 
 export interface StorybookResumeSeed {
+  draftId?: string
   id?: string | null
   slug?: string | null
   editSecret?: string | null
