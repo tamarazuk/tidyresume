@@ -26,22 +26,24 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Owner: Story = {
-  parameters: {
-    tidyresume: {
-      stores: {
-        resume: {
-          id: STORY_RESUME_ID,
-          isPublished: true,
-          resumeTitle: STORY_RESUME_TITLE,
-          markdown: STORY_RESUME_CONTENT,
-          resumeDisplay: {
-            theme: STORY_RESUME_THEME,
-          },
+const ownerStoreParameters = {
+  tidyresume: {
+    stores: {
+      resume: {
+        id: STORY_RESUME_ID,
+        isPublished: true,
+        resumeTitle: STORY_RESUME_TITLE,
+        markdown: STORY_RESUME_CONTENT,
+        resumeDisplay: {
+          theme: STORY_RESUME_THEME,
         },
       },
     },
   },
+}
+
+export const Owner: Story = {
+  parameters: ownerStoreParameters,
 }
 
 export const Visitor: Story = {
@@ -61,19 +63,5 @@ export const FullWidth: Story = {
   args: {
     isFullWidth: true,
   },
-  parameters: {
-    tidyresume: {
-      stores: {
-        resume: {
-          id: STORY_RESUME_ID,
-          isPublished: true,
-          resumeTitle: STORY_RESUME_TITLE,
-          markdown: STORY_RESUME_CONTENT,
-          resumeDisplay: {
-            theme: STORY_RESUME_THEME,
-          },
-        },
-      },
-    },
-  },
+  parameters: ownerStoreParameters,
 }
