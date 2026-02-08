@@ -265,13 +265,13 @@ const mergeThemeUpdate = (
 }
 
 const createSaveStatusDebouncer = (
-  updateActiveDraft: (partial: Partial<ResumeDraft>) => void
+  updateDraft: (draftId: string, partial: Partial<ResumeDraft>) => void
 ) => {
   let timeout: ReturnType<typeof setTimeout> | null = null
-  return () => {
+  return (draftId: string) => {
     if (timeout) clearTimeout(timeout)
     timeout = setTimeout(() => {
-      updateActiveDraft({ saveStatus: 'saved' })
+      updateDraft(draftId, { saveStatus: 'saved' })
     }, 500)
   }
 }
@@ -280,7 +280,7 @@ export const useResumeStore = create<ResumeState>()(
   persist(
     (set, get) => {
       const scheduleSaveStatus = createSaveStatusDebouncer(
-        (partial) => get().updateActiveDraft(partial)
+        (draftId, partial) => get().updateDraft(draftId, partial)
       )
       const initialDraft = createDraftDefaults()
       return {
@@ -429,10 +429,12 @@ export const useResumeStore = create<ResumeState>()(
           get().updateDraft(draftId, { syncStatus })
         },
         setResumeTitle: (resumeTitle) => {
+          const activeId = get().activeDraftId
           get().updateActiveDraft({ resumeTitle, saveStatus: 'saving' })
-          scheduleSaveStatus()
+          if (activeId) scheduleSaveStatus(activeId)
         },
         setMarkdown: (markdown) => {
+          const activeId = get().activeDraftId
           const exceedsLimit = markdown.length > MAX_MARKDOWN_LENGTH
           get().updateActiveDraft({
             markdown: exceedsLimit
@@ -441,7 +443,7 @@ export const useResumeStore = create<ResumeState>()(
             saveStatus: 'saving',
             contentWarning: exceedsLimit ? CONTENT_TOO_LARGE_WARNING : null,
           })
-          scheduleSaveStatus()
+          if (activeId) scheduleSaveStatus(activeId)
         },
         setSaveStatus: (saveStatus) => get().updateActiveDraft({ saveStatus }),
         setSyncStatus: (syncStatus) => get().updateActiveDraft({ syncStatus }),
@@ -469,7 +471,7 @@ export const useResumeStore = create<ResumeState>()(
             resumeDisplay: mergeThemeUpdate(draft, theme),
             saveStatus: 'saving',
           })
-          scheduleSaveStatus()
+          scheduleSaveStatus(draft.draftId)
         },
         setResumeAccent: (accent) => {
           const draft = get().getActiveDraft()
@@ -483,7 +485,7 @@ export const useResumeStore = create<ResumeState>()(
             },
             saveStatus: 'saving',
           })
-          scheduleSaveStatus()
+          scheduleSaveStatus(draft.draftId)
         },
         unpublish: (draftId) => {
           const id = draftId ?? get().activeDraftId
