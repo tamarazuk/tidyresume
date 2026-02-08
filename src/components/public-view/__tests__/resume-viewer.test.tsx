@@ -118,7 +118,9 @@ describe('ResumeViewer', () => {
     const draftIdsToDelete = state.draftOrder.filter(
       (draftId) => draftId !== state.activeDraftId
     )
-    draftIdsToDelete.forEach((draftId) => state.deleteDraft(draftId))
+    draftIdsToDelete.forEach((draftId) => {
+      state.deleteDraft(draftId)
+    })
     const draft = useResumeStore.getState().getActiveDraft()
     useResumeStore.getState().updateDraft(draft.draftId, {
       id: 'resume-123',
