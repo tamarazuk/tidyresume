@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { useRef, type ComponentType, type ReactNode } from 'react'
+import { useRef } from 'react'
 import {
   Combobox,
   ComboboxContent,
@@ -28,15 +28,10 @@ const options = [
 
 function ComboboxPreview() {
   const anchorRef = useRef<HTMLDivElement | null>(null)
-  const UnsafeCombobox = Combobox as unknown as ComponentType<{
-    defaultValue: (typeof options)[number]
-    items: typeof options
-    children: ReactNode
-  }>
 
   return (
     <div className="w-72" ref={anchorRef}>
-      <UnsafeCombobox defaultValue={options[0]} items={options}>
+      <Combobox defaultValue={options[0]} items={options}>
         <ComboboxInput placeholder="Select font" />
         <ComboboxContent anchor={anchorRef}>
           <ComboboxList>
@@ -51,7 +46,7 @@ function ComboboxPreview() {
             </ComboboxGroup>
           </ComboboxList>
         </ComboboxContent>
-      </UnsafeCombobox>
+      </Combobox>
     </div>
   )
 }
