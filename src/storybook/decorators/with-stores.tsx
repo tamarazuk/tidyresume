@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import type { Decorator } from '@storybook/react'
 import {
   DEFAULT_RESUME_MARGINS,
@@ -80,9 +80,9 @@ interface StoryStoreSeederProps {
 
 function StoryStoreSeeder({ stores, children }: StoryStoreSeederProps) {
   const initialStoresRef = useRef(stores)
-  const [isSeeded, setIsSeeded] = useState(false)
+  const hasSeededRef = useRef(false)
 
-  useLayoutEffect(() => {
+  if (!hasSeededRef.current) {
     const initialStores = initialStoresRef.current
 
     useResumeStore.persist?.clearStorage?.()
@@ -91,12 +91,7 @@ function StoryStoreSeeder({ stores, children }: StoryStoreSeederProps) {
     useResumeStore.setState(buildResumeSeed(initialStores?.resume))
     useEditorViewStore.setState(buildEditorViewSeed(initialStores?.editorView))
     usePublicViewStore.setState(buildPublicViewSeed(initialStores?.publicView))
-
-    setIsSeeded(true)
-  }, [])
-
-  if (!isSeeded) {
-    return null
+    hasSeededRef.current = true
   }
 
   return <>{children}</>
