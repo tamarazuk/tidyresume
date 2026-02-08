@@ -52,7 +52,7 @@
   "devDependencies": {
     "@react-email/preview-server": "5.2.5",
     "@storybook/nextjs": "10.2.7",
-    "@storybook/react": "10.2.0",
+    "@storybook/react": "10.2.7",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
