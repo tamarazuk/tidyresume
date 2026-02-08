@@ -30,3 +30,9 @@ jobs:
 
       - name: Run tests
         run: pnpm test:once
+
+      - name: Check Storybook coverage
+        run: pnpm storybook:check-coverage
+
+      - name: Build Storybook
+        run: pnpm storybook:build

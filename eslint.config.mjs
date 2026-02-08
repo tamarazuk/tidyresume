@@ -12,8 +12,10 @@ const eslintConfig = defineConfig([
     '.open-next/**',
     'out/**',
     'build/**',
+    'storybook-static/**',
     'next-env.d.ts',
     'cloudflare-env.d.ts',
+    'public/mockServiceWorker.js',
   ]),
 ])
 
