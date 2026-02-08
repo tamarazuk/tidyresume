@@ -50,6 +50,8 @@ export default function ResumeLibrary() {
   }
 
   const handleDelete = async (draftId: string) => {
+    if (isDeleting) return
+
     const draft = draftsById[draftId]
     if (!draft) return
 
