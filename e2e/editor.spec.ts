@@ -18,7 +18,7 @@ test.describe('Editor page', () => {
   })
 
   test('markdown editor loads', async ({ page }) => {
-    await expect(page.locator('.md-editor')).toBeVisible()
+    await expect(page.getByTestId('markdown-editor')).toBeVisible()
   })
 
   test('resume title is editable', async ({ page }) => {

@@ -34,7 +34,7 @@ export default function Editor() {
     useResumeAppearanceClasses()
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col" data-testid="markdown-editor">
       <input {...uploadInputProps} />
       <MdEditor
         key={editorTheme}
