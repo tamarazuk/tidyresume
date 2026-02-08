@@ -16,9 +16,7 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
   const id = draft?.id ?? null
   const slug = draft?.slug ?? null
   const draftId = draft?.draftId ?? null
-  const setSlug = useResumeStore((state) => state.setSlug)
   const setDraftSlug = useResumeStore((state) => state.setDraftSlug)
-  const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
   const setDraftSyncStatus = useResumeStore((state) => state.setDraftSyncStatus)
   const editSecret = draft?.editSecret ?? null
 
@@ -67,9 +65,6 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
       if (draftId) {
         setDraftSlug(draftId, data.slug)
         setDraftSyncStatus(draftId, 'synced')
-      } else {
-        setSlug(data.slug)
-        setSyncStatus('synced')
       }
       setStatus('success')
       if (data.url) {
