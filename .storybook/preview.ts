@@ -19,7 +19,6 @@ const applyBrowserShims = () => {
   shimWindow.__tidyresumeStorybookShimsApplied = true
 
   window.print = () => undefined
-  window.confirm = () => true
 
   if (!navigator.clipboard) {
     Object.defineProperty(navigator, 'clipboard', {
