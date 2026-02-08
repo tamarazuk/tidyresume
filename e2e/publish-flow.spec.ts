@@ -20,6 +20,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )
@@ -52,6 +53,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     })
@@ -107,6 +109,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'my-resume',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )
@@ -136,6 +139,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )
@@ -169,6 +173,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )
