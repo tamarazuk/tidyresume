@@ -77,3 +77,9 @@ in sync.
 ## UI primitives
 
 When adding new UI primitives, use Base UI (`@base-ui/react`) instead of Radix.
+
+## Storybook
+
+- `pnpm storybook` runs Storybook locally with co-located component stories.
+- `pnpm storybook:check-coverage` verifies each render component has a co-located story file.
+- `pnpm storybook:build` builds static Storybook output for CI validation.

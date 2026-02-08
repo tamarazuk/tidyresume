@@ -129,6 +129,8 @@ pnpm build      # Build for production
 pnpm start      # Start production server
 pnpm test       # Run Vitest
 pnpm lint       # Run ESLint
+pnpm storybook  # Run Storybook locally
+pnpm storybook:build # Build static Storybook
 pnpm format     # Format code with Prettier
 ```
 
