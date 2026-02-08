@@ -22,6 +22,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { AppearanceSettingsContent } from './appearance-settings-content'
+import type { ResumeDraftId } from '@/stores/resume-store'
 
 interface AppearanceSettingsProps {
   label?: string
@@ -31,6 +32,7 @@ interface AppearanceSettingsProps {
   triggerClassName?: string
   triggerVariant?: VariantProps<typeof buttonVariants>['variant']
   triggerSize?: VariantProps<typeof buttonVariants>['size']
+  draftId?: ResumeDraftId
 }
 
 export default function AppearanceSettings({
@@ -41,6 +43,7 @@ export default function AppearanceSettings({
   triggerClassName,
   triggerVariant = 'ghost',
   triggerSize = 'sm',
+  draftId,
 }: AppearanceSettingsProps) {
   return (
     <Popover>
@@ -63,7 +66,7 @@ export default function AppearanceSettings({
           </PopoverDescription>
         </PopoverHeader>
         <Separator />
-        <AppearanceSettingsContent />
+        <AppearanceSettingsContent draftId={draftId} />
       </PopoverContent>
     </Popover>
   )
@@ -72,11 +75,13 @@ export default function AppearanceSettings({
 interface AppearanceSettingsSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  draftId?: ResumeDraftId
 }
 
 export function AppearanceSettingsSheet({
   open,
   onOpenChange,
+  draftId,
 }: AppearanceSettingsSheetProps) {
   return (
     <Sheet open={open} onOpenChange={(nextOpen) => onOpenChange(nextOpen)}>
@@ -96,7 +101,7 @@ export function AppearanceSettingsSheet({
           </SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 overflow-y-auto p-4">
-          <AppearanceSettingsContent />
+          <AppearanceSettingsContent draftId={draftId} />
         </div>
       </SheetContent>
     </Sheet>

@@ -100,7 +100,7 @@ export function OwnerFloatingToolbar({
   isFullWidth,
   onToggleWidth,
 }: OwnerFloatingToolbarProps) {
-  const { isOwner, editHref, handleShare, handleUrlUpdated, handleEdit } =
+  const { isOwner, draftId, editHref, handleShare, handleUrlUpdated, handleEdit } =
     useOwnerFloatingToolbar({
       id,
     })
@@ -163,6 +163,7 @@ export function OwnerFloatingToolbar({
           <TooltipTrigger
             render={(props) => (
               <SlugSettings
+                draftId={draftId}
                 label="Link"
                 ariaLabel="Edit link"
                 labelClassName="sm:hidden"

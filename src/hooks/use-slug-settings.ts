@@ -1,18 +1,26 @@
 import { useState } from 'react'
 import { isResumeApiError, updateResumeSlug } from '@/lib/resume-api'
-import { useResumeStore } from '@/stores/resume-store'
+import { useResumeStore, type ResumeDraftId } from '@/stores/resume-store'
 
 interface UseSlugSettingsOptions {
+  draftId?: ResumeDraftId
   onUrlUpdated?: (url: string) => void
 }
 
 export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
-  const draft = useResumeStore((state) => state.getActiveDraft())
-  const id = draft.id
-  const slug = draft.slug
+  const draft = useResumeStore((state) =>
+    options.draftId
+      ? state.draftsById[options.draftId] ?? null
+      : state.getActiveDraft()
+  )
+  const id = draft?.id ?? null
+  const slug = draft?.slug ?? null
+  const draftId = draft?.draftId ?? null
   const setSlug = useResumeStore((state) => state.setSlug)
+  const setDraftSlug = useResumeStore((state) => state.setDraftSlug)
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
-  const editSecret = draft.editSecret
+  const setDraftSyncStatus = useResumeStore((state) => state.setDraftSyncStatus)
+  const editSecret = draft?.editSecret ?? null
 
   const [isOpen, setIsOpen] = useState(false)
   const [inputValue, setInputValue] = useState<string>(slug ?? id ?? '')
@@ -56,8 +64,13 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
           editSecret: editSecret ?? undefined,
         }
       )
-      setSlug(data.slug)
-      setSyncStatus('synced')
+      if (draftId) {
+        setDraftSlug(draftId, data.slug)
+        setDraftSyncStatus(draftId, 'synced')
+      } else {
+        setSlug(data.slug)
+        setSyncStatus('synced')
+      }
       setStatus('success')
       if (data.url) {
         options.onUrlUpdated?.(data.url)

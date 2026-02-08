@@ -142,6 +142,7 @@ export function ResumeViewer({
               </DropdownMenuItem>
               {isOwner ? (
                 <AppearanceSettings
+                  draftId={draftId}
                   label="Appearance"
                   labelClassName="inline"
                   triggerVariant="ghost"
@@ -154,6 +155,7 @@ export function ResumeViewer({
               ) : null}
               {isOwner ? (
                 <SlugSettings
+                  draftId={draftId}
                   label="Edit link"
                   labelClassName="inline"
                   variant="ghost"

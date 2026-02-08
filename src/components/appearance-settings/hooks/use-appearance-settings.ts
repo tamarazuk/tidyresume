@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, type KeyboardEvent } from 'react'
-import { useResumeStore } from '@/stores/resume-store'
+import { useResumeStore, type ResumeDraftId } from '@/stores/resume-store'
 import {
   DEFAULT_RESUME_MARGINS,
   DEFAULT_RESUME_THEME,
@@ -85,15 +85,25 @@ interface AppearanceSettingsState {
   }
 }
 
-export const useAppearanceSettings = (): AppearanceSettingsState => {
-  const accent = useResumeStore(
-    (state) => state.getActiveDraft().resumeDisplay.theme?.accent
+interface UseAppearanceSettingsOptions {
+  draftId?: ResumeDraftId
+}
+
+export const useAppearanceSettings = (
+  options: UseAppearanceSettingsOptions = {}
+): AppearanceSettingsState => {
+  const draft = useResumeStore((state) =>
+    options.draftId
+      ? state.draftsById[options.draftId] ?? null
+      : state.getActiveDraft()
   )
-  const resumeTheme = useResumeStore(
-    (state) => state.getActiveDraft().resumeDisplay.theme
-  )
+  const accent = draft?.resumeDisplay.theme?.accent
+  const resumeTheme = draft?.resumeDisplay.theme ?? DEFAULT_RESUME_THEME
+  const draftId = draft?.draftId
   const setResumeTheme = useResumeStore((state) => state.setResumeTheme)
+  const setDraftTheme = useResumeStore((state) => state.setDraftTheme)
   const setResumeAccent = useResumeStore((state) => state.setResumeAccent)
+  const setDraftAccent = useResumeStore((state) => state.setDraftAccent)
 
   const resolvedAccent = resolveResumeAccent({ accent })
   const accentOptions = RESUME_ACCENT_OPTIONS
@@ -131,10 +141,32 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
     DEFAULT_RESUME_THEME.typography?.bodyLetterSpacing ??
     '0'
 
+  const applyTheme = useCallback(
+    (theme: Parameters<typeof setResumeTheme>[0]) => {
+      if (draftId) {
+        setDraftTheme(draftId, theme)
+        return
+      }
+      setResumeTheme(theme)
+    },
+    [draftId, setDraftTheme, setResumeTheme]
+  )
+
+  const applyAccent = useCallback(
+    (nextAccent: (typeof RESUME_ACCENT_OPTIONS)[number]['value']) => {
+      if (draftId) {
+        setDraftAccent(draftId, nextAccent)
+        return
+      }
+      setResumeAccent(nextAccent)
+    },
+    [draftId, setDraftAccent, setResumeAccent]
+  )
+
   const setHeadingFont = useCallback(
     (value: ResumeFont | null) => {
       if (!value) return
-      setResumeTheme({
+      applyTheme({
         ...resumeTheme,
         typography: {
           ...typography,
@@ -142,13 +174,13 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
         },
       })
     },
-    [resumeTheme, setResumeTheme, typography]
+    [applyTheme, resumeTheme, typography]
   )
 
   const setBodyFont = useCallback(
     (value: ResumeFont | null) => {
       if (!value) return
-      setResumeTheme({
+      applyTheme({
         ...resumeTheme,
         typography: {
           ...typography,
@@ -156,13 +188,13 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
         },
       })
     },
-    [resumeTheme, setResumeTheme, typography]
+    [applyTheme, resumeTheme, typography]
   )
 
   const setHeadingSize = useCallback(
     (value: ResumeHeadingSize | null) => {
       if (!value) return
-      setResumeTheme({
+      applyTheme({
         ...resumeTheme,
         typography: {
           ...typography,
@@ -170,13 +202,13 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
         },
       })
     },
-    [resumeTheme, setResumeTheme, typography]
+    [applyTheme, resumeTheme, typography]
   )
 
   const setBodySize = useCallback(
     (value: ResumeBodySize | null) => {
       if (!value) return
-      setResumeTheme({
+      applyTheme({
         ...resumeTheme,
         typography: {
           ...typography,
@@ -184,13 +216,13 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
         },
       })
     },
-    [resumeTheme, setResumeTheme, typography]
+    [applyTheme, resumeTheme, typography]
   )
 
   const setBodyLineHeight = useCallback(
     (value: ResumeBodyLineHeight | null) => {
       if (!value) return
-      setResumeTheme({
+      applyTheme({
         ...resumeTheme,
         typography: {
           ...typography,
@@ -198,13 +230,13 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
         },
       })
     },
-    [resumeTheme, setResumeTheme, typography]
+    [applyTheme, resumeTheme, typography]
   )
 
   const setBodyLetterSpacing = useCallback(
     (value: ResumeBodyLetterSpacing | null) => {
       if (!value) return
-      setResumeTheme({
+      applyTheme({
         ...resumeTheme,
         typography: {
           ...typography,
@@ -212,7 +244,7 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
         },
       })
     },
-    [resumeTheme, setResumeTheme, typography]
+    [applyTheme, resumeTheme, typography]
   )
 
   const handleAccentKeyDown = useCallback(
@@ -220,24 +252,24 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
         event.preventDefault()
         const nextIndex = (index + 1) % accentOptions.length
-        setResumeAccent(accentOptions[nextIndex].value)
+        applyAccent(accentOptions[nextIndex].value)
       }
       if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
         event.preventDefault()
         const prevIndex =
           (index - 1 + accentOptions.length) % accentOptions.length
-        setResumeAccent(accentOptions[prevIndex].value)
+        applyAccent(accentOptions[prevIndex].value)
       }
       if (event.key === 'Home') {
         event.preventDefault()
-        setResumeAccent(accentOptions[0].value)
+        applyAccent(accentOptions[0].value)
       }
       if (event.key === 'End') {
         event.preventDefault()
-        setResumeAccent(accentOptions[accentOptions.length - 1].value)
+        applyAccent(accentOptions[accentOptions.length - 1].value)
       }
     },
-    [accentOptions, setResumeAccent]
+    [accentOptions, applyAccent]
   )
 
   const setMargin = useCallback(
@@ -255,9 +287,9 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
         if (side === 'right') updated.left = clamped
       }
 
-      setResumeTheme({ ...resumeTheme, margins: updated })
+      applyTheme({ ...resumeTheme, margins: updated })
     },
-    [margins, resumeTheme, setResumeTheme, verticalLocked, horizontalLocked]
+    [applyTheme, margins, resumeTheme, verticalLocked, horizontalLocked]
   )
 
   const toggleVerticalLock = useCallback(() => {
@@ -270,7 +302,7 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
 
   const actions = useMemo(
     () => ({
-      setResumeAccent,
+      setResumeAccent: applyAccent,
       setHeadingFont,
       setBodyFont,
       setHeadingSize,
@@ -291,7 +323,7 @@ export const useAppearanceSettings = (): AppearanceSettingsState => {
       setHeadingFont,
       setHeadingSize,
       setMargin,
-      setResumeAccent,
+      applyAccent,
       toggleHorizontalLock,
       toggleVerticalLock,
     ]

@@ -19,7 +19,7 @@ export function useEditableResumeTitle({
   content,
 }: UseEditableResumeTitleOptions) {
   const { isOwner, draftId } = useOwnerCheck(id)
-  const updateDraft = useResumeStore((state) => state.updateDraft)
+  const setDraftTitleInStore = useResumeStore((state) => state.setDraftTitle)
   const draft = useResumeStore((state) =>
     draftId ? state.draftsById[draftId] : null
   )
@@ -78,7 +78,7 @@ export function useEditableResumeTitle({
       setCurrentTitle(nextTitle)
       setDraftTitle(nextTitle)
       if (draftId) {
-        updateDraft(draftId, { resumeTitle: nextTitle })
+        setDraftTitleInStore(draftId, nextTitle)
       }
     } catch (error) {
       console.error('Title update failed', error)

@@ -47,7 +47,7 @@ export interface ResumeDraft {
   resumeTitle: string
   markdown: string
   saveStatus: SaveStatus
-  syncStatus: 'synced' | 'syncing' | 'error' | 'unsaved'
+  syncStatus: ResumeSyncStatus
   isPublished: boolean
   imageWarning: string | null
   contentWarning: string | null
@@ -162,6 +162,14 @@ interface ResumeState {
   setActiveDraft: (draftId: ResumeDraftId) => void
   updateDraft: (draftId: ResumeDraftId, partial: Partial<ResumeDraft>) => void
   updateActiveDraft: (partial: Partial<ResumeDraft>) => void
+  setDraftTitle: (draftId: ResumeDraftId, resumeTitle: string) => void
+  setDraftTheme: (draftId: ResumeDraftId, theme: ResumeThemeUpdate) => void
+  setDraftAccent: (draftId: ResumeDraftId, accent: ResumeAccent) => void
+  setDraftSlug: (draftId: ResumeDraftId, slug: ResumeSlug) => void
+  setDraftSyncStatus: (
+    draftId: ResumeDraftId,
+    syncStatus: ResumeSyncStatus
+  ) => void
   setResumeTitle: (resumeTitle: string) => void
   setResumeThemeMode: (themeMode: ResumeThemeMode) => void
   setResumeAccent: (accent: ResumeAccent) => void
@@ -230,6 +238,29 @@ const mergeResumeDisplay = (
     ...current,
     ...next,
     theme,
+  }
+}
+
+const mergeThemeUpdate = (
+  draft: ResumeDraft,
+  theme: ResumeThemeUpdate
+): ResumeDisplaySettings => {
+  return {
+    ...draft.resumeDisplay,
+    theme: resolveThemeDefaults({
+      ...draft.resumeDisplay.theme,
+      ...theme,
+      typography: {
+        ...draft.resumeDisplay.theme.typography,
+        ...theme.typography,
+      },
+      margins: theme.margins
+        ? normalizeResumeMargins({
+            ...draft.resumeDisplay.theme.margins,
+            ...theme.margins,
+          })
+        : draft.resumeDisplay.theme.margins,
+    }),
   }
 }
 
@@ -368,6 +399,35 @@ export const useResumeStore = create<ResumeState>()(
           if (!activeId) return
           get().updateDraft(activeId, partial)
         },
+        setDraftTitle: (draftId, resumeTitle) => {
+          get().updateDraft(draftId, { resumeTitle })
+        },
+        setDraftTheme: (draftId, theme) => {
+          const draft = get().draftsById[draftId]
+          if (!draft) return
+          get().updateDraft(draftId, {
+            resumeDisplay: mergeThemeUpdate(draft, theme),
+          })
+        },
+        setDraftAccent: (draftId, accent) => {
+          const draft = get().draftsById[draftId]
+          if (!draft) return
+          get().updateDraft(draftId, {
+            resumeDisplay: {
+              ...draft.resumeDisplay,
+              theme: {
+                ...draft.resumeDisplay.theme,
+                accent,
+              },
+            },
+          })
+        },
+        setDraftSlug: (draftId, slug) => {
+          get().updateDraft(draftId, { slug })
+        },
+        setDraftSyncStatus: (draftId, syncStatus) => {
+          get().updateDraft(draftId, { syncStatus })
+        },
         setResumeTitle: (resumeTitle) => {
           get().updateActiveDraft({ resumeTitle, saveStatus: 'saving' })
           scheduleSaveStatus()
@@ -406,23 +466,7 @@ export const useResumeStore = create<ResumeState>()(
         setResumeTheme: (theme) => {
           const draft = get().getActiveDraft()
           get().updateActiveDraft({
-            resumeDisplay: {
-              ...draft.resumeDisplay,
-              theme: resolveThemeDefaults({
-                ...draft.resumeDisplay.theme,
-                ...theme,
-                typography: {
-                  ...draft.resumeDisplay.theme.typography,
-                  ...theme.typography,
-                },
-                margins: theme.margins
-                  ? normalizeResumeMargins({
-                    ...draft.resumeDisplay.theme.margins,
-                    ...theme.margins,
-                  })
-                  : draft.resumeDisplay.theme.margins,
-              }),
-            },
+            resumeDisplay: mergeThemeUpdate(draft, theme),
             saveStatus: 'saving',
           })
           scheduleSaveStatus()

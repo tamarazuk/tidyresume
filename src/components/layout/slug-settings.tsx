@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils'
 
 import { useSlugSettings } from '@/hooks/use-slug-settings'
+import type { ResumeDraftId } from '@/stores/resume-store'
 
 interface SlugSettingsProps {
   label?: string
@@ -33,6 +34,7 @@ interface SlugSettingsProps {
   size?: VariantProps<typeof buttonVariants>['size']
   popoverAlign?: 'start' | 'center' | 'end'
   popoverSide?: 'top' | 'bottom' | 'left' | 'right'
+  draftId?: ResumeDraftId
 }
 
 export function SlugSettings({
@@ -46,6 +48,7 @@ export function SlugSettings({
   size = 'icon',
   popoverAlign = 'end',
   popoverSide = 'bottom',
+  draftId,
 }: SlugSettingsProps) {
   const {
     id,
@@ -57,7 +60,7 @@ export function SlugSettings({
     errorMessage,
     handleSave,
     copyLink,
-  } = useSlugSettings({ onUrlUpdated })
+  } = useSlugSettings({ onUrlUpdated, draftId })
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {

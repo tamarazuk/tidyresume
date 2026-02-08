@@ -102,3 +102,37 @@ describe('useResumeStore (margins)', () => {
     expect(draft.resumeDisplay.theme.margins?.left).toBe(40)
   })
 })
+
+describe('useResumeStore (draft-scoped updates)', () => {
+  beforeEach(() => {
+    useResumeStore.persist?.clearStorage?.()
+    useResumeStore.getState().resetResume()
+  })
+
+  it('updates only the targeted draft', () => {
+    const state = useResumeStore.getState()
+    const firstDraftId = state.getActiveDraft().draftId
+    const secondDraftId = state.createDraft()
+
+    state.setDraftSlug(firstDraftId, 'first-slug')
+    state.setDraftSyncStatus(firstDraftId, 'synced')
+    state.setDraftTheme(firstDraftId, { accent: 'teal' })
+    state.setDraftTitle(firstDraftId, 'First Draft')
+
+    const nextState = useResumeStore.getState()
+    const firstDraft = nextState.draftsById[firstDraftId]
+    const secondDraft = nextState.draftsById[secondDraftId]
+
+    expect(firstDraft.slug).toBe('first-slug')
+    expect(firstDraft.syncStatus).toBe('synced')
+    expect(firstDraft.resumeDisplay.theme.accent).toBe('teal')
+    expect(firstDraft.resumeTitle).toBe('First Draft')
+
+    expect(secondDraft.slug).toBeNull()
+    expect(secondDraft.syncStatus).toBe('unsaved')
+    expect(secondDraft.resumeDisplay.theme.accent).toBe(
+      DEFAULT_RESUME_THEME.accent
+    )
+    expect(secondDraft.resumeTitle).not.toBe('First Draft')
+  })
+})

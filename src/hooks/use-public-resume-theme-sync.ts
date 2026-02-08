@@ -25,6 +25,7 @@ export function usePublicResumeThemeSync({
     draftId ? state.draftsById[draftId]?.editSecret ?? null : null
   )
   const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
+  const setDraftSyncStatus = useResumeStore((state) => state.setDraftSyncStatus)
 
   const mountedRef = useRef(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -50,17 +51,29 @@ export function usePublicResumeThemeSync({
       clearTimeout(timeoutRef.current)
     }
 
-    setSyncStatus('syncing')
+    if (draftId) {
+      setDraftSyncStatus(draftId, 'syncing')
+    } else {
+      setSyncStatus('syncing')
+    }
     timeoutRef.current = setTimeout(async () => {
       try {
         await updateResumeTheme(id, resumeTheme, {
           editSecret: editSecret ?? undefined,
         })
         lastSyncedKeyRef.current = nextKey
-        setSyncStatus('synced')
+        if (draftId) {
+          setDraftSyncStatus(draftId, 'synced')
+        } else {
+          setSyncStatus('synced')
+        }
       } catch (error) {
         console.error('Public theme sync error:', error)
-        setSyncStatus('error')
+        if (draftId) {
+          setDraftSyncStatus(draftId, 'error')
+        } else {
+          setSyncStatus('error')
+        }
       }
     }, PUBLIC_THEME_SYNC_DEBOUNCE_MS)
 
@@ -76,6 +89,7 @@ export function usePublicResumeThemeSync({
     draftId,
     resumeTheme,
     serverTheme,
+    setDraftSyncStatus,
     setSyncStatus,
   ])
 }
