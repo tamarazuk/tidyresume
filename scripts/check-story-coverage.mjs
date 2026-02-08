@@ -28,6 +28,8 @@ const componentFiles = walkFiles(componentsRoot)
   .filter((filePath) => !filePath.endsWith('.stories.tsx'))
   .filter((filePath) => !filePath.includes('__tests__'))
   .filter((filePath) => !filePath.includes(`${path.sep}hooks${path.sep}`))
+  .filter((filePath) => !path.basename(filePath).startsWith('use-'))
+  .filter((filePath) => path.basename(filePath) !== 'index.tsx')
 
 const missingStories = []
 
