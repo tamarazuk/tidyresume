@@ -26,12 +26,14 @@ type TriggerButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 interface MagicLinkDialogProps {
   resumeId: string
+  editSecret?: string | null
   triggerProps?: TriggerButtonProps
   triggerVariant?: React.ComponentProps<typeof Button>['variant']
 }
 
 export function MagicLinkDialog({
   resumeId,
+  editSecret,
   triggerProps,
   triggerVariant = 'ghost',
 }: MagicLinkDialogProps) {
@@ -41,6 +43,10 @@ export function MagicLinkDialog({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    if (!editSecret) {
+      toast.error('Unable to verify ownership for this resume')
+      return
+    }
     setIsLoading(true)
 
     try {
@@ -48,6 +54,7 @@ export function MagicLinkDialog({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Edit-Secret': editSecret,
         },
         body: JSON.stringify({ resumeId, email }),
       })
@@ -129,6 +136,7 @@ export function MagicLinkDialog({
               ref={assignRef}
               variant={triggerVariant}
               size="sm"
+              disabled={!editSecret}
               className={cn('gap-1.5', mergedTriggerClassName)}
               aria-label="Edit on another device"
             >

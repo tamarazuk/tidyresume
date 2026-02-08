@@ -100,10 +100,17 @@ export function OwnerFloatingToolbar({
   isFullWidth,
   onToggleWidth,
 }: OwnerFloatingToolbarProps) {
-  const { isOwner, draftId, editHref, handleShare, handleUrlUpdated, handleEdit } =
-    useOwnerFloatingToolbar({
-      id,
-    })
+  const {
+    isOwner,
+    draftId,
+    editSecret,
+    editHref,
+    handleShare,
+    handleUrlUpdated,
+    handleEdit,
+  } = useOwnerFloatingToolbar({
+    id,
+  })
   const isPreviewMode = usePublicViewStore(
     (state) => state.publicViewState.isPreviewMode
   )
@@ -183,7 +190,11 @@ export function OwnerFloatingToolbar({
         <Tooltip>
           <TooltipTrigger
             render={(props) => (
-              <MagicLinkDialog resumeId={id} triggerProps={props} />
+              <MagicLinkDialog
+                resumeId={id}
+                editSecret={editSecret}
+                triggerProps={props}
+              />
             )}
           />
           <TooltipContent side="right" align="center" sideOffset={8}>

@@ -14,6 +14,9 @@ export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) 
   const slug = useResumeStore((state) =>
     draftId ? state.draftsById[draftId]?.slug ?? null : null
   )
+  const editSecret = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId]?.editSecret ?? null : null
+  )
   const setActiveDraft = useResumeStore((state) => state.setActiveDraft)
 
   const getShareUrl = () => {
@@ -57,6 +60,7 @@ export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) 
   return {
     isOwner,
     draftId,
+    editSecret,
     editHref,
     handleShare,
     handleUrlUpdated,
