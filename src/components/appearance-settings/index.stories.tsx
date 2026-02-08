@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from 'storybook/test'
 import AppearanceSettings, {
   AppearanceSettingsSheet,
 } from '@/components/appearance-settings'
@@ -30,5 +31,5 @@ type Story = StoryObj<typeof meta>
 export const PopoverTrigger: Story = {}
 
 export const SheetOpen: Story = {
-  render: () => <AppearanceSettingsSheet open onOpenChange={() => undefined} />,
+  render: () => <AppearanceSettingsSheet open onOpenChange={fn()} />,
 }
