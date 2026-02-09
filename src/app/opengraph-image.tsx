@@ -8,24 +8,30 @@ export const size = {
 
 export const contentType = 'image/png'
 
-export default async function Image() {
-  const sourceSerif = await fetch(
-    'https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap'
-  )
-    .then((res) => res.text())
-    .then((css) => {
-      const match = css.match(/src: url\(([^)]+)\)/)
-      return match ? fetch(match[1]).then((res) => res.arrayBuffer()) : null
-    })
+async function fetchFont(url: string): Promise<ArrayBuffer | null> {
+  try {
+    const css = await fetch(url).then((res) => res.text())
+    const match = css.match(/src: url\(([^)]+)\)/)
+    if (!match) {
+      console.warn(`[og] Could not extract font URL from Google Fonts CSS: ${url}`)
+      return null
+    }
+    return await fetch(match[1]).then((res) => res.arrayBuffer())
+  } catch (e) {
+    console.warn(`[og] Failed to fetch font: ${url}`, e)
+    return null
+  }
+}
 
-  const notoSans = await fetch(
-    'https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500&display=swap'
-  )
-    .then((res) => res.text())
-    .then((css) => {
-      const match = css.match(/src: url\(([^)]+)\)/)
-      return match ? fetch(match[1]).then((res) => res.arrayBuffer()) : null
-    })
+export default async function Image() {
+  const [sourceSerif, notoSans] = await Promise.all([
+    fetchFont(
+      'https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap'
+    ),
+    fetchFont(
+      'https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500&display=swap'
+    ),
+  ])
 
   return new ImageResponse(
     <div
