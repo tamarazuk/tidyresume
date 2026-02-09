@@ -1,5 +1,8 @@
 # AGENTS.md
 
+> [!IMPORTANT]
+> **NEVER run `pnpm format`**. This command modifies a massive amount of files and creates unnecessary noise in the repository. Stick to manual formatting or local editor settings that don't affect other files.
+
 Guidelines for AI assistants working on this codebase.
 
 ## Safety & File Operations
@@ -203,12 +206,6 @@ Vitest is configured for unit tests with Testing Library and jsdom. Prefer Playw
 - After adding a new migration in `drizzle/`, update `drizzle/meta/*_snapshot.json` and `drizzle/meta/_journal.json` (or run the appropriate drizzle-kit command) so schema snapshots stay in sync.
 
 ## Common Tasks
-
-### Format code
-
-```bash
-pnpm format
-```
 
 ### Check linting
 
