@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import Hero from '@/components/marketing/hero'
+import HowItWorks from '@/components/marketing/how-it-works'
 
 const meta = {
-  title: 'Marketing/Hero',
-  component: Hero,
+  title: 'Marketing/How It Works',
+  component: HowItWorks,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<typeof Hero>
+} satisfies Meta<typeof HowItWorks>
 
 export default meta
 type Story = StoryObj<typeof meta>

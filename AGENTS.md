@@ -11,10 +11,10 @@ Guidelines for AI assistants working on this codebase.
 ### Code Modification Best Practices
 
 - **Preserve Integrity:** When using the `replace` tool, ensure you identify a unique block of code to replace, but **NEVER truncate** the surrounding code or the function body unless explicitly intended.
-- **Context is Key:** Always include enough context in your `old_string` to ensure uniqueness, but verify that your `new_string` contains the *complete* replacement logic, including any closing braces or return statements that were part of the original block.
+- **Context is Key:** Always include enough context in your `old_string` to ensure uniqueness, but verify that your `new_string` contains the _complete_ replacement logic, including any closing braces or return statements that were part of the original block.
 - **Read First:** Always read the file content immediately before modifying it to ensure you are working with the latest version.
 - **Verify:** After any modification, read the file again to ensure integrity.
-- **Final Validation (MANDATORY for code changes):** After every code change (including TypeScript, JavaScript, CSS, config, build/runtime behavior, tests, or generated type files), you **MUST** run `pnpm cf-typegen`, followed by `pnpm lint`, and finally `pnpm build` before wrapping up. For docs-only changes (`*.md`) with no code/config impact, full validation is not required unless explicitly requested.
+- **Final Validation (before completing a task):** Before declaring a task complete and ready for commit, run `pnpm cf-typegen`, `pnpm lint`, and `pnpm build` to catch any issues. You do NOT need to run these after every individual change—only run them once when you're done with all changes for the current task. For docs-only changes (`*.md`) with no code/config impact, validation is not required unless explicitly requested.
 
 ## Project Overview
 
@@ -22,20 +22,20 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript (strict mode) |
-| UI | React 19 + custom components, shadcn/ui patterns (Base UI primitives) |
-| Styling | Tailwind CSS v4 (CSS-first config) |
-| Icons | @phosphor-icons/react |
-| Editor | md-editor-rt |
-| Theming | next-themes |
-| State | zustand (persist to localStorage) |
-| Database | Drizzle ORM + Cloudflare D1 |
-| Hosting/Runtime | OpenNext Cloudflare (edge runtime for routes) |
-| Email | Resend + React Email |
-| Package Manager | pnpm |
+| Category        | Technology                                                            |
+| --------------- | --------------------------------------------------------------------- |
+| Framework       | Next.js 15 (App Router)                                               |
+| Language        | TypeScript (strict mode)                                              |
+| UI              | React 19 + custom components, shadcn/ui patterns (Base UI primitives) |
+| Styling         | Tailwind CSS v4 (CSS-first config)                                    |
+| Icons           | @phosphor-icons/react                                                 |
+| Editor          | md-editor-rt                                                          |
+| Theming         | next-themes                                                           |
+| State           | zustand (persist to localStorage)                                     |
+| Database        | Drizzle ORM + Cloudflare D1                                           |
+| Hosting/Runtime | OpenNext Cloudflare (edge runtime for routes)                         |
+| Email           | Resend + React Email                                                  |
+| Package Manager | pnpm                                                                  |
 
 > Waiting for Cloudflare/OpenNext to fully support Next 16 before upgrading the framework version.
 
@@ -48,6 +48,7 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 ## Architecture Decisions
 
 ### Routing
+
 - Uses Next.js App Router with route groups.
 - `(marketing)` — Landing page + privacy policy.
 - `edit` — Resume editor.
@@ -57,12 +58,14 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 - Future: `edit/[token]` for token-based editing.
 
 ### Data Flow and Persistence
+
 - Local draft state: `src/stores/resume-store.ts` (zustand + persist).
 - Publishing: `src/hooks/use-publish.ts` (manual publish) and `src/hooks/use-resume-sync.ts` (debounced sync once an id exists).
 - Cloud DB: `src/db/index.ts` (Drizzle D1 client) + `src/services/resume-service.ts` (CRUD helpers).
 - Owner detection: `src/hooks/use-owner-check.ts` compares local id to public view id.
 
 ### Styling
+
 - **Tailwind v4** — No `tailwind.config.ts`, everything in CSS via `@theme`.
 - **Theme variables** — `src/styles/theme.css` with CSS custom properties.
 - **Global styles** — `src/styles/globals.css` imports theme and defines layers.
@@ -71,6 +74,7 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 - **Printing** — `src/styles/print.css` targets `.editor-page` and `.resume-view` containers.
 
 ### Components
+
 - Located in `src/components/`.
 - Organized by domain: `editor/`, `layout/`, `marketing/`, `public-view/`, `ui/`.
 - UI primitives follow shadcn/ui patterns with `class-variance-authority`.
@@ -78,6 +82,7 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 - Use `cn()` utility from `src/lib/utils.ts` for conditional classes.
 
 ### Editor + Toolbars
+
 - Editor styling lives in `src/components/editor/styles/` with preview overrides in `src/components/editor/styles/preview/`.
 - Toolbar config: `src/components/editor/hooks/toolbar-items.tsx` and `src/components/editor/hooks/use-editor-toolbars.tsx`.
 - Footer config: `src/components/editor/hooks/footer-items.tsx` and `src/components/editor/hooks/use-editor-footers.tsx`.
@@ -85,14 +90,16 @@ TidyResume is a markdown-based resume builder built with Next.js 15 (App Router)
 ## Code Style
 
 ### TypeScript
+
 - Strict mode enabled.
 - Prefer `interface` for object shapes, `type` for unions/primitives.
 - Export types alongside components when needed.
 
 ### Components
+
 ```tsx
 // Prefer named exports for components
-export default function ComponentName() { }
+export default function ComponentName() {}
 
 // Props interface above component
 interface ComponentNameProps {
@@ -104,29 +111,29 @@ interface ComponentNameProps {
 export default function ComponentName({
   title,
   onAction,
-}: ComponentNameProps) { }
+}: ComponentNameProps) {}
 ```
 
 ### React 19
+
 - **Avoid `forwardRef`**: React 19 allows passing `ref` as a regular prop to function components. Do not use `forwardRef`.
 - **Use Actions**: Prefer React Server Actions for form submissions and mutations where applicable.
 
 ### Styling
+
 ```tsx
 // Use cn() for conditional classes
 import { cn } from '@/lib/utils'
-
-<div className={cn(
-  "base-classes",
-  condition && "conditional-classes",
-  className
-)} />
+;<div
+  className={cn('base-classes', condition && 'conditional-classes', className)}
+/>
 
 // Prefer Tailwind classes over inline styles
 // Use CSS variables for theme values: bg-primary, text-foreground, etc.
 ```
 
 ### Imports
+
 ```tsx
 // Order: React/Next, external libs, internal (@/), relative, styles
 import { useState } from 'react'
@@ -147,17 +154,21 @@ import './styles.css'
 ## Common Patterns
 
 ### Adding a new page
+
 1. Create directory in `src/app/`.
 2. Add `page.tsx` with default export.
 3. Optionally add `layout.tsx` for nested layout.
 
 ### Adding a new component
+
 1. Create file in appropriate `src/components/` subdirectory.
 2. Use existing UI primitives from `src/components/ui/` when possible.
 3. Follow the props interface pattern shown above.
 
 ### Styling the resume preview
+
 Apply `.resume-theme` or `.resume-preview-theme` to the container to switch to the resume accent colors:
+
 ```tsx
 <div className="resume-theme">
   {/* Resume content uses the selected accent color */}
@@ -165,9 +176,11 @@ Apply `.resume-theme` or `.resume-preview-theme` to the container to switch to t
 ```
 
 ### Printing / PDF export
+
 Printing is built-in: the editor and public view provide print buttons, and browser print (menu or shortcut) prints only the resume content. Users can save to PDF using the browser's native print dialog.
 
 ### Branding & Assets
+
 The app uses dynamic SVG-to-PNG generation for the brand logo and favicons via `next/og`.
 
 - **Endpoints:**
@@ -181,6 +194,7 @@ The app uses dynamic SVG-to-PNG generation for the brand logo and favicons via `
 ## Testing
 
 Vitest is configured for unit tests with Testing Library and jsdom. Prefer Playwright for E2E tests if/when added.
+
 > Aim to add or update tests whenever you touch existing behaviour; new functionality should ship with coverage (unit, hook, or integration) that demonstrates the change.
 > `pnpm test` runs the default Vitest entry (interactive watch); to run one-shot runs, use the helper `pnpm test:once` (or fallback to `CI=1 pnpm test`).
 
@@ -191,35 +205,42 @@ Vitest is configured for unit tests with Testing Library and jsdom. Prefer Playw
 ## Common Tasks
 
 ### Format code
+
 ```bash
 pnpm format
 ```
 
 ### Check linting
+
 ```bash
 pnpm lint
 ```
 
 ### Build for production
+
 ```bash
 pnpm build
 ```
 
 ### Generate Cloudflare types
+
 ```bash
 pnpm cf-typegen
 ```
 
 ### Run tests
+
 ```bash
 pnpm test:once
 ```
 
 ### Phosphor Icons
+
 The `@phosphor-icons/react` package has deprecated all icon component names without the suffix of `Icon`.
+
 - **Incorrect**: `import { PencilSimple } from '@phosphor-icons/react'`
 - **Correct**: `import { PencilSimpleIcon } from '@phosphor-icons/react'`
-Please ensure all new imports and existing ones are using the `Icon` suffix.
+  Please ensure all new imports and existing ones are using the `Icon` suffix.
 
 ## Known Issues / TODOs
 

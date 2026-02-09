@@ -10,7 +10,9 @@ export default function SiteFooter() {
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
         <div className="text-muted-foreground flex items-center gap-2">
           <AppIcon />
-          <span className="font-heading text-sm font-semibold">TidyResume</span>
+          <span className="font-[family-name:var(--font-source-serif-4)] text-sm font-semibold">
+            TidyResume
+          </span>
         </div>
         <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-8 text-sm font-medium">
           <Link

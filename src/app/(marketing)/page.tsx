@@ -1,7 +1,10 @@
-import CtaStrip from '@/components/marketing/cta-strip'
-import FeatureGrid from '@/components/marketing/feature-grid'
 import Hero from '@/components/marketing/hero'
-import SupportStrip from '@/components/marketing/support-strip'
+import MultiResumeCallout from '@/components/marketing/multi-resume-callout'
+import HowItWorks from '@/components/marketing/how-it-works'
+import Features from '@/components/marketing/features'
+import TrustSignals from '@/components/marketing/trust-signals'
+import CtaSection from '@/components/marketing/cta-section'
+import SupportSection from '@/components/marketing/support-section'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -14,9 +17,12 @@ export default function MarketingHome() {
   return (
     <>
       <Hero />
-      <FeatureGrid />
-      <CtaStrip />
-      <SupportStrip />
+      <MultiResumeCallout />
+      <HowItWorks />
+      <Features />
+      <TrustSignals />
+      <CtaSection />
+      <SupportSection />
     </>
   )
 }

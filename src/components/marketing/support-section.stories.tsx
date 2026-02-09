@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import CtaStrip from '@/components/marketing/cta-strip'
+import SupportSection from '@/components/marketing/support-section'
 
 const meta = {
-  title: 'Marketing/CTA Strip',
-  component: CtaStrip,
+  title: 'Marketing/Support Section',
+  component: SupportSection,
+  tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<typeof CtaStrip>
+} satisfies Meta<typeof SupportSection>
 
 export default meta
-
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}

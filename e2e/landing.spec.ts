@@ -11,48 +11,54 @@ test.describe('Landing page', () => {
     ).toBeVisible()
   })
 
-  test('CTA links to /resumes', async ({ page }) => {
-    const cta = page.getByRole('link', { name: 'Start Writing Now' })
+  test('CTA button is visible', async ({ page }) => {
+    const cta = page.getByRole('button', { name: 'Start Writing' }).first()
     await expect(cta).toBeVisible()
-    await expect(cta).toHaveAttribute('href', '/resumes')
   })
 
   test('clicking CTA navigates to /resumes', async ({ page }) => {
-    await page.getByRole('link', { name: 'Start Writing Now' }).click()
+    await page.getByRole('button', { name: 'Start Writing' }).first().click()
     await expect(page).toHaveURL('/resumes')
   })
 
-  test('feature grid renders', async ({ page }) => {
+  test('features section renders', async ({ page }) => {
     await expect(
-      page.getByRole('heading', { name: 'Why TidyResume?' })
+      page.getByRole('heading', { name: /Everything you need/ })
     ).toBeVisible()
   })
 
-  test('CTA strip renders', async ({ page }) => {
+  test('CTA section renders', async ({ page }) => {
     await expect(
       page.getByRole('heading', {
-        name: 'A resume you can actually maintain',
+        name: 'Your next role starts with a better resume',
       })
     ).toBeVisible()
   })
 
-  test('support strip renders', async ({ page }) => {
+  test('support section renders', async ({ page }) => {
     await expect(
-      page.getByRole('heading', { name: 'Help this project grow' })
+      page.getByRole('heading', { name: 'Help TidyResume grow' })
     ).toBeVisible()
   })
 
   test('footer renders with links', async ({ page }) => {
+    const footer = page.getByRole('contentinfo')
     await expect(
-      page.getByRole('link', { name: 'Privacy Policy' })
+      footer.getByRole('link', { name: 'Privacy Policy' })
     ).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Contact' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Github' })).toBeVisible()
+    await expect(footer.getByRole('link', { name: 'Contact' })).toBeVisible()
+    await expect(footer.getByRole('link', { name: /github/i })).toBeVisible()
   })
 
-  test('header CTA links to /resumes', async ({ page }) => {
-    const headerCta = page.getByRole('link', { name: 'Start Writing' })
+  test('header CTA navigates to /resumes', async ({ page }) => {
+    const header = page.getByRole('banner')
+    // CTA text depends on whether user has a stored draft
+    const headerCta = header.getByRole('button', {
+      name: /Start Writing|Continue Writing/,
+    })
     await expect(headerCta).toBeVisible()
-    await expect(headerCta).toHaveAttribute('href', '/resumes')
+    // Click and verify navigation works
+    await headerCta.click()
+    await expect(page).toHaveURL('/resumes')
   })
 })

@@ -25,6 +25,7 @@
 .DS_Store
 *.pem
 /_internal
+/_tam
 
 # debug
 npm-debug.log*

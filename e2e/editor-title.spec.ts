@@ -37,7 +37,9 @@ test.describe('Editor title', () => {
     await titleInput.fill('Blur Saved Title')
 
     // Click elsewhere to blur
-    await page.getByRole('heading', { level: 2 }).click()
+    await page
+      .getByRole('heading', { level: 2, name: 'TidyResume Editor' })
+      .click()
 
     // Title input should disappear
     await expect(titleInput).not.toBeVisible()

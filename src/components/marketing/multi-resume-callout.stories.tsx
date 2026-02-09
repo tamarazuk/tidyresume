@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import Hero from '@/components/marketing/hero'
+import MultiResumeCallout from '@/components/marketing/multi-resume-callout'
 
 const meta = {
-  title: 'Marketing/Hero',
-  component: Hero,
+  title: 'Marketing/Multi-Resume Callout',
+  component: MultiResumeCallout,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<typeof Hero>
+} satisfies Meta<typeof MultiResumeCallout>
 
 export default meta
 type Story = StoryObj<typeof meta>
