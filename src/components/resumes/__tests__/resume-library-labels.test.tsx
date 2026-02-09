@@ -203,8 +203,10 @@ describe('ResumeLibrary (labels)', () => {
     expect(screen.getByText('Published Labeled')).toBeInTheDocument()
     expect(screen.getByText('Draft Labeled')).toBeInTheDocument()
 
-    // Now also filter to "Drafts" only - use regex because button name includes count ("Drafts1")
-    const draftsButtons = screen.getAllByRole('button', { name: /^Drafts/ })
+    // Now also filter to "Local Drafts" only - use regex because button name includes count ("Local Drafts1")
+    const draftsButtons = screen.getAllByRole('button', {
+      name: /^Local Drafts/,
+    })
     fireEvent.click(draftsButtons[0])
 
     expect(screen.queryByText('Published Labeled')).not.toBeInTheDocument()
