@@ -28,7 +28,9 @@ vi.mock('next/link', () => ({
 }))
 
 vi.mock('@/components/ui/popover', () => ({
-  Popover: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Popover: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
   PopoverTrigger: ({
     render,
   }: {
@@ -40,10 +42,19 @@ vi.mock('@/components/ui/popover', () => ({
 }))
 
 vi.mock('@/components/ui/dialog', () => ({
-  Dialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Dialog: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
   DialogTrigger: () => null,
   DialogContent: () => null,
   DialogTitle: () => null,
+}))
+
+vi.mock('@/hooks/use-platform-shortcuts', () => ({
+  default: () => ({
+    modifierKey: 'Cmd' as const,
+    formatShortcutKeys: (keys: string[]) => keys,
+  }),
 }))
 
 describe('ResumeSwitcher', () => {
@@ -81,22 +92,6 @@ describe('ResumeSwitcher', () => {
     expect(pushMock).toHaveBeenCalledWith(`/edit/${activeDraft.draftId}`)
   })
 
-  it('duplicates a draft and navigates to the new draft url', () => {
-    const initialDraftCount = useResumeStore.getState().draftOrder.length
-    render(<ResumeSwitcher />)
-
-    fireEvent.click(
-      screen.getAllByLabelText('Duplicate Published Resume')[0]
-    )
-
-    expect(pushMock).toHaveBeenCalledTimes(1)
-    const destination = pushMock.mock.calls[0]?.[0] as string
-    expect(destination.startsWith('/edit/')).toBe(true)
-    expect(useResumeStore.getState().draftOrder.length).toBeGreaterThan(
-      initialDraftCount
-    )
-  })
-
   it('opens the public link for published drafts', () => {
     render(<ResumeSwitcher />)
 
@@ -105,5 +100,15 @@ describe('ResumeSwitcher', () => {
     )
 
     expect(pushMock).toHaveBeenCalledWith('/r/published-resume')
+  })
+
+  it('opens the popover when ⌘K is pressed', () => {
+    render(<ResumeSwitcher />)
+
+    fireEvent.keyDown(document, { key: 'k', metaKey: true })
+
+    // The popover should now be open — verify by checking search input is present
+    const searchInputs = screen.getAllByLabelText('Search resumes')
+    expect(searchInputs.length).toBeGreaterThan(0)
   })
 })

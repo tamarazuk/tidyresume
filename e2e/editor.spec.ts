@@ -36,9 +36,11 @@ test.describe('Editor page', () => {
     await titleInput.fill('Persisted Title')
     await titleInput.press('Enter')
 
-    // Reload and verify
+    // Reload and verify title is displayed in the main title button
     await page.reload()
-    await expect(page.getByText('Persisted Title')).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Edit resume title' })
+    ).toContainText('Persisted Title')
   })
 
   test('home link navigates to /', async ({ page }) => {

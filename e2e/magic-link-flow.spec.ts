@@ -23,8 +23,10 @@ test.describe('Magic link flow', () => {
     // Should show success toast (loading toast is transient and may resolve before assertion)
     await expect(page.getByText('Resume loaded successfully')).toBeVisible()
 
-    // Title should be displayed
-    await expect(page.getByText('Loaded Resume')).toBeVisible()
+    // Title should be displayed in the main title button
+    await expect(
+      page.getByRole('button', { name: 'Edit resume title' })
+    ).toContainText('Loaded Resume')
 
     // URL should be rewritten to draft route and remove token param
     await expect(page).toHaveURL(/\/edit\/[^/?]+$/)

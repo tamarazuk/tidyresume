@@ -44,7 +44,9 @@ test.describe('Editor title', () => {
     // Title input should disappear
     await expect(titleInput).not.toBeVisible()
 
-    // The new title should be displayed
-    await expect(page.getByText('Blur Saved Title')).toBeVisible()
+    // The new title should be displayed in the main title button
+    await expect(
+      page.getByRole('button', { name: 'Edit resume title' })
+    ).toContainText('Blur Saved Title')
   })
 })

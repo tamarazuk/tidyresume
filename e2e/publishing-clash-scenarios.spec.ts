@@ -141,6 +141,9 @@ test.describe('Publishing clash scenarios', () => {
       )
 
       await page.goto('/edit?token=fresh-browser-token')
+
+      // Wait for magic link flow to complete before checking URL
+      await expect(page.getByText('Resume loaded successfully')).toBeVisible()
       await expect(page).toHaveURL(/\/edit\/.+$/)
 
       const persisted = await readPersistedResumeStore(page)
