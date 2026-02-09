@@ -1,7 +1,16 @@
-import type { ResumeThemeSettings } from '@/types/resume'
+import type {
+  ResumeLabel,
+  ResumeLabelId,
+  ResumeThemeSettings,
+} from '@/types/resume'
 import type { ResumeSyncStatus, SaveStatus } from '@/stores/resume-store'
 
-export interface StorybookResumeSeed {
+export interface StorybookLabelsSeed {
+  labelsById?: Record<ResumeLabelId, ResumeLabel>
+  labelOrder?: ResumeLabelId[]
+}
+
+export interface StorybookResumeSeed extends StorybookLabelsSeed {
   draftId?: string
   labelIds?: string[]
   id?: string | null

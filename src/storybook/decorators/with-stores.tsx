@@ -59,6 +59,8 @@ const buildResumeSeed = (seed?: StorybookResumeSeed) => {
     draftsById: {
       [draftId]: draft,
     },
+    labelsById: seed?.labelsById ?? {},
+    labelOrder: seed?.labelOrder ?? [],
   }
 }
 
