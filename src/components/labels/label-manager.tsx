@@ -50,7 +50,13 @@ export function LabelManager({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={(value) => {
+        setOpen(value)
+        if (!value) setEditing({ mode: 'idle' })
+      }}
+    >
       <PopoverTrigger
         render={(props) => {
           if (isValidElement(children)) {

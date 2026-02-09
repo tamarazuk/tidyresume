@@ -111,7 +111,7 @@ export default function ShelfRow({
 
       {/* Actions Overlay */}
       <div
-        className="absolute inset-y-0 right-0 z-10 flex items-center gap-2 p-2 pr-4 opacity-0 transition-all duration-300 group-hover:opacity-100"
+        className="absolute inset-y-0 right-0 z-10 flex items-center gap-2 p-2 pr-4 opacity-0 transition-all duration-300 group-focus-within:opacity-100 group-hover:opacity-100"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Gradient backdrop */}

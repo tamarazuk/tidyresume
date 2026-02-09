@@ -298,6 +298,9 @@ const createSaveStatusDebouncer = (
   }
 }
 
+// Stable fallback draft to avoid re-renders when no drafts exist (defensive)
+const fallbackDraft = createDraftDefaults()
+
 export const useResumeStore = create<ResumeState>()(
   persist(
     (set, get) => {
@@ -323,7 +326,7 @@ export const useResumeStore = create<ResumeState>()(
           if (firstId && state.draftsById[firstId]) {
             return state.draftsById[firstId]
           }
-          return createDraftDefaults()
+          return fallbackDraft
         },
         getDraftByRemoteId: (id) => {
           const drafts = Object.values(get().draftsById).filter(

@@ -9,12 +9,11 @@ vi.mock('@/lib/resume-api', () => ({
   isResumeApiError: vi.fn((err) => 'status' in err),
 }))
 
-const setSyncStatus = vi.fn()
-const setResumeId = vi.fn()
-const setResumeSlug = vi.fn()
-const setEditSecret = vi.fn()
+const setDraftSyncStatus = vi.fn()
+const updateDraft = vi.fn()
 let storeState = {
   getActiveDraft: () => ({
+    draftId: 'draft-1',
     id: 'test-id',
     resumeTitle: 'Title',
     markdown: 'Content',
@@ -31,16 +30,15 @@ let storeState = {
       },
     },
     isPublished: true,
-    editSecret: null,
+    editSecret: null as string | null,
   }),
-  setId: setResumeId,
-  setSlug: setResumeSlug,
-  setEditSecret,
-  setSyncStatus,
+  updateDraft,
+  setDraftSyncStatus,
 }
 
 vi.mock('@/stores/resume-store', () => ({
-  useResumeStore: <T>(selector: (state: typeof storeState) => T) => selector(storeState),
+  useResumeStore: <T>(selector: (state: typeof storeState) => T) =>
+    selector(storeState),
 }))
 
 describe('useResumeSync', () => {
@@ -49,6 +47,7 @@ describe('useResumeSync', () => {
     vi.useFakeTimers()
     storeState = {
       getActiveDraft: () => ({
+        draftId: 'draft-1',
         id: 'test-id',
         resumeTitle: 'Title',
         markdown: 'Content',
@@ -67,10 +66,8 @@ describe('useResumeSync', () => {
         isPublished: true,
         editSecret: null,
       }),
-      setId: setResumeId,
-      setSlug: setResumeSlug,
-      setEditSecret,
-      setSyncStatus,
+      updateDraft,
+      setDraftSyncStatus,
     }
   })
 
@@ -97,6 +94,7 @@ describe('useResumeSync', () => {
     storeState = {
       ...storeState,
       getActiveDraft: () => ({
+        draftId: 'draft-1',
         id: 'test-id',
         resumeTitle: 'Title',
         markdown: 'Updated Content',
@@ -123,7 +121,7 @@ describe('useResumeSync', () => {
 
     // Expect first call
     expect(publishResume).toHaveBeenCalledTimes(1)
-    
+
     // Fast-forward retry delay (e.g. 1000ms - generic assumption, implementation will define it)
     await vi.advanceTimersByTimeAsync(2000)
     expect(publishResume).toHaveBeenCalledTimes(2)
@@ -131,8 +129,8 @@ describe('useResumeSync', () => {
     await vi.advanceTimersByTimeAsync(4000)
     expect(publishResume).toHaveBeenCalledTimes(3)
 
-    // Should be synced now
-    expect(setSyncStatus).toHaveBeenLastCalledWith('synced')
+    // Should be synced now - now uses setDraftSyncStatus with draftId
+    expect(setDraftSyncStatus).toHaveBeenLastCalledWith('draft-1', 'synced')
   })
 
   it('should include theme settings in payload', async () => {
@@ -147,6 +145,7 @@ describe('useResumeSync', () => {
     storeState = {
       ...storeState,
       getActiveDraft: () => ({
+        draftId: 'draft-1',
         id: 'test-id',
         resumeTitle: 'Title',
         markdown: 'Updated Content',
@@ -199,6 +198,7 @@ describe('useResumeSync', () => {
     storeState = {
       ...storeState,
       getActiveDraft: () => ({
+        draftId: 'draft-1',
         id: 'stale-id',
         resumeTitle: 'Title',
         markdown: 'Updated Content',
@@ -222,8 +222,11 @@ describe('useResumeSync', () => {
 
     await vi.advanceTimersByTimeAsync(2500)
 
-    expect(setResumeId).toHaveBeenCalledWith('new-id')
-    expect(setResumeSlug).toHaveBeenCalledWith('new-slug')
-    expect(setEditSecret).toHaveBeenCalledWith('new-secret')
+    // Now uses updateDraft with draftId to update specific draft
+    expect(updateDraft).toHaveBeenCalledWith('draft-1', { id: 'new-id' })
+    expect(updateDraft).toHaveBeenCalledWith('draft-1', { slug: 'new-slug' })
+    expect(updateDraft).toHaveBeenCalledWith('draft-1', {
+      editSecret: 'new-secret',
+    })
   })
 })

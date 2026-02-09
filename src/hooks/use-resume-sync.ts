@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import {
-  publishResume,
-  type PublishResumePayload,
-} from '@/lib/resume-api'
+import { publishResume, type PublishResumePayload } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
 const CLOUD_SYNC_DEBOUNCE_MS = 2500
 
 export function useResumeSync() {
   const draft = useResumeStore((state) => state.getActiveDraft())
+  const draftId = draft.draftId
   const id = draft.id
   const title = draft.resumeTitle
   const content = draft.markdown
@@ -16,10 +14,8 @@ export function useResumeSync() {
   const theme = draft.resumeDisplay.theme
   const isPublished = draft.isPublished
   const editSecret = draft.editSecret
-  const setResumeId = useResumeStore((state) => state.setId)
-  const setResumeSlug = useResumeStore((state) => state.setSlug)
-  const setEditSecret = useResumeStore((state) => state.setEditSecret)
-  const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
+  const updateDraft = useResumeStore((state) => state.updateDraft)
+  const setDraftSyncStatus = useResumeStore((state) => state.setDraftSyncStatus)
   const [retryTrigger, setRetryTrigger] = useState(0)
 
   const mounted = useRef(false)
@@ -63,8 +59,11 @@ export function useResumeSync() {
       return
     }
 
+    // Capture the draft we're syncing so response updates target the correct draft
+    const syncingDraftId = draftId
+
     pendingRef.current = { key: payloadKey, payload }
-    setSyncStatus('syncing')
+    setDraftSyncStatus(syncingDraftId, 'syncing')
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
@@ -98,13 +97,13 @@ export function useResumeSync() {
             editSecret: editSecret ?? undefined,
           })
           if (response.id !== id) {
-            setResumeId(response.id)
+            updateDraft(syncingDraftId, { id: response.id })
           }
           if (response.slug !== slug) {
-            setResumeSlug(response.slug ?? null)
+            updateDraft(syncingDraftId, { slug: response.slug ?? null })
           }
           if (response.editSecret) {
-            setEditSecret(response.editSecret)
+            updateDraft(syncingDraftId, { editSecret: response.editSecret })
           }
 
           const syncedPayload: PublishResumePayload = {
@@ -127,7 +126,7 @@ export function useResumeSync() {
           attempt++
           if (attempt >= maxRetries) {
             console.error('Auto-sync error:', error)
-            setSyncStatus('error')
+            setDraftSyncStatus(syncingDraftId, 'error')
             return
           }
 
@@ -139,14 +138,16 @@ export function useResumeSync() {
 
       if (success) {
         lastSyncedKeyRef.current = pendingRef.current?.key ?? pending.key
-        setSyncStatus('synced')
+        setDraftSyncStatus(syncingDraftId, 'synced')
       }
     }, CLOUD_SYNC_DEBOUNCE_MS)
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      abortControllerRef.current?.abort()
     }
   }, [
+    draftId,
     id,
     title,
     content,
@@ -154,10 +155,8 @@ export function useResumeSync() {
     theme,
     isPublished,
     editSecret,
-    setEditSecret,
-    setResumeId,
-    setResumeSlug,
-    setSyncStatus,
+    updateDraft,
+    setDraftSyncStatus,
     retryTrigger,
   ])
 

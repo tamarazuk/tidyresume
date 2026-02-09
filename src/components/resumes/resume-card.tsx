@@ -133,7 +133,7 @@ export default function ResumeCard({
       </div>
 
       {/* Action row */}
-      <div className="absolute inset-x-0 bottom-0 z-10 flex translate-y-2 items-center justify-center gap-2 p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+      <div className="absolute inset-x-0 bottom-0 z-10 flex translate-y-2 items-center justify-center gap-2 p-3 opacity-0 transition-all duration-300 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100">
         {/* Gradient backdrop for contrast */}
         <div className="from-background/90 via-background/50 pointer-events-none absolute inset-0 bg-gradient-to-t to-transparent" />
 

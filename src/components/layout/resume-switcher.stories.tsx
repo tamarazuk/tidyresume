@@ -36,6 +36,7 @@ export const DraftOnly: Story = {
       stores: {
         resume: {
           id: null,
+          slug: null,
           isPublished: false,
           resumeTitle: 'Untitled Resume',
           markdown: STORY_RESUME_CONTENT,
