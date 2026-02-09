@@ -34,6 +34,7 @@ const buildResumeSeed = (seed?: StorybookResumeSeed) => {
   const now = Date.now()
   const draft: ResumeDraft = {
     draftId,
+    labelIds: seed?.labelIds ?? [],
     id: seed?.id ?? null,
     slug: seed?.slug ?? null,
     editSecret: seed?.editSecret ?? 'storybook-secret',

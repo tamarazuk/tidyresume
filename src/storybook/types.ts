@@ -3,6 +3,7 @@ import type { ResumeSyncStatus, SaveStatus } from '@/stores/resume-store'
 
 export interface StorybookResumeSeed {
   draftId?: string
+  labelIds?: string[]
   id?: string | null
   slug?: string | null
   editSecret?: string | null
