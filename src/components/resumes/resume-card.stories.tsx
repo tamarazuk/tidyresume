@@ -10,11 +10,10 @@ import {
 
 const now = Date.now()
 
-const createDraft = (
-  overrides: Partial<ResumeDraft> = {}
-): ResumeDraft => {
+const createDraft = (overrides: Partial<ResumeDraft> = {}): ResumeDraft => {
   return {
     draftId: overrides.draftId ?? 'storybook-draft',
+    labelIds: overrides.labelIds ?? [],
     id: overrides.id ?? STORY_RESUME_ID,
     slug: overrides.slug ?? 'maya-sandoval',
     editSecret: overrides.editSecret ?? 'storybook-secret',
