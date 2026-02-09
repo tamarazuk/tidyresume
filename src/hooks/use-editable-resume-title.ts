@@ -18,9 +18,12 @@ export function useEditableResumeTitle({
   title,
   content,
 }: UseEditableResumeTitleOptions) {
-  const isOwner = useOwnerCheck(id)
-  const setResumeTitle = useResumeStore((state) => state.setResumeTitle)
-  const editSecret = useResumeStore((state) => state.editSecret)
+  const { isOwner, draftId } = useOwnerCheck(id)
+  const setDraftTitleInStore = useResumeStore((state) => state.setDraftTitle)
+  const draft = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId] : null
+  )
+  const editSecret = draft?.editSecret ?? null
   const [currentTitle, setCurrentTitle] = useState(title)
   const [draftTitle, setDraftTitle] = useState(title)
   const [isEditing, setIsEditing] = useState(false)
@@ -74,7 +77,9 @@ export function useEditableResumeTitle({
 
       setCurrentTitle(nextTitle)
       setDraftTitle(nextTitle)
-      setResumeTitle(nextTitle)
+      if (draftId) {
+        setDraftTitleInStore(draftId, nextTitle)
+      }
     } catch (error) {
       console.error('Title update failed', error)
       toast.error('Failed to update title')

@@ -66,13 +66,14 @@ export function ResumeViewer({
 }: ResumeViewerProps) {
   const { formatShortcutKeys } = usePlatformShortcuts()
   const { resumeTheme, className: resumeThemeClassName } = useResumeTheme()
-  const isOwner = useOwnerCheck(id)
+  const { isOwner, draftId } = useOwnerCheck(id)
   const { isDownloading, downloadPdf } = usePdfDownload()
   const resumeDisplayTheme = useResumeStore(
-    (state) => state.resumeDisplay.theme
+    (state) =>
+      draftId ? state.draftsById[draftId]?.resumeDisplay.theme : undefined
   )
   const shortcutKeys = formatShortcutKeys(['Mod', 'P'])
-  const resolvedTheme = isOwner ? resumeDisplayTheme : theme
+  const resolvedTheme = isOwner && resumeDisplayTheme ? resumeDisplayTheme : theme
   const resumeAccentClassName = getResumeAccentClassName(resolvedTheme?.accent)
   const resumeTypographyClassNames =
     getResumeTypographyClassNames(resolvedTheme)
@@ -85,6 +86,7 @@ export function ResumeViewer({
   usePublicResumeThemeSync({
     id,
     isOwner,
+    draftId,
     serverTheme: theme,
   })
 
@@ -140,6 +142,7 @@ export function ResumeViewer({
               </DropdownMenuItem>
               {isOwner ? (
                 <AppearanceSettings
+                  draftId={draftId}
                   label="Appearance"
                   labelClassName="inline"
                   triggerVariant="ghost"
@@ -152,6 +155,7 @@ export function ResumeViewer({
               ) : null}
               {isOwner ? (
                 <SlugSettings
+                  draftId={draftId}
                   label="Edit link"
                   labelClassName="inline"
                   variant="ghost"

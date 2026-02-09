@@ -19,7 +19,7 @@ describe('ViralLoopCTA', () => {
   })
 
   it('renders when user is not the owner after delay', () => {
-    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    vi.mocked(useOwnerCheck).mockReturnValue({ isOwner: false })
     render(<ViralLoopCTA resumeId="test-id" />)
     
     act(() => {
@@ -30,7 +30,7 @@ describe('ViralLoopCTA', () => {
   })
 
   it('does not render when user is the owner', () => {
-    vi.mocked(useOwnerCheck).mockReturnValue(true)
+    vi.mocked(useOwnerCheck).mockReturnValue({ isOwner: true })
     const { container } = render(<ViralLoopCTA resumeId="test-id" />)
     
     act(() => {
@@ -41,7 +41,7 @@ describe('ViralLoopCTA', () => {
   })
 
   it('renders only after 2 seconds', () => {
-    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    vi.mocked(useOwnerCheck).mockReturnValue({ isOwner: false })
     
     render(<ViralLoopCTA resumeId="test-id" />)
     
@@ -65,7 +65,7 @@ describe('ViralLoopCTA', () => {
   })
 
   it('applies animation classes when visible', () => {
-    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    vi.mocked(useOwnerCheck).mockReturnValue({ isOwner: false })
     render(<ViralLoopCTA resumeId="test-id" />)
     
     act(() => {
@@ -77,8 +77,8 @@ describe('ViralLoopCTA', () => {
     expect(cta).not.toHaveClass('translate-y-10', 'opacity-0')
   })
 
-  it('links to /edit and opens in a new tab', () => {
-    vi.mocked(useOwnerCheck).mockReturnValue(false)
+  it('links to /resumes and opens in a new tab', () => {
+    vi.mocked(useOwnerCheck).mockReturnValue({ isOwner: false })
     render(<ViralLoopCTA resumeId="test-id" />)
     
     act(() => {
@@ -87,12 +87,12 @@ describe('ViralLoopCTA', () => {
 
     const link = screen.getByText(/Tidy up your resume/i).closest('a')
     expect(link).toBeInTheDocument()
-    expect(link).toHaveAttribute('href', '/edit')
+    expect(link).toHaveAttribute('href', '/resumes')
     expect(link).toHaveAttribute('target', '_blank')
   })
 
   it('shows tooltip on hover', async () => {
-    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    vi.mocked(useOwnerCheck).mockReturnValue({ isOwner: false })
     render(<ViralLoopCTA resumeId="test-id" />)
     
     act(() => {
@@ -119,7 +119,7 @@ describe('ViralLoopCTA', () => {
   })
 
   it('is hidden during print', () => {
-    vi.mocked(useOwnerCheck).mockReturnValue(false)
+    vi.mocked(useOwnerCheck).mockReturnValue({ isOwner: false })
     render(<ViralLoopCTA resumeId="test-id" />)
     
     act(() => {

@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { OwnerFloatingToolbar } from '@/components/public-view/owner-floating-toolbar'
 import { ResumeViewer } from '@/components/public-view/resume-viewer'
+import { useOwnerCheck } from '@/hooks/use-owner-check'
 import { useRemoteStatus } from '@/hooks/use-remote-status'
 import type { ResumeThemeSettings } from '@/types/resume'
 
@@ -21,7 +22,8 @@ export function PublicResumeView({
   theme,
 }: PublicResumeViewProps) {
   const [isFullWidth, setIsFullWidth] = useState(false)
-  useRemoteStatus()
+  const { draftId } = useOwnerCheck(id)
+  useRemoteStatus(draftId)
 
   return (
     <>

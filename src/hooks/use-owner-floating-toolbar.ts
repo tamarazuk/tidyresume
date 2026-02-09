@@ -9,9 +9,15 @@ interface UseOwnerFloatingToolbarOptions {
 }
 
 export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) {
-  const isOwner = useOwnerCheck(id)
+  const { isOwner, draftId } = useOwnerCheck(id)
   const router = useRouter()
-  const slug = useResumeStore((state) => state.slug)
+  const slug = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId]?.slug ?? null : null
+  )
+  const editSecret = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId]?.editSecret ?? null : null
+  )
+  const setActiveDraft = useResumeStore((state) => state.setActiveDraft)
 
   const getShareUrl = () => {
     const shareId = slug || id
@@ -43,9 +49,21 @@ export function useOwnerFloatingToolbar({ id }: UseOwnerFloatingToolbarOptions) 
     router.replace(url)
   }
 
+  const handleEdit = () => {
+    if (draftId) {
+      setActiveDraft(draftId)
+    }
+  }
+
+  const editHref = draftId ? `/edit/${draftId}` : '/edit'
+
   return {
     isOwner,
+    draftId,
+    editSecret,
+    editHref,
     handleShare,
     handleUrlUpdated,
+    handleEdit,
   }
 }

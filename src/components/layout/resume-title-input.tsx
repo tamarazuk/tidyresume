@@ -10,7 +10,9 @@ import { RESUME_TITLE_MAX_LENGTH, FOCUS_TITLE_EVENT } from '@/lib/constants'
 
 export default function ResumeTitleInput() {
   const isHydrated = useResumeHydrated()
-  const resumeTitleValue = useResumeStore((state) => state.resumeTitle)
+  const resumeTitleValue = useResumeStore(
+    (state) => state.getActiveDraft().resumeTitle
+  )
   const setResumeTitleValue = useResumeStore((state) => state.setResumeTitle)
   const [isEditing, setIsEditing] = useState(false)
   const inputRef = useRef<HTMLInputElement | null>(null)

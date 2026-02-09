@@ -18,12 +18,13 @@ export function useEditorState() {
   useRemoteStatus()
 
   const editorRef = useRef<ExposeParam>(null)
-  const text = useResumeStore((state) => state.markdown)
-  const saveStatus = useResumeStore((state) => state.saveStatus)
-  const syncStatus = useResumeStore((state) => state.syncStatus)
-  const isPublished = useResumeStore((state) => state.isPublished)
-  const imageWarning = useResumeStore((state) => state.imageWarning)
-  const contentWarning = useResumeStore((state) => state.contentWarning)
+  const draft = useResumeStore((state) => state.getActiveDraft())
+  const text = draft.markdown
+  const saveStatus = draft.saveStatus
+  const syncStatus = draft.syncStatus
+  const isPublished = draft.isPublished
+  const imageWarning = draft.imageWarning
+  const contentWarning = draft.contentWarning
   const setText = useResumeStore((state) => state.setMarkdown)
   const [isFullWidth, setIsFullWidth] = useState(true)
   const [isAppearanceOpen, setIsAppearanceOpen] = useState(false)

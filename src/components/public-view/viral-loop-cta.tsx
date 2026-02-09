@@ -16,7 +16,7 @@ interface ViralLoopCTAProps {
 }
 
 export function ViralLoopCTA({ resumeId }: ViralLoopCTAProps) {
-  const isOwner = useOwnerCheck(resumeId)
+  const { isOwner } = useOwnerCheck(resumeId)
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export function ViralLoopCTA({ resumeId }: ViralLoopCTAProps) {
           render={(triggerProps) => (
             <ButtonLink
               {...triggerProps}
-              href="/edit"
+              href="/resumes"
               target="_blank"
               className={cn(
                 'bg-primary text-primary-foreground flex items-center gap-2 rounded-full px-6 py-3 font-bold shadow-lg transition-all hover:scale-105 active:scale-95'

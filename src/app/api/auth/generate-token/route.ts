@@ -34,6 +34,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
     }
 
+    const editSecretHeader = request.headers.get('X-Edit-Secret')
+    if (
+      !editSecretHeader ||
+      !resume.editSecret ||
+      editSecretHeader !== resume.editSecret
+    ) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     // If resume has an owner, verify email matches
     if (resume.userEmail && resume.userEmail !== email) {
       return NextResponse.json({ error: 'Unauthorized: Resume belongs to another user' }, { status: 403 })

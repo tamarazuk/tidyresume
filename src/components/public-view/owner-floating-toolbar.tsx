@@ -100,7 +100,15 @@ export function OwnerFloatingToolbar({
   isFullWidth,
   onToggleWidth,
 }: OwnerFloatingToolbarProps) {
-  const { isOwner, handleShare, handleUrlUpdated } = useOwnerFloatingToolbar({
+  const {
+    isOwner,
+    draftId,
+    editSecret,
+    editHref,
+    handleShare,
+    handleUrlUpdated,
+    handleEdit,
+  } = useOwnerFloatingToolbar({
     id,
   })
   const isPreviewMode = usePublicViewStore(
@@ -132,16 +140,20 @@ export function OwnerFloatingToolbar({
         <Tooltip>
           <TooltipTrigger
             render={(props) => {
-              const { className: triggerClassName, ...rest } = props
+              const { className: triggerClassName, onClick, ...rest } = props
               return (
                 <Link
                   {...rest}
-                  href={`/edit`} // Since it's local storage based, /edit implies editing 'current'
+                  href={editHref}
                   className={cn(
                     buttonVariants({ variant: 'default', size: 'sm' }),
                     'gap-1.5',
                     triggerClassName
                   )}
+                  onClick={(event) => {
+                    onClick?.(event)
+                    handleEdit()
+                  }}
                   aria-label="Edit resume"
                 >
                   <PencilSimpleIcon size={16} />
@@ -158,6 +170,7 @@ export function OwnerFloatingToolbar({
           <TooltipTrigger
             render={(props) => (
               <SlugSettings
+                draftId={draftId}
                 label="Link"
                 ariaLabel="Edit link"
                 labelClassName="sm:hidden"
@@ -177,7 +190,11 @@ export function OwnerFloatingToolbar({
         <Tooltip>
           <TooltipTrigger
             render={(props) => (
-              <MagicLinkDialog resumeId={id} triggerProps={props} />
+              <MagicLinkDialog
+                resumeId={id}
+                editSecret={editSecret}
+                triggerProps={props}
+              />
             )}
           />
           <TooltipContent side="right" align="center" sideOffset={8}>

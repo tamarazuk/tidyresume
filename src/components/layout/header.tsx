@@ -12,6 +12,8 @@ import {
 } from '@phosphor-icons/react/dist/ssr'
 
 import AppIcon from '@/icons/app-icon'
+import AppearanceSettings from '@/components/appearance-settings'
+import ResumeSwitcher from '@/components/layout/resume-switcher'
 import ResumeTitleInput from '@/components/layout/resume-title-input'
 import { SlugSettings } from '@/components/layout/slug-settings'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -51,9 +53,11 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
     usePublish()
   const { isDownloading, downloadPdf } = usePdfDownload()
   const { formatShortcutKeys } = usePlatformShortcuts()
-  const resumeId = useResumeStore((state) => state.id)
-  const isPublished = useResumeStore((state) => state.isPublished)
-  const resumeTitle = useResumeStore((state) => state.resumeTitle)
+  const draft = useResumeStore((state) => state.getActiveDraft())
+  const resumeId = draft.id
+  const resumeSlug = draft.slug
+  const isPublished = draft.isPublished
+  const resumeTitle = draft.resumeTitle
   const isUntitled = resumeTitle === DEFAULT_RESUME_TITLE
   const printShortcutKeys = formatShortcutKeys(['Mod', 'P'])
 
@@ -75,6 +79,7 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <ResumeSwitcher />
         <DropdownMenu>
           <DropdownMenuTrigger
             render={(props) => (
@@ -113,6 +118,16 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
               )}
               <span>Download PDF</span>
             </DropdownMenuItem>
+            <AppearanceSettings
+              label="Appearance"
+              labelClassName="inline"
+              triggerVariant="ghost"
+              triggerSize="sm"
+              triggerClassName={cn(
+                dropdownMenuItemClassName,
+                'w-full justify-start focus:bg-transparent focus:text-foreground data-[highlighted]:bg-transparent data-[highlighted]:text-foreground'
+              )}
+            />
             <SlugSettings
               label="Edit link"
               labelClassName="inline"
@@ -160,7 +175,7 @@ export default function Header({ title = 'TidyResume Editor' }: HeaderProps) {
                       {...props}
                       href={getResumeUrl(
                         resumeId,
-                        useResumeStore.getState().slug
+                        resumeSlug
                       )}
                       className={cn(
                         buttonVariants({ variant: 'default' }),

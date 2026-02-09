@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { toast } from 'sonner'
 import EditorLoading from '@/components/editor/editor-loading'
-import { useResumeStore } from '@/stores/resume-store'
+import { useResumeHydrated, useResumeStore } from '@/stores/resume-store'
 
 const MarkdownEditor = dynamic(() => import('@/components/editor/editor'), {
   ssr: false,
@@ -17,13 +17,12 @@ function TokenHandler() {
   const router = useRouter()
   const token = searchParams.get('token')
 
-  const setMarkdown = useResumeStore((state) => state.setMarkdown)
-  const setResumeTitle = useResumeStore((state) => state.setResumeTitle)
-  const setId = useResumeStore((state) => state.setId)
-  const setSlug = useResumeStore((state) => state.setSlug)
-  const setEditSecret = useResumeStore((state) => state.setEditSecret)
-  const setIsPublished = useResumeStore((state) => state.setIsPublished)
-  const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
+  const createDraft = useResumeStore((state) => state.createDraft)
+  const setActiveDraft = useResumeStore((state) => state.setActiveDraft)
+  const updateDraft = useResumeStore((state) => state.updateDraft)
+  const getDraftByRemoteId = useResumeStore(
+    (state) => state.getDraftByRemoteId
+  )
 
   useEffect(() => {
     if (!token) return
@@ -55,19 +54,22 @@ function TokenHandler() {
         }
 
         const { resume } = data
+        const existingDraft = getDraftByRemoteId(resume.id)
+        const draftId = existingDraft?.draftId ?? createDraft()
 
-        setId(resume.id)
-        setSlug(resume.slug)
-        setResumeTitle(resume.title)
-        setMarkdown(resume.content)
-        if (resume.editSecret) {
-          setEditSecret(resume.editSecret)
-        }
-        setIsPublished(true)
-        setSyncStatus('synced')
+        updateDraft(draftId, {
+          id: resume.id,
+          slug: resume.slug,
+          resumeTitle: resume.title,
+          markdown: resume.content,
+          editSecret: resume.editSecret ?? null,
+          isPublished: true,
+          syncStatus: 'synced',
+        })
+        setActiveDraft(draftId)
 
         toast.success('Resume loaded successfully', { id: toastId })
-        router.replace('/edit')
+        router.replace(`/edit/${draftId}`)
       } catch (error) {
         toast.error('Invalid or expired link', {
           id: toastId,
@@ -82,22 +84,94 @@ function TokenHandler() {
   }, [
     token,
     router,
-    setId,
-    setSlug,
-    setResumeTitle,
-    setMarkdown,
-    setEditSecret,
-    setIsPublished,
-    setSyncStatus,
+    createDraft,
+    setActiveDraft,
+    updateDraft,
+    getDraftByRemoteId,
   ])
 
   return null
 }
 
-export default function EditorClient() {
+interface RouteSyncProps {
+  routeDraftId?: string
+  gateway?: boolean
+}
+
+function RouteSync({ routeDraftId, gateway = false }: RouteSyncProps) {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const isHydrated = useResumeHydrated()
+  const activeDraftId = useResumeStore((state) => state.activeDraftId)
+  const draftsById = useResumeStore((state) => state.draftsById)
+  const setActiveDraft = useResumeStore((state) => state.setActiveDraft)
+  const createDraft = useResumeStore((state) => state.createDraft)
+
+  useEffect(() => {
+    if (!isHydrated) return
+    if (searchParams.get('token')) return
+
+    if (routeDraftId) {
+      if (draftsById[routeDraftId]) {
+        if (activeDraftId !== routeDraftId) {
+          setActiveDraft(routeDraftId)
+        }
+        return
+      }
+
+      const fallbackDraftId =
+        activeDraftId && draftsById[activeDraftId]
+          ? activeDraftId
+          : createDraft()
+      router.replace(`/edit/${fallbackDraftId}`)
+      return
+    }
+
+    if (!gateway) return
+
+    const targetDraftId =
+      activeDraftId && draftsById[activeDraftId]
+        ? activeDraftId
+        : createDraft()
+    router.replace(`/edit/${targetDraftId}`)
+  }, [
+    activeDraftId,
+    createDraft,
+    draftsById,
+    gateway,
+    isHydrated,
+    routeDraftId,
+    router,
+    searchParams,
+    setActiveDraft,
+  ])
+
+  return null
+}
+
+interface EditorClientProps {
+  routeDraftId?: string
+  gateway?: boolean
+}
+
+export default function EditorClient({
+  routeDraftId,
+  gateway = false,
+}: EditorClientProps) {
+  if (gateway) {
+    return (
+      <Suspense fallback={<EditorLoading />}>
+        <TokenHandler />
+        <RouteSync gateway />
+        <EditorLoading />
+      </Suspense>
+    )
+  }
+
   return (
     <Suspense fallback={<EditorLoading />}>
       <TokenHandler />
+      <RouteSync routeDraftId={routeDraftId} />
       <MarkdownEditor />
     </Suspense>
   )

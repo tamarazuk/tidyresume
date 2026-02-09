@@ -3,12 +3,16 @@ import { DrizzleD1Database } from 'drizzle-orm/d1'
 import { resumes } from '@/db/schema'
 import * as schema from '@/db/schema'
 import { safeJsonParse, safeJsonStringify } from '@/lib/json-utils'
-import type { ResumeThemeSettings } from '@/types/resume'
+import type { ResumeLabel, ResumeThemeSettings } from '@/types/resume'
 
 type Db = DrizzleD1Database<typeof schema>
 
-type ResumeRecordWithTheme = Omit<typeof resumes.$inferSelect, 'theme'> & {
+type ResumeRecordWithExtras = Omit<
+  typeof resumes.$inferSelect,
+  'theme' | 'labels'
+> & {
   theme: ResumeThemeSettings | null
+  labels: ResumeLabel[] | null
 }
 
 const isThemeValue = (value: unknown): value is ResumeThemeSettings => {
@@ -23,6 +27,18 @@ const serializeTheme = (theme?: ResumeThemeSettings | null): string | null => {
   return safeJsonStringify(theme)
 }
 
+const isLabelsValue = (value: unknown): value is ResumeLabel[] => {
+  return Array.isArray(value)
+}
+
+const parseLabels = (labels: string | null): ResumeLabel[] | null => {
+  return safeJsonParse(labels, isLabelsValue)
+}
+
+const serializeLabels = (labels?: ResumeLabel[] | null): string | null => {
+  return safeJsonStringify(labels)
+}
+
 export async function getResume(db: Db, idOrSlug: string) {
   // Try finding by ID or Slug
   const resume = await db.query.resumes.findFirst({
@@ -33,7 +49,8 @@ export async function getResume(db: Db, idOrSlug: string) {
   return {
     ...resume,
     theme: parseTheme(resume.theme ?? null),
-  } satisfies ResumeRecordWithTheme
+    labels: parseLabels(resume.labels ?? null),
+  } satisfies ResumeRecordWithExtras
 }
 
 export async function deleteResume(db: Db, id: string) {
@@ -130,11 +147,46 @@ export async function publishResume(
     content: string
     slug?: string | null
     theme?: ResumeThemeSettings | null
+    labels?: ResumeLabel[] | null
   }
 ) {
   const slugVal = data.slug ?? null
   const themeValue =
     data.theme !== undefined ? serializeTheme(data.theme) : undefined
+  const labelsValue =
+    data.labels !== undefined ? serializeLabels(data.labels) : undefined
+
+  const createResumeRecord = async () => {
+    const resumeId = crypto.randomUUID()
+    const editSecret = crypto.randomUUID()
+    const insertThemeValue = serializeTheme(data.theme ?? null)
+    const insertLabelsValue = serializeLabels(data.labels ?? null)
+
+    const values: typeof resumes.$inferInsert = {
+      id: resumeId,
+      title: data.title,
+      content: data.content,
+      slug: slugVal,
+      theme: insertThemeValue,
+      labels: insertLabelsValue,
+      editSecret: editSecret,
+    }
+
+    try {
+      const results = await db.insert(resumes).values(values).returning({
+        id: resumes.id,
+        slug: resumes.slug,
+        editSecret: resumes.editSecret,
+      })
+
+      return results[0]
+    } catch (error) {
+      if (isUniqueConstraintViolation(error)) {
+        throw new Error('Slug already taken')
+      }
+      throw error
+    }
+  }
 
   // CASE 1: Update existing resume
   if (data.id) {
@@ -148,6 +200,9 @@ export async function publishResume(
       if (themeValue !== undefined) {
         updateValues.theme = themeValue
       }
+      if (labelsValue !== undefined) {
+        updateValues.labels = labelsValue
+      }
 
       const results = await db
         .update(resumes)
@@ -159,13 +214,19 @@ export async function publishResume(
           editSecret: resumes.editSecret,
         })
 
-      if (results.length === 0) {
-        // Client provided an ID, but it doesn't exist.
-        // We do NOT create it. We consider this an invalid update attempt.
-        throw new Error('Resume not found')
+      if (results.length > 0) {
+        return {
+          ...results[0],
+          created: false,
+        }
       }
 
-      return results[0]
+      // Stale client ID: create a new remote record and let the client rotate.
+      const createdResume = await createResumeRecord()
+      return {
+        ...createdResume,
+        created: true,
+      }
     } catch (error) {
       if (isUniqueConstraintViolation(error)) {
         throw new Error('Slug already taken')
@@ -175,31 +236,9 @@ export async function publishResume(
   }
 
   // CASE 2: Create new resume
-  const resumeId = crypto.randomUUID()
-  const editSecret = crypto.randomUUID()
-  const insertThemeValue = serializeTheme(data.theme ?? null)
-
-  const values: typeof resumes.$inferInsert = {
-    id: resumeId,
-    title: data.title,
-    content: data.content,
-    slug: slugVal,
-    theme: insertThemeValue,
-    editSecret: editSecret,
-  }
-
-  try {
-    const results = await db.insert(resumes).values(values).returning({
-      id: resumes.id,
-      slug: resumes.slug,
-      editSecret: resumes.editSecret,
-    })
-
-    return results[0]
-  } catch (error) {
-    if (isUniqueConstraintViolation(error)) {
-      throw new Error('Slug already taken')
-    }
-    throw error
+  const createdResume = await createResumeRecord()
+  return {
+    ...createdResume,
+    created: true,
   }
 }

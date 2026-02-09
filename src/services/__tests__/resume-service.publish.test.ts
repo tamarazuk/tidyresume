@@ -29,7 +29,7 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
     vi.clearAllMocks()
   })
 
-  it('should return the existing editSecret when updating with an ID', async () => {
+  it('should update an existing resume when ID is found', async () => {
     const returningMock = vi.fn().mockResolvedValue([
       { id: 'existing-id', editSecret: 'existing-secret', slug: null },
     ])
@@ -47,6 +47,7 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
     expect(mockDb.update).toHaveBeenCalled()
     expect(mockDb.insert).not.toHaveBeenCalled()
     expect(result.editSecret).toBe('existing-secret')
+    expect(result.created).toBe(false)
   })
 
   it('should serialize theme when updating with an ID', async () => {
@@ -76,5 +77,36 @@ describe('publishResume (Unpublish/Republish Scenario)', () => {
         }),
       })
     )
+  })
+
+  it('creates a new resume when client ID is stale', async () => {
+    const updateReturningMock = vi.fn().mockResolvedValue([])
+    const updateWhereMock = vi
+      .fn()
+      .mockReturnValue({ returning: updateReturningMock })
+    const updateSetMock = vi.fn().mockReturnValue({ where: updateWhereMock })
+    mockDb.update.mockReturnValue({ set: updateSetMock })
+
+    const insertReturningMock = vi.fn().mockResolvedValue([
+      { id: 'new-id', editSecret: 'new-secret', slug: 'new-slug' },
+    ])
+    const insertValuesMock = vi
+      .fn()
+      .mockReturnValue({ returning: insertReturningMock })
+    mockDb.insert.mockReturnValue({ values: insertValuesMock })
+
+    const result = await publishResume(mockDb, {
+      id: 'stale-id',
+      title: 'Republished',
+      content: 'Content',
+      slug: 'new-slug',
+    })
+
+    expect(mockDb.update).toHaveBeenCalled()
+    expect(mockDb.insert).toHaveBeenCalled()
+    expect(result.id).toBe('new-id')
+    expect(result.editSecret).toBe('new-secret')
+    expect(result.slug).toBe('new-slug')
+    expect(result.created).toBe(true)
   })
 })

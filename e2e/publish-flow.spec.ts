@@ -20,6 +20,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )
@@ -52,6 +53,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     })
@@ -107,6 +109,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'my-resume',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )
@@ -120,9 +123,9 @@ test.describe('Publish flow', () => {
 
     await page.getByRole('button', { name: 'Publish resume' }).click()
 
-    // The View link uses the store's slug (null initially) falling back to the id
+    // The View link should use the returned slug when provided.
     const viewLink = page.getByRole('link', { name: 'View resume' })
-    await expect(viewLink).toHaveAttribute('href', '/r/test-resume-id')
+    await expect(viewLink).toHaveAttribute('href', '/r/my-resume')
   })
 
   test('after publish, View button replaces Publish button', async ({
@@ -136,6 +139,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )
@@ -169,6 +173,7 @@ test.describe('Publish flow', () => {
           id: 'test-resume-id',
           slug: 'test-slug',
           editSecret: 'test-secret',
+          created: true,
         }),
       })
     )

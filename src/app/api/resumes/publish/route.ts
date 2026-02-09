@@ -40,6 +40,7 @@ export async function POST(request: Request) {
       slug: result.slug,
       url,
       editSecret: result.editSecret,
+      created: result.created,
     })
   } catch (error: unknown) {
     if (error instanceof Error && error.message === 'Slug already taken') {

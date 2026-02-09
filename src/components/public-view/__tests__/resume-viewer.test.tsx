@@ -5,6 +5,9 @@ import { ResumeViewer } from '@/components/public-view/resume-viewer'
 import { updateResumeTheme } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 
+const appearanceSettingsProps = vi.fn()
+const slugSettingsProps = vi.fn()
+
 vi.mock('next/link', () => ({
   default: ({
     href,
@@ -32,11 +35,17 @@ vi.mock('@/icons/app-icon', () => ({
 }))
 
 vi.mock('@/components/appearance-settings', () => ({
-  default: () => <div data-testid="appearance-settings" />,
+  default: (props: { draftId?: string }) => {
+    appearanceSettingsProps(props)
+    return <div data-testid="appearance-settings" />
+  },
 }))
 
 vi.mock('@/components/layout/slug-settings', () => ({
-  SlugSettings: () => <div data-testid="slug-settings" />,
+  SlugSettings: (props: { draftId?: string }) => {
+    slugSettingsProps(props)
+    return <div data-testid="slug-settings" />
+  },
 }))
 
 vi.mock('@/components/public-view/unpublish-button', () => ({
@@ -101,19 +110,30 @@ vi.mock('@/lib/resume-api', () => ({
 
 describe('ResumeViewer', () => {
   beforeEach(() => {
+    appearanceSettingsProps.mockClear()
+    slugSettingsProps.mockClear()
     useResumeStore.persist?.clearStorage?.()
-    useResumeStore.setState((state) => ({
-      ...state,
+    useResumeStore.getState().resetResume()
+    const state = useResumeStore.getState()
+    const draftIdsToDelete = state.draftOrder.filter(
+      (draftId) => draftId !== state.activeDraftId
+    )
+    draftIdsToDelete.forEach((draftId) => {
+      state.deleteDraft(draftId)
+    })
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
       id: 'resume-123',
+      isPublished: true,
       editSecret: 'secret-123',
       resumeDisplay: {
-        ...state.resumeDisplay,
+        ...draft.resumeDisplay,
         theme: {
-          ...state.resumeDisplay.theme,
+          ...draft.resumeDisplay.theme,
           accent: 'indigo',
         },
       },
-    }))
+    })
   })
 
   afterEach(() => {
@@ -145,18 +165,74 @@ describe('ResumeViewer', () => {
     })
   })
 
+  it('passes owner draftId to owner-only controls even when another draft is active', () => {
+    const state = useResumeStore.getState()
+    const ownerDraftId = state.getActiveDraft().draftId
+    state.createDraft()
+
+    render(
+      <ResumeViewer
+        id="resume-123"
+        title="Resume"
+        content="Content"
+        isFullWidth={false}
+        theme={{ accent: 'rose' }}
+      />
+    )
+
+    expect(
+      appearanceSettingsProps.mock.calls.some(
+        ([props]) => props?.draftId === ownerDraftId
+      )
+    ).toBe(true)
+    expect(
+      slugSettingsProps.mock.calls.some(
+        ([props]) => props?.draftId === ownerDraftId
+      )
+    ).toBe(true)
+  })
+
   it('uses the server theme for visitors', () => {
-    useResumeStore.setState((state) => ({
-      ...state,
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
       id: 'other-id',
       resumeDisplay: {
-        ...state.resumeDisplay,
+        ...draft.resumeDisplay,
         theme: {
-          ...state.resumeDisplay.theme,
+          ...draft.resumeDisplay.theme,
           accent: 'indigo',
         },
       },
-    }))
+    })
+
+    render(
+      <ResumeViewer
+        id="resume-123"
+        title="Resume"
+        content="Content"
+        isFullWidth={false}
+        theme={{ accent: 'rose' }}
+      />
+    )
+
+    const preview = screen.getByTestId('preview')
+    expect(preview.className).toContain('resume-accent-rose')
+  })
+
+  it('treats matching drafts without edit secret as visitors', () => {
+    const draft = useResumeStore.getState().getActiveDraft()
+    useResumeStore.getState().updateDraft(draft.draftId, {
+      id: 'resume-123',
+      isPublished: true,
+      editSecret: null,
+      resumeDisplay: {
+        ...draft.resumeDisplay,
+        theme: {
+          ...draft.resumeDisplay.theme,
+          accent: 'indigo',
+        },
+      },
+    })
 
     render(
       <ResumeViewer
@@ -189,7 +265,7 @@ describe('ResumeViewer', () => {
     })
 
     await act(async () => {
-      vi.advanceTimersByTime(2600)
+      await vi.advanceTimersByTimeAsync(2600)
     })
 
     expect(updateResumeTheme).toHaveBeenCalledWith(
@@ -199,9 +275,46 @@ describe('ResumeViewer', () => {
     )
   })
 
+  it('updates sync status on the viewed owner draft, not the active draft', async () => {
+    vi.useFakeTimers()
+    const state = useResumeStore.getState()
+    const ownerDraftId = state.getActiveDraft().draftId
+    const activeDraftId = state.createDraft()
+
+    render(
+      <ResumeViewer
+        id="resume-123"
+        title="Resume"
+        content="Content"
+        isFullWidth={false}
+        theme={{ accent: 'indigo' }}
+      />
+    )
+
+    act(() => {
+      useResumeStore.getState().setDraftTheme(ownerDraftId, { accent: 'teal' })
+    })
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2600)
+    })
+    expect(updateResumeTheme).toHaveBeenCalledWith(
+      'resume-123',
+      expect.objectContaining({ accent: 'teal' }),
+      { editSecret: 'secret-123' }
+    )
+
+    const nextState = useResumeStore.getState()
+    expect(nextState.draftsById[ownerDraftId]?.syncStatus).toBe('synced')
+    expect(nextState.draftsById[activeDraftId]?.syncStatus).toBe('unsaved')
+  })
+
   it('does not publish on mount when the theme matches the server', async () => {
     vi.useFakeTimers()
-    const matchingTheme = useResumeStore.getState().resumeDisplay.theme
+    const matchingTheme = useResumeStore
+      .getState()
+      .getActiveDraft()
+      .resumeDisplay.theme
     render(
       <ResumeViewer
         id="resume-123"
@@ -213,7 +326,7 @@ describe('ResumeViewer', () => {
     )
 
     await act(async () => {
-      vi.advanceTimersByTime(2600)
+      await vi.advanceTimersByTimeAsync(2600)
     })
 
     expect(updateResumeTheme).not.toHaveBeenCalled()

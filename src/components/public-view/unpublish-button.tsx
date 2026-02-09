@@ -11,9 +11,19 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useOwnerCheck } from '@/hooks/use-owner-check'
-import { deleteResume } from '@/lib/resume-api'
+import { deleteResume, isResumeApiError } from '@/lib/resume-api'
 import { useResumeStore } from '@/stores/resume-store'
 import { cn } from '@/lib/utils'
+
+function resolveUnpublishErrorMessage(error: unknown) {
+  if (!isResumeApiError(error)) {
+    return 'Failed to unpublish resume'
+  }
+  if (error.status === 401 || error.status === 403) {
+    return 'You do not have permission to unpublish this resume'
+  }
+  return 'Failed to unpublish resume'
+}
 
 interface UnpublishButtonProps {
   id: string
@@ -32,10 +42,13 @@ export function UnpublishButton({
   labelClassName = 'hidden sm:inline',
   showTooltip = true,
 }: UnpublishButtonProps) {
-  const isOwner = useOwnerCheck(id)
+  const { isOwner, draftId } = useOwnerCheck(id)
   const router = useRouter()
   const unpublish = useResumeStore((state) => state.unpublish)
-  const editSecret = useResumeStore((state) => state.editSecret)
+  const setActiveDraft = useResumeStore((state) => state.setActiveDraft)
+  const editSecret = useResumeStore((state) =>
+    draftId ? state.draftsById[draftId]?.editSecret ?? null : null
+  )
   const [isUnpublishing, setIsUnpublishing] = useState(false)
 
   if (!isOwner) return null
@@ -48,13 +61,30 @@ export function UnpublishButton({
 
     setIsUnpublishing(true)
     try {
-      await deleteResume(id, { editSecret })
-      unpublish()
-      toast.success('Resume unpublished successfully')
-      router.push('/edit')
+      let wasAlreadyUnpublished = false
+      try {
+        await deleteResume(id, { editSecret })
+      } catch (error) {
+        if (isResumeApiError(error) && error.status === 404) {
+          wasAlreadyUnpublished = true
+        } else {
+          throw error
+        }
+      }
+      if (draftId) {
+        unpublish(draftId)
+        setActiveDraft(draftId)
+      }
+      toast.success(
+        wasAlreadyUnpublished
+          ? 'Resume was already unpublished'
+          : 'Resume unpublished successfully'
+      )
+      setIsUnpublishing(false)
+      router.push(draftId ? `/edit/${draftId}` : '/edit')
     } catch (error) {
       console.error(error)
-      toast.error('Failed to unpublish resume')
+      toast.error(resolveUnpublishErrorMessage(error))
       setIsUnpublishing(false)
     }
   }

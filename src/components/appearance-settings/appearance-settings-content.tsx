@@ -20,8 +20,15 @@ import { Separator } from '@/components/ui/separator'
 import { getResumeAccentSwatch } from '@/lib/resume-theme'
 import { cn } from '@/lib/utils'
 import { useAppearanceSettings } from './hooks/use-appearance-settings'
+import type { ResumeDraftId } from '@/stores/resume-store'
 
-export function AppearanceSettingsContent() {
+interface AppearanceSettingsContentProps {
+  draftId?: ResumeDraftId
+}
+
+export function AppearanceSettingsContent({
+  draftId,
+}: AppearanceSettingsContentProps) {
   const {
     accentHelpText,
     accentOptions,
@@ -44,7 +51,7 @@ export function AppearanceSettingsContent() {
     marginMin,
     marginMax,
     actions,
-  } = useAppearanceSettings()
+  } = useAppearanceSettings({ draftId })
 
   return (
     <>

@@ -61,9 +61,7 @@
       "indexes": {
         "auth_tokens_token_unique": {
           "name": "auth_tokens_token_unique",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         }
       },
@@ -72,12 +70,8 @@
           "name": "auth_tokens_resume_id_resumes_id_fk",
           "tableFrom": "auth_tokens",
           "tableTo": "resumes",
-          "columnsFrom": [
-            "resume_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["resume_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -144,9 +138,7 @@
       "indexes": {
         "resumes_slug_unique": {
           "name": "resumes_slug_unique",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         }
       },

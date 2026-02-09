@@ -1,17 +1,24 @@
 import { useState } from 'react'
 import { isResumeApiError, updateResumeSlug } from '@/lib/resume-api'
-import { useResumeStore } from '@/stores/resume-store'
+import { useResumeStore, type ResumeDraftId } from '@/stores/resume-store'
 
 interface UseSlugSettingsOptions {
+  draftId?: ResumeDraftId
   onUrlUpdated?: (url: string) => void
 }
 
 export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
-  const id = useResumeStore((state) => state.id)
-  const slug = useResumeStore((state) => state.slug)
-  const setSlug = useResumeStore((state) => state.setSlug)
-  const setSyncStatus = useResumeStore((state) => state.setSyncStatus)
-  const editSecret = useResumeStore((state) => state.editSecret)
+  const draft = useResumeStore((state) =>
+    options.draftId
+      ? state.draftsById[options.draftId] ?? null
+      : state.getActiveDraft()
+  )
+  const id = draft?.id ?? null
+  const slug = draft?.slug ?? null
+  const draftId = draft?.draftId ?? null
+  const setDraftSlug = useResumeStore((state) => state.setDraftSlug)
+  const setDraftSyncStatus = useResumeStore((state) => state.setDraftSyncStatus)
+  const editSecret = draft?.editSecret ?? null
 
   const [isOpen, setIsOpen] = useState(false)
   const [inputValue, setInputValue] = useState<string>(slug ?? id ?? '')
@@ -55,8 +62,10 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
           editSecret: editSecret ?? undefined,
         }
       )
-      setSlug(data.slug)
-      setSyncStatus('synced')
+      if (draftId) {
+        setDraftSlug(draftId, data.slug)
+        setDraftSyncStatus(draftId, 'synced')
+      }
       setStatus('success')
       if (data.url) {
         options.onUrlUpdated?.(data.url)
@@ -74,6 +83,16 @@ export function useSlugSettings(options: UseSlugSettingsOptions = {}) {
         if (error.status === 401 || error.status === 403) {
           setStatus('error')
           setErrorMessage('You do not have permission to edit this slug')
+          return
+        }
+        if (error.status === 404) {
+          setStatus('error')
+          setErrorMessage('Resume not found. Publish again and retry.')
+          return
+        }
+        if (error.status >= 500) {
+          setStatus('error')
+          setErrorMessage('Server error while saving link')
           return
         }
       }
