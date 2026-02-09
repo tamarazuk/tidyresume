@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b7474d6b-9eb4-45f7-83dd-7b87633d42a9",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "a2b3c4d5-e6f7-8901-a2b3-c4d5e6f78901",
+  "prevId": "c1675bbe-6753-4cc4-a7de-990fd9a570bc",
   "tables": {
     "auth_tokens": {
       "name": "auth_tokens",
@@ -111,8 +111,29 @@
           "notNull": true,
           "autoincrement": false
         },
+        "theme": {
+          "name": "theme",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "labels": {
+          "name": "labels",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "user_email": {
           "name": "user_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "edit_secret": {
+          "name": "edit_secret",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

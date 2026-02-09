@@ -13,6 +13,7 @@ import {
   RESUME_BODY_LETTER_SPACING_VALUES,
   RESUME_BODY_LINE_HEIGHT_VALUES,
 } from '@/types/resume'
+import { DEFAULT_LABEL_COLOR } from '@/lib/label-colors'
 import type {
   ResumeAccent,
   ResumeBodySize,
@@ -20,6 +21,8 @@ import type {
   ResumeBodyLetterSpacing,
   ResumeHeadingSize,
   ResumeId,
+  ResumeLabel,
+  ResumeLabelId,
   ResumeSlug,
   ResumeThemeSettings,
 } from '@/types/resume'
@@ -52,6 +55,7 @@ export interface ResumeDraft {
   imageWarning: string | null
   contentWarning: string | null
   resumeDisplay: ResumeDisplaySettings
+  labelIds: ResumeLabelId[]
   createdAt: number
   updatedAt: number
 }
@@ -75,12 +79,7 @@ const normalizeResumeHeadingSize = (value: unknown): ResumeHeadingSize => {
 
 // Normalize legacy size values from persisted themes.
 const normalizeResumeBodySize = (value: unknown): ResumeBodySize => {
-  if (
-    value === '10' ||
-    value === '11' ||
-    value === '12' ||
-    value === '13'
-  ) {
+  if (value === '10' || value === '11' || value === '12' || value === '13') {
     return value
   }
   if (value === '14' || value === '15' || value === '16') return value
@@ -95,13 +94,17 @@ const normalizeResumeBodyLineHeight = (
 ): ResumeBodyLineHeight => {
   if (typeof value === 'number' && Number.isFinite(value)) {
     const candidate = value.toFixed(1)
-    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(candidate as ResumeBodyLineHeight)) {
+    if (
+      RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(candidate as ResumeBodyLineHeight)
+    ) {
       return candidate as ResumeBodyLineHeight
     }
   }
   if (typeof value === 'string') {
     const trimmed = value.trim()
-    if (RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(trimmed as ResumeBodyLineHeight)) {
+    if (
+      RESUME_BODY_LINE_HEIGHT_VALUE_SET.has(trimmed as ResumeBodyLineHeight)
+    ) {
       return trimmed as ResumeBodyLineHeight
     }
   }
@@ -113,14 +116,22 @@ const normalizeResumeBodyLetterSpacing = (
 ): ResumeBodyLetterSpacing => {
   if (typeof value === 'number' && Number.isFinite(value)) {
     const candidate = `${value}em`
-    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(candidate as ResumeBodyLetterSpacing)) {
+    if (
+      RESUME_BODY_LETTER_SPACING_VALUE_SET.has(
+        candidate as ResumeBodyLetterSpacing
+      )
+    ) {
       return candidate as ResumeBodyLetterSpacing
     }
     if (value === 0) return '0'
   }
   if (typeof value === 'string') {
     const trimmed = value.trim()
-    if (RESUME_BODY_LETTER_SPACING_VALUE_SET.has(trimmed as ResumeBodyLetterSpacing)) {
+    if (
+      RESUME_BODY_LETTER_SPACING_VALUE_SET.has(
+        trimmed as ResumeBodyLetterSpacing
+      )
+    ) {
       return trimmed as ResumeBodyLetterSpacing
     }
   }
@@ -154,6 +165,8 @@ interface ResumeState {
   activeDraftId: ResumeDraftId | null
   draftOrder: ResumeDraftId[]
   draftsById: Record<ResumeDraftId, ResumeDraft>
+  labelsById: Record<ResumeLabelId, ResumeLabel>
+  labelOrder: ResumeLabelId[]
   getActiveDraft: () => ResumeDraft
   getDraftByRemoteId: (id: ResumeId) => ResumeDraft | null
   createDraft: () => ResumeDraftId
@@ -185,6 +198,14 @@ interface ResumeState {
   setContentWarning: (contentWarning: string | null) => void
   unpublish: (draftId?: ResumeDraftId) => void
   resetResume: () => void
+  createLabel: (name: string, color?: string) => ResumeLabelId
+  updateLabel: (
+    id: ResumeLabelId,
+    updates: { name?: string; color?: string }
+  ) => void
+  deleteLabel: (id: ResumeLabelId) => void
+  addLabelToDraft: (draftId: ResumeDraftId, labelId: ResumeLabelId) => void
+  removeLabelFromDraft: (draftId: ResumeDraftId, labelId: ResumeLabelId) => void
 }
 
 const createResumeDisplay = (
@@ -214,6 +235,7 @@ const createDraftDefaults = (
     imageWarning: overrides.imageWarning ?? null,
     contentWarning: overrides.contentWarning ?? null,
     resumeDisplay,
+    labelIds: overrides.labelIds ?? [],
     createdAt: overrides.createdAt ?? now,
     updatedAt: overrides.updatedAt ?? now,
   }
@@ -279,8 +301,8 @@ const createSaveStatusDebouncer = (
 export const useResumeStore = create<ResumeState>()(
   persist(
     (set, get) => {
-      const scheduleSaveStatus = createSaveStatusDebouncer(
-        (draftId, partial) => get().updateDraft(draftId, partial)
+      const scheduleSaveStatus = createSaveStatusDebouncer((draftId, partial) =>
+        get().updateDraft(draftId, partial)
       )
       const initialDraft = createDraftDefaults()
       return {
@@ -289,6 +311,8 @@ export const useResumeStore = create<ResumeState>()(
         draftsById: {
           [initialDraft.draftId]: initialDraft,
         },
+        labelsById: {},
+        labelOrder: [],
         getActiveDraft: () => {
           const state = get()
           const activeId = state.activeDraftId ?? state.draftOrder[0]
@@ -308,7 +332,8 @@ export const useResumeStore = create<ResumeState>()(
           if (drafts.length === 0) return null
           drafts.sort((left, right) => {
             const secretScore =
-              Number(Boolean(right.editSecret)) - Number(Boolean(left.editSecret))
+              Number(Boolean(right.editSecret)) -
+              Number(Boolean(left.editSecret))
             if (secretScore !== 0) return secretScore
             return right.updatedAt - left.updatedAt
           })
@@ -333,6 +358,7 @@ export const useResumeStore = create<ResumeState>()(
             resumeTitle: `${draft.resumeTitle} Copy`,
             markdown: draft.markdown,
             resumeDisplay: draft.resumeDisplay,
+            labelIds: [...draft.labelIds],
           })
           set((state) => ({
             draftsById: {
@@ -347,7 +373,9 @@ export const useResumeStore = create<ResumeState>()(
         deleteDraft: (draftId) => {
           set((state) => {
             if (!state.draftsById[draftId]) return state
-            const nextDraftOrder = state.draftOrder.filter((id) => id !== draftId)
+            const nextDraftOrder = state.draftOrder.filter(
+              (id) => id !== draftId
+            )
             const nextDraftsById = { ...state.draftsById }
             delete nextDraftsById[draftId]
             let nextActiveId = state.activeDraftId
@@ -510,12 +538,97 @@ export const useResumeStore = create<ResumeState>()(
             imageWarning: null,
             contentWarning: null,
             resumeDisplay: createResumeDisplay(),
+            labelIds: [],
           }),
+        createLabel: (name, color) => {
+          const id = crypto.randomUUID() as ResumeLabelId
+          const now = Date.now()
+          const label: ResumeLabel = {
+            id,
+            name,
+            color: color ?? DEFAULT_LABEL_COLOR,
+            createdAt: now,
+            updatedAt: now,
+          }
+          set((state) => ({
+            labelsById: { ...state.labelsById, [id]: label },
+            labelOrder: [...state.labelOrder, id],
+          }))
+          return id
+        },
+        updateLabel: (id, updates) => {
+          set((state) => {
+            const label = state.labelsById[id]
+            if (!label) return state
+            return {
+              labelsById: {
+                ...state.labelsById,
+                [id]: {
+                  ...label,
+                  ...updates,
+                  updatedAt: Date.now(),
+                },
+              },
+            }
+          })
+        },
+        deleteLabel: (id) => {
+          set((state) => {
+            const nextLabelsById = { ...state.labelsById }
+            delete nextLabelsById[id]
+            const nextDraftsById = { ...state.draftsById }
+            for (const [draftId, draft] of Object.entries(nextDraftsById)) {
+              if (draft.labelIds.includes(id)) {
+                nextDraftsById[draftId] = {
+                  ...draft,
+                  labelIds: draft.labelIds.filter((lid) => lid !== id),
+                }
+              }
+            }
+            return {
+              labelsById: nextLabelsById,
+              labelOrder: state.labelOrder.filter((lid) => lid !== id),
+              draftsById: nextDraftsById,
+            }
+          })
+        },
+        addLabelToDraft: (draftId, labelId) => {
+          set((state) => {
+            const draft = state.draftsById[draftId]
+            if (!draft || draft.labelIds.includes(labelId)) return state
+            return {
+              draftsById: {
+                ...state.draftsById,
+                [draftId]: {
+                  ...draft,
+                  labelIds: [...draft.labelIds, labelId],
+                  updatedAt: Date.now(),
+                },
+              },
+            }
+          })
+        },
+        removeLabelFromDraft: (draftId, labelId) => {
+          set((state) => {
+            const draft = state.draftsById[draftId]
+            if (!draft) return state
+            return {
+              draftsById: {
+                ...state.draftsById,
+                [draftId]: {
+                  ...draft,
+                  labelIds: draft.labelIds.filter((lid) => lid !== labelId),
+                  updatedAt: Date.now(),
+                },
+              },
+            }
+          })
+        },
       }
     },
     {
       name: 'tidyresume-editor',
-      version: 8,
+      version: 9,
       onRehydrateStorage: () => (state) => {
         state?.setSaveStatus('saved')
       },
@@ -534,12 +647,16 @@ export const useResumeStore = create<ResumeState>()(
           resumeDisplay?: ResumeDisplaySettings
         }
 
+        const labelsById = state.labelsById ?? {}
+        const labelOrder = state.labelOrder ?? []
+
         if (state.draftsById && state.draftOrder) {
           const normalizedDrafts: Record<ResumeDraftId, ResumeDraft> = {}
           Object.entries(state.draftsById).forEach(([draftId, draft]) => {
             normalizedDrafts[draftId] = createDraftDefaults({
               ...draft,
               draftId,
+              labelIds: Array.isArray(draft.labelIds) ? draft.labelIds : [],
               resumeDisplay: {
                 themeMode: draft.resumeDisplay?.themeMode ?? 'auto',
                 theme: resolveThemeDefaults(draft.resumeDisplay?.theme),
@@ -552,7 +669,7 @@ export const useResumeStore = create<ResumeState>()(
           let activeDraftId =
             state.activeDraftId && normalizedDrafts[state.activeDraftId]
               ? state.activeDraftId
-              : normalizedOrder[0] ?? null
+              : (normalizedOrder[0] ?? null)
           if (!activeDraftId) {
             const fallback = createDraftDefaults()
             normalizedDrafts[fallback.draftId] = fallback
@@ -563,6 +680,8 @@ export const useResumeStore = create<ResumeState>()(
             activeDraftId,
             draftOrder: normalizedOrder,
             draftsById: normalizedDrafts,
+            labelsById,
+            labelOrder,
           }
         }
 
@@ -587,6 +706,8 @@ export const useResumeStore = create<ResumeState>()(
           activeDraftId: draft.draftId,
           draftOrder: [draft.draftId],
           draftsById: { [draft.draftId]: draft },
+          labelsById,
+          labelOrder,
         }
       },
     }

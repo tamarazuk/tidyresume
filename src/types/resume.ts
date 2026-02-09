@@ -1,7 +1,23 @@
 export type ResumeId = string
 export type ResumeSlug = string | null
 
-export type ResumeAccent = 'indigo' | 'blue' | 'teal' | 'slate' | 'emerald' | 'rose'
+export type ResumeLabelId = string
+
+export interface ResumeLabel {
+  id: ResumeLabelId
+  name: string
+  color: string
+  createdAt: number
+  updatedAt: number
+}
+
+export type ResumeAccent =
+  | 'indigo'
+  | 'blue'
+  | 'teal'
+  | 'slate'
+  | 'emerald'
+  | 'rose'
 
 export type ResumeFont =
   | 'geologica'
