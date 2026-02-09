@@ -75,9 +75,9 @@ describe('resume-service', () => {
   })
 
   it('should serialize theme when inserting', async () => {
-    const returningMock = vi.fn().mockResolvedValue([
-      { id: 'new-id', editSecret: 'secret', slug: null },
-    ])
+    const returningMock = vi
+      .fn()
+      .mockResolvedValue([{ id: 'new-id', editSecret: 'secret', slug: null }])
     const valuesMock = vi.fn().mockReturnValue({ returning: returningMock })
     mockDb.insert.mockReturnValue({ values: valuesMock })
 

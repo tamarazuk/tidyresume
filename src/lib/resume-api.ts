@@ -1,5 +1,6 @@
 import type {
   ResumeId,
+  ResumeLabel,
   ResumeRecord,
   ResumeSlug,
   ResumeThemeSettings,
@@ -11,6 +12,7 @@ export interface PublishResumePayload {
   content: string
   slug?: ResumeSlug
   theme?: ResumeThemeSettings | null
+  labels?: ResumeLabel[] | null
 }
 
 export interface PublishResumeResponse {
