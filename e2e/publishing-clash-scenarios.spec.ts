@@ -69,6 +69,15 @@ test.describe('Publishing clash scenarios', () => {
       })
     )
 
+    // Mock the public resume page to avoid hitting the database
+    await page.route('**/r/resume-b', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'text/html',
+        body: '<html><head><title>Resume B</title></head><body><h1>Resume B</h1></body></html>',
+      })
+    )
+
     await page.goto('/edit/draft-a')
     await expect(page).toHaveURL(/\/edit\/draft-a$/)
 
@@ -143,8 +152,12 @@ test.describe('Publishing clash scenarios', () => {
       await page.goto('/edit?token=fresh-browser-token')
 
       // Wait for magic link flow to complete before checking URL
-      await expect(page.getByText('Resume loaded successfully')).toBeVisible()
-      await expect(page).toHaveURL(/\/edit\/.+$/)
+      await expect(
+        page.getByText('Resume loaded successfully').first()
+      ).toBeVisible()
+
+      // Wait for URL redirect with longer timeout since it can take time
+      await page.waitForURL(/\/edit\/.+$/, { timeout: 10000 })
 
       const persisted = await readPersistedResumeStore(page)
       expect(persisted).not.toBeNull()

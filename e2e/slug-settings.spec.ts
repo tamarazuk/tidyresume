@@ -2,14 +2,27 @@ import { test, expect } from '@playwright/test'
 import { seedPublishedState } from './helpers'
 
 test.describe('Slug settings', () => {
+  // Mock the publish endpoint to prevent auto-sync errors
+  test.beforeEach(async ({ page }) => {
+    await page.route('**/api/resumes/publish', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: 'test-resume-id',
+          slug: 'test-slug',
+          created: false,
+        }),
+      })
+    )
+  })
+
   test('slug settings popover opens when published', async ({ page }) => {
     await seedPublishedState(page)
     await page.goto('/edit')
 
     // Verify published state
-    await expect(
-      page.getByRole('link', { name: 'View resume' })
-    ).toBeVisible()
+    await expect(page.getByRole('link', { name: 'View resume' })).toBeVisible()
 
     // Open actions menu and click "Edit link"
     await page.getByRole('button', { name: 'Open actions menu' }).click()
@@ -26,7 +39,10 @@ test.describe('Slug settings', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ slug: 'my-custom-slug', url: '/r/my-custom-slug' }),
+        body: JSON.stringify({
+          slug: 'my-custom-slug',
+          url: '/r/my-custom-slug',
+        }),
       })
     )
 
