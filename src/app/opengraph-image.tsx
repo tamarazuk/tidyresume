@@ -10,13 +10,30 @@ export const contentType = 'image/png'
 
 async function fetchFont(url: string): Promise<ArrayBuffer | null> {
   try {
-    const css = await fetch(url).then((res) => res.text())
-    const match = css.match(/src: url\(([^)]+)\)/)
-    if (!match) {
-      console.warn(`[og] Could not extract font URL from Google Fonts CSS: ${url}`)
+    const cssRes = await fetch(url)
+    if (!cssRes.ok) {
+      console.warn(
+        `[og] Failed to fetch Google Fonts CSS: ${url} (status ${cssRes.status})`
+      )
       return null
     }
-    return await fetch(match[1]).then((res) => res.arrayBuffer())
+    const css = await cssRes.text()
+    const match = css.match(/src: url\(([^)]+)\)/)
+    if (!match) {
+      console.warn(
+        `[og] Could not extract font URL from Google Fonts CSS: ${url}`
+      )
+      return null
+    }
+    const fontUrl = match[1].replace(/['"]/g, '').trim()
+    const fontRes = await fetch(fontUrl)
+    if (!fontRes.ok) {
+      console.warn(
+        `[og] Failed to fetch font file: ${fontUrl} (status ${fontRes.status})`
+      )
+      return null
+    }
+    return await fontRes.arrayBuffer()
   } catch (e) {
     console.warn(`[og] Failed to fetch font: ${url}`, e)
     return null
