@@ -8,7 +8,48 @@ export const size = {
 
 export const contentType = 'image/png'
 
+async function fetchFont(url: string): Promise<ArrayBuffer | null> {
+  try {
+    const cssRes = await fetch(url)
+    if (!cssRes.ok) {
+      console.warn(
+        `[og] Failed to fetch Google Fonts CSS: ${url} (status ${cssRes.status})`
+      )
+      return null
+    }
+    const css = await cssRes.text()
+    const match = css.match(/src: url\(([^)]+)\)/)
+    if (!match) {
+      console.warn(
+        `[og] Could not extract font URL from Google Fonts CSS: ${url}`
+      )
+      return null
+    }
+    const fontUrl = match[1].replace(/['"]/g, '').trim()
+    const fontRes = await fetch(fontUrl)
+    if (!fontRes.ok) {
+      console.warn(
+        `[og] Failed to fetch font file: ${fontUrl} (status ${fontRes.status})`
+      )
+      return null
+    }
+    return await fontRes.arrayBuffer()
+  } catch (e) {
+    console.warn(`[og] Failed to fetch font: ${url}`, e)
+    return null
+  }
+}
+
 export default async function Image() {
+  const [sourceSerif, notoSans] = await Promise.all([
+    fetchFont(
+      'https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap'
+    ),
+    fetchFont(
+      'https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500&display=swap'
+    ),
+  ])
+
   return new ImageResponse(
     <div
       style={{
@@ -19,7 +60,6 @@ export default async function Image() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'sans-serif',
       }}
     >
       <div
@@ -27,43 +67,39 @@ export default async function Image() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: 20,
+          marginBottom: 24,
         }}
       >
-        {/* Simple Icon Representation */}
         <svg
           width="80"
           height="80"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#6366f1"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
-          <line x1="16" y1="13" x2="8" y2="13" />
-          <line x1="16" y1="17" x2="8" y2="17" />
-          <line x1="10" y1="9" x2="8" y2="9" />
+          <path
+            fill="#6366F1"
+            d="M0 12A12 12 0 0 1 12 0h76a12 12 0 0 1 12 12v18H0zM0 36h40a6 6 0 0 1 6 6v58H12a12 12 0 0 1-12-12zM54 42a6 6 0 0 1 6-6h40v52a12 12 0 0 1-12 12H54z"
+          />
         </svg>
       </div>
       <div
         style={{
-          fontSize: 80,
-          fontWeight: 800,
-          color: '#0f172a', // Slate 900
+          fontSize: 72,
+          fontFamily: '"Source Serif 4"',
+          fontWeight: 600,
+          color: '#0f172a',
           marginBottom: 10,
-          letterSpacing: '-0.02em',
+          letterSpacing: '-0.015em',
         }}
       >
         TidyResume
       </div>
       <div
         style={{
-          fontSize: 40,
+          fontSize: 36,
+          fontFamily: '"Noto Sans"',
           fontWeight: 500,
-          color: '#64748b', // Slate 500
+          color: '#64748b',
         }}
       >
         Markdown Resume Builder
@@ -71,6 +107,28 @@ export default async function Image() {
     </div>,
     {
       ...size,
+      fonts: [
+        ...(sourceSerif
+          ? [
+              {
+                name: 'Source Serif 4',
+                data: sourceSerif,
+                weight: 600 as const,
+                style: 'normal' as const,
+              },
+            ]
+          : []),
+        ...(notoSans
+          ? [
+              {
+                name: 'Noto Sans',
+                data: notoSans,
+                weight: 500 as const,
+                style: 'normal' as const,
+              },
+            ]
+          : []),
+      ],
     }
   )
 }
