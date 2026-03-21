@@ -8,6 +8,8 @@ interface MarketingErrorProps {
 }
 
 export default function MarketingError({ error, reset }: MarketingErrorProps) {
+  const canShowDetails = process.env.NODE_ENV !== 'production'
+
   return (
     <div className="px-6 py-16 md:py-24">
       <div className="mx-auto w-full max-w-3xl space-y-6">
@@ -15,7 +17,12 @@ export default function MarketingError({ error, reset }: MarketingErrorProps) {
           <h1 className="text-foreground text-2xl font-bold">
             Something went wrong
           </h1>
-          <p className="text-muted-foreground text-sm">{error.message}</p>
+          <p className="text-muted-foreground text-sm">
+            We couldn&apos;t load this page. Please try again.
+          </p>
+          {canShowDetails ? (
+            <p className="text-muted-foreground text-xs">{error.message}</p>
+          ) : null}
         </div>
         <Button type="button" onClick={reset} size="sm">
           Try again
