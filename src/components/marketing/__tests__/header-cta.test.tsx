@@ -49,8 +49,8 @@ describe('HeaderCta', () => {
   it('navigates to /resumes when clicked', () => {
     render(<HeaderCta />)
 
-    const button = screen.getByRole('button')
-    fireEvent.click(button)
+    const link = screen.getByRole('link', { name: /start writing/i })
+    fireEvent.click(link)
 
     expect(mockNavigateTo).toHaveBeenCalledWith('/resumes')
   })
